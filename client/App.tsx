@@ -30,6 +30,14 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/portal" element={<Portal />} />
+          <Route path="/portal/profile" element={<Profile />} />
+          <Route path="/portal/leave" element={<Leave />} />
+          <Route path="/portal/payslips" element={<Payslips />} />
+          <Route path="/portal/reimbursements" element={<Reimbursements />} />
+          <Route path="/portal/attendance" element={<Attendance />} />
+          <Route path="/portal/directory" element={<Directory />} />
+          <Route path="/portal/facilities" element={<Facilities />} />
+          <Route path="/portal/settings" element={<Settings />} />
           <Route path="/issues" element={<Issues />} />
           <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
