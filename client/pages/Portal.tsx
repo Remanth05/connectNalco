@@ -20,6 +20,8 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export default function Portal() {
+  const navigate = useNavigate();
+
   const services = [
     {
       icon: User,
