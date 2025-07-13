@@ -242,7 +242,7 @@ export default function Index() {
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Button asChild size="lg" variant="secondary">
-                <Link to="/portal">Get Started Today</Link>
+                <Link to="/login">Get Started Today</Link>
               </Button>
               <Button
                 asChild
@@ -250,7 +250,7 @@ export default function Index() {
                 variant="outline"
                 className="border-white text-white hover:bg-white hover:text-nalco-red"
               >
-                <Link to="/issues">Report Your First Issue</Link>
+                <Link to="/login">Report Your First Issue</Link>
               </Button>
             </div>
           </div>
