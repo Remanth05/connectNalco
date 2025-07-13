@@ -29,14 +29,14 @@ export default function Index() {
       title: "Employee Portal",
       description:
         "Comprehensive employee management system with all essential services and information in one place.",
-      href: "/portal",
+      href: "/login",
     },
     {
       icon: AlertTriangle,
       title: "Issue Tracker",
       description:
         "Report, track, and resolve plant issues efficiently with our advanced complaint management system.",
-      href: "/issues",
+      href: "/login",
     },
     {
       icon: BarChart3,
