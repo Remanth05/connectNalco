@@ -23,6 +23,14 @@ export default {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        // NALCO-inspired brand colors
+        nalco: {
+          red: "hsl(var(--nalco-red))",
+          black: "hsl(var(--nalco-black))",
+          blue: "hsl(var(--nalco-blue))",
+          gray: "hsl(var(--nalco-gray))",
+          green: "hsl(var(--nalco-green))",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
