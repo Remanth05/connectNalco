@@ -91,27 +91,51 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              {navigation.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={cn(
-                      "flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-nalco-red/10 text-nalco-red"
-                        : "text-nalco-gray hover:bg-nalco-gray/10 hover:text-nalco-black",
-                    )}
+            <div className="hidden md:flex items-center space-x-4">
+              <nav className="flex items-center space-x-1">
+                {navigation.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.href;
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className={cn(
+                        "flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                        isActive
+                          ? "bg-nalco-red/10 text-nalco-red"
+                          : "text-nalco-gray hover:bg-nalco-gray/10 hover:text-nalco-black",
+                      )}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              {/* User Info and Logout */}
+              {isAuthenticated && user && (
+                <div className="flex items-center space-x-3 border-l pl-4">
+                  <div className="text-sm">
+                    <div className="font-medium text-nalco-black">
+                      {user.name}
+                    </div>
+                    <div className="text-xs text-nalco-gray capitalize">
+                      {user.role}
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="text-nalco-gray hover:text-nalco-red"
                   >
-                    <Icon className="h-4 w-4" />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </nav>
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
 
             {/* Mobile menu button */}
             <Button
