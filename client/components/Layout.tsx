@@ -21,13 +21,53 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useAuth();
 
-  const navigation = [
-    { name: "Home", href: "/", icon: Building2 },
-    { name: "Employee Portal", href: "/portal", icon: Users },
-    { name: "Issue Tracker", href: "/issues", icon: AlertTriangle },
-    { name: "Settings", href: "/settings", icon: Settings },
-  ];
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  // Navigation based on user role
+  const getNavigation = () => {
+    if (!isAuthenticated) {
+      return [
+        { name: "Home", href: "/", icon: Building2 },
+        { name: "Login", href: "/login", icon: User },
+      ];
+    }
+
+    if (user?.role === "admin") {
+      return [
+        { name: "Home", href: "/", icon: Building2 },
+        { name: "Admin Dashboard", href: "/admin/dashboard", icon: Settings },
+        { name: "Issue Tracker", href: "/issues", icon: AlertTriangle },
+      ];
+    }
+
+    if (user?.role === "authority") {
+      return [
+        { name: "Home", href: "/", icon: Building2 },
+        {
+          name: "Authority Dashboard",
+          href: "/authority/dashboard",
+          icon: Settings,
+        },
+        { name: "Issue Tracker", href: "/issues", icon: AlertTriangle },
+      ];
+    }
+
+    // Employee navigation
+    return [
+      { name: "Home", href: "/", icon: Building2 },
+      { name: "Employee Portal", href: "/portal", icon: Users },
+      { name: "Issue Tracker", href: "/issues", icon: AlertTriangle },
+      { name: "Settings", href: "/settings", icon: Settings },
+    ];
+  };
+
+  const navigation = getNavigation();
 
   return (
     <div className="min-h-screen bg-background">
