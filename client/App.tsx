@@ -30,28 +30,133 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/portal" element={<Portal />} />
-            <Route path="/portal/profile" element={<Profile />} />
-            <Route path="/portal/leave" element={<Leave />} />
-            <Route path="/portal/payslips" element={<Payslips />} />
-            <Route path="/portal/reimbursements" element={<Reimbursements />} />
-            <Route path="/portal/attendance" element={<Attendance />} />
-            <Route path="/portal/directory" element={<Directory />} />
-            <Route path="/portal/facilities" element={<Facilities />} />
-            <Route path="/portal/settings" element={<Settings />} />
-            <Route path="/issues" element={<Issues />} />
-            <Route path="/settings" element={<Settings />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster />
-          <Sonner />
-        </BrowserRouter>
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+
+              {/* Employee Routes */}
+              <Route
+                path="/portal"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Portal />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/profile"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/leave"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Leave />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/payslips"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Payslips />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/reimbursements"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Reimbursements />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/attendance"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Attendance />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/directory"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Directory />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/facilities"
+                element={
+                  <ProtectedRoute allowedRoles={["employee"]}>
+                    <Facilities />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Authority Routes */}
+              <Route
+                path="/authority/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={["authority"]}>
+                    <AuthorityDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Admin Routes */}
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Issues accessible by all authenticated users */}
+              <Route
+                path="/issues"
+                element={
+                  <ProtectedRoute>
+                    <Issues />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/portal/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+            <Sonner />
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
