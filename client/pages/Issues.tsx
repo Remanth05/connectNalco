@@ -63,7 +63,7 @@ export default function Issues() {
       count: "12 active",
     },
     {
-      icon: Tool,
+      icon: Wrench,
       title: "Mechanical",
       description: "Machinery, equipment maintenance, and repairs",
       count: "8 active",
