@@ -112,13 +112,13 @@ export default function Index() {
                 size="lg"
                 className="bg-nalco-red hover:bg-nalco-red/90"
               >
-                <Link to="/portal">
+                <Link to="/login">
                   Access Employee Portal
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link to="/issues">Report an Issue</Link>
+                <Link to="/login">Report an Issue</Link>
               </Button>
             </div>
           </div>
