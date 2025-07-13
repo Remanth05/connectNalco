@@ -140,6 +140,7 @@ export default function Portal() {
               <Card
                 key={index}
                 className="group cursor-pointer transition-all hover:shadow-lg hover:shadow-nalco-red/10"
+                onClick={() => navigate(service.href)}
               >
                 <CardHeader>
                   <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-nalco-red/10 group-hover:bg-nalco-red group-hover:text-white transition-colors">
@@ -153,7 +154,15 @@ export default function Portal() {
                   <CardDescription className="mb-4 text-nalco-gray">
                     {service.description}
                   </CardDescription>
-                  <Button variant="outline" size="sm" className="w-full">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(service.href);
+                    }}
+                  >
                     Access Service
                   </Button>
                 </CardContent>
