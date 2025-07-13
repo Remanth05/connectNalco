@@ -6,8 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 import Index from "./pages/Index";
+import Login from "./pages/Login";
 import Portal from "./pages/Portal";
 import Issues from "./pages/Issues";
 import Settings from "./pages/Settings";
@@ -19,6 +22,8 @@ import Reimbursements from "./pages/portal/Reimbursements";
 import Attendance from "./pages/portal/Attendance";
 import Directory from "./pages/portal/Directory";
 import Facilities from "./pages/portal/Facilities";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
 
 const queryClient = new QueryClient();
 
