@@ -1,0 +1,139 @@
+import { Link, useLocation } from "react-router-dom";
+import {
+  Building2,
+  Users,
+  AlertTriangle,
+  Settings,
+  Menu,
+  X,
+} from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const navigation = [
+    { name: "Home", href: "/", icon: Building2 },
+    { name: "Employee Portal", href: "/portal", icon: Users },
+    { name: "Issue Tracker", href: "/issues", icon: AlertTriangle },
+    { name: "Settings", href: "/settings", icon: Settings },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-nalco-red to-nalco-blue">
+                <Building2 className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-nalco-black">
+                  Connect
+                </span>
+                <span className="text-sm font-medium text-nalco-red">
+                  NALCO
+                </span>
+              </div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-1">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={cn(
+                      "flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-nalco-red/10 text-nalco-red"
+                        : "text-nalco-gray hover:bg-nalco-gray/10 hover:text-nalco-black",
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
+
+          {/* Mobile Navigation */}
+          {isMobileMenuOpen && (
+            <div className="border-t md:hidden">
+              <nav className="flex flex-col space-y-1 py-4">
+                {navigation.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.href;
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className={cn(
+                        "flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                        isActive
+                          ? "bg-nalco-red/10 text-nalco-red"
+                          : "text-nalco-gray hover:bg-nalco-gray/10 hover:text-nalco-black",
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main>{children}</main>
+
+      {/* Footer */}
+      <footer className="border-t bg-nalco-black/5">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
+            <div className="flex items-center space-x-2">
+              <Building2 className="h-5 w-5 text-nalco-red" />
+              <span className="text-sm font-medium text-nalco-black">
+                ConnectNalco - NALCO Damanjodi Plant Management System
+              </span>
+            </div>
+            <p className="text-sm text-nalco-gray">
+              © 2024 National Aluminium Company Limited. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
