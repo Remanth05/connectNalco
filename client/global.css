@@ -99,6 +99,13 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* NALCO-inspired brand colors (dark mode) */
+    --nalco-red: 0 73% 50%;
+    --nalco-black: 12 7% 12%;
+    --nalco-blue: 210 100% 30%;
+    --nalco-gray: 210 9% 41%;
+    --nalco-green: 142 52% 55%;
   }
 }
 
