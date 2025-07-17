@@ -25,6 +25,16 @@ import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleModuleAccess = (modulePath: string, moduleTitle: string) => {
+    // For demo purposes, show an alert for now
+    // In a real application, these would navigate to actual module pages
+    alert(`Accessing ${moduleTitle} module...\nFeature coming soon!`);
+
+    // You can uncomment this to enable navigation when pages are created:
+    // navigate(modulePath);
+  };
 
   const systemStats = [
     {
