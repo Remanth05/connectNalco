@@ -36,6 +36,36 @@ export default function AdminDashboard() {
     // navigate(modulePath);
   };
 
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case "create-user":
+        alert("Create New User functionality\nFeature coming soon!");
+        break;
+      case "backup":
+        alert(
+          "Database Backup initiated...\nBackup will be completed in background.",
+        );
+        break;
+      case "reports":
+        alert(
+          "Generating System Reports...\nReports will be available in Downloads.",
+        );
+        break;
+      case "maintenance":
+        alert(
+          "System Maintenance Mode\nScheduled maintenance window configured.",
+        );
+        break;
+      case "security":
+        alert(
+          "Security Audit initiated...\nAudit report will be available shortly.",
+        );
+        break;
+      default:
+        alert("Feature coming soon!");
+    }
+  };
+
   const systemStats = [
     {
       title: "Total Users",
