@@ -71,29 +71,31 @@ export default function Login() {
         return;
       }
 
-      // Store auth data in localStorage (demo purposes)
+      // Store auth data using context
       const authData = {
         employeeId: formData.employeeId,
-        role: formData.role,
+        role: formData.role as "employee" | "authority" | "admin",
         name:
           formData.role === "admin"
-            ? "Admin User"
+            ? "Vikram Patel"
             : formData.role === "authority"
-              ? "Authority User"
-              : "Employee User",
+              ? "Dr. Priya Sharma"
+              : "Rajesh Kumar Singh",
         isAuthenticated: true,
       };
 
-      localStorage.setItem("auth", JSON.stringify(authData));
+      // Use the auth context to log in
+      login(authData);
 
-      // Force a page reload to ensure auth context is properly updated
-      window.location.href =
+      // Navigate to appropriate dashboard
+      const targetPath =
         formData.role === "admin"
           ? "/admin/dashboard"
           : formData.role === "authority"
             ? "/authority/dashboard"
             : "/portal";
 
+      navigate(targetPath);
       setIsLoading(false);
     }, 1000);
   };
