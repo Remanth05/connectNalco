@@ -534,6 +534,71 @@ export default function AuthorityDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Rejection Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Reject{" "}
+              {selectedItem?.type === "leave"
+                ? "Leave Application"
+                : "Reimbursement"}
+            </DialogTitle>
+            <DialogDescription>
+              Please provide a reason for rejecting this{" "}
+              {selectedItem?.type === "leave"
+                ? "leave application"
+                : "reimbursement request"}
+              .
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="rejectionReason">Reason for Rejection</Label>
+              <Textarea
+                id="rejectionReason"
+                placeholder="Please provide a clear reason for rejection..."
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDialogOpen(false);
+                setRejectionReason("");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                selectedItem &&
+                handleApproval(selectedItem.id, selectedItem.type, "reject")
+              }
+              disabled={
+                !rejectionReason.trim() || processing === selectedItem?.id
+              }
+            >
+              {processing === selectedItem?.id ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Rejecting...
+                </>
+              ) : (
+                "Reject"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }
