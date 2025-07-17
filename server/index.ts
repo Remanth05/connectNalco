@@ -39,6 +39,27 @@ import {
   searchEmployees,
 } from "./routes/employee";
 
+import {
+  getFacilities,
+  getFacility,
+  checkFacilityAvailability,
+  bookFacility,
+  getEmployeeBookings,
+  getAllBookings,
+  processBooking,
+  cancelBooking,
+  getFacilitySchedule,
+} from "./routes/facility";
+
+import {
+  getAttendanceRecords,
+  clockInOut,
+  getTodayAttendance,
+  getAttendanceSummary,
+  markAttendance,
+  getDepartmentAttendance,
+} from "./routes/attendance";
+
 export function createServer() {
   const app = express();
 
