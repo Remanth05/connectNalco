@@ -24,6 +24,7 @@ import { User, Lock, Building2, Shield, Users } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     employeeId: "",
     password: "",
