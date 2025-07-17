@@ -113,11 +113,23 @@ export default function Login() {
       <div className="w-full max-w-6xl grid gap-8 lg:grid-cols-2 items-center">
         {/* Left Side - Branding */}
         <div className="text-center lg:text-left">
-          <h1 className="text-4xl lg:text-6xl font-bold text-nalco-black mb-4">
-            𝐜𝐨𝐧𝐧𝐞𝐜𝐭𝐍𝐚𝐥𝐜𝐨
-          </h1>
+          <div className="flex items-center justify-center lg:justify-start mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-r from-nalco-red to-nalco-blue">
+                <Building2 className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl lg:text-5xl font-bold text-nalco-black">
+                  NALCO<span className="text-nalco-red">Connect</span>
+                </h1>
+                <p className="text-sm text-nalco-blue font-medium">
+                  Digital Workplace Portal
+                </p>
+              </div>
+            </div>
+          </div>
           <p className="text-xl text-nalco-gray mb-8">
-            Secure portal for employees, authorities, and administrators
+            Modern employee management system for NALCO operations
           </p>
 
           {/* Role Information Cards */}
