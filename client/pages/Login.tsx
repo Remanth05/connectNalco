@@ -43,6 +43,8 @@ export default function Login() {
 
     // Simple demo authentication
     setTimeout(() => {
+      console.log("Login attempt:", formData);
+
       if (!formData.employeeId || !formData.password || !formData.role) {
         setError("Please fill in all fields");
         setIsLoading(false);
@@ -58,6 +60,9 @@ export default function Login() {
 
       const roleCredentials =
         validCredentials[formData.role as keyof typeof validCredentials];
+
+      console.log("Role credentials:", roleCredentials);
+      console.log("Form data:", formData);
 
       if (
         !roleCredentials ||
@@ -84,6 +89,8 @@ export default function Login() {
         isAuthenticated: true,
       };
 
+      console.log("Auth data:", authData);
+
       // Use the auth context to log in
       login(authData);
 
@@ -95,9 +102,10 @@ export default function Login() {
             ? "/authority/dashboard"
             : "/portal";
 
+      console.log("Navigating to:", targetPath);
       navigate(targetPath);
       setIsLoading(false);
-    }, 1000);
+    }, 500); // Reduced timeout for faster testing
   };
 
   return (
