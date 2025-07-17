@@ -28,15 +28,15 @@ export default function AdminDashboard() {
   const systemStats = [
     {
       title: "Total Users",
-      value: "1,247",
-      change: "+12%",
+      value: "11", // Based on our mock data
+      change: "All active",
       icon: Users,
       color: "text-nalco-blue",
     },
     {
       title: "Active Departments",
-      value: "8",
-      change: "+1",
+      value: "5",
+      change: "HR, Finance, Ops, Eng, Sales",
       icon: Building2,
       color: "text-nalco-green",
     },
@@ -48,9 +48,9 @@ export default function AdminDashboard() {
       color: "text-nalco-green",
     },
     {
-      title: "Pending Issues",
-      value: "23",
-      change: "-5",
+      title: "Pending Approvals",
+      value: "3", // Based on mock pending items
+      change: "Needs attention",
       icon: AlertTriangle,
       color: "text-nalco-red",
     },
