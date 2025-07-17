@@ -122,5 +122,27 @@ export function createServer() {
   app.get("/api/departments/:department/stats", getDepartmentStats);
   app.post("/api/employees/search", searchEmployees);
 
+  // Facility Management Routes
+  app.get("/api/facilities", getFacilities);
+  app.get("/api/facilities/:facilityId", getFacility);
+  app.get(
+    "/api/facilities/:facilityId/availability",
+    checkFacilityAvailability,
+  );
+  app.post("/api/facilities/employee/:employeeId/book", bookFacility);
+  app.get("/api/facilities/employee/:employeeId/bookings", getEmployeeBookings);
+  app.get("/api/facilities/bookings", getAllBookings);
+  app.patch("/api/facilities/bookings/:bookingId/process", processBooking);
+  app.patch("/api/facilities/bookings/:bookingId/cancel", cancelBooking);
+  app.get("/api/facilities/:facilityId/schedule", getFacilitySchedule);
+
+  // Attendance Management Routes
+  app.get("/api/attendance/employee/:employeeId", getAttendanceRecords);
+  app.post("/api/attendance/employee/:employeeId/clock", clockInOut);
+  app.get("/api/attendance/employee/:employeeId/today", getTodayAttendance);
+  app.get("/api/attendance/employee/:employeeId/summary", getAttendanceSummary);
+  app.post("/api/attendance/mark", markAttendance);
+  app.get("/api/attendance/department/:department", getDepartmentAttendance);
+
   return app;
 }
