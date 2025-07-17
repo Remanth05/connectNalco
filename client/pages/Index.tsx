@@ -93,13 +93,17 @@ export default function Index() {
               NALCO Damanjodi Plant Management System
             </div>
 
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-nalco-black lg:text-6xl">
-              Connect
-              <span className="bg-gradient-to-r from-nalco-red to-nalco-blue bg-clip-text text-transparent">
-                {" "}
+            <div className="flex items-center justify-center mb-6">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-r from-nalco-red to-nalco-blue mr-4">
+                <Building2 className="h-10 w-10 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold tracking-tight text-nalco-black lg:text-6xl">
                 NALCO
-              </span>
-            </h1>
+                <span className="bg-gradient-to-r from-nalco-red to-nalco-blue bg-clip-text text-transparent">
+                  Connect
+                </span>
+              </h1>
+            </div>
 
             <p className="mb-8 text-xl text-nalco-gray lg:text-2xl">
               Your comprehensive platform for employee management, issue
