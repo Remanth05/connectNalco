@@ -249,32 +249,6 @@ export default function AuthorityDashboard() {
     },
   ];
 
-  // Combine pending approvals from both leave and reimbursements
-  const allPendingApprovals = [
-    ...pendingLeaves.map((leave) => ({
-      id: leave.id,
-      type: "Leave Application",
-      employee: leave.employeeName,
-      request: `${leave.leaveType.charAt(0).toUpperCase() + leave.leaveType.slice(1)} Leave - ${leave.days} day(s)`,
-      date: `${leave.startDate} to ${leave.endDate}`,
-      status: leave.status,
-      priority: "normal",
-      details: leave,
-      itemType: "leave" as const,
-    })),
-    ...pendingReimbursements.map((reimb) => ({
-      id: reimb.id,
-      type: "Reimbursement",
-      employee: reimb.employeeName,
-      request: `${reimb.type.charAt(0).toUpperCase() + reimb.type.slice(1)} - ₹${reimb.amount}`,
-      date: reimb.submittedDate,
-      status: reimb.status,
-      priority: reimb.amount > 5000 ? "high" : "normal",
-      details: reimb,
-      itemType: "reimbursement" as const,
-    })),
-  ];
-
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "urgent":
