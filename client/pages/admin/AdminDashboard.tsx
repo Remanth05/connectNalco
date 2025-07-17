@@ -211,6 +211,9 @@ export default function AdminDashboard() {
                     <Card
                       key={index}
                       className="hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() =>
+                        handleModuleAccess(module.path, module.title)
+                      }
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start space-x-3">
@@ -229,7 +232,11 @@ export default function AdminDashboard() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="w-full"
+                              className="w-full hover:bg-nalco-blue hover:text-white transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleModuleAccess(module.path, module.title);
+                              }}
                             >
                               Access Module
                             </Button>
