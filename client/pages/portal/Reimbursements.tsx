@@ -18,63 +18,156 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, CreditCard, Plus, Upload, Eye } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ArrowLeft, CreditCard, Plus, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
+import { Reimbursement, ApiResponse } from "@shared/api";
 
 export default function Reimbursements() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const reimbursements = [
-    {
-      id: "RB-2024-003",
-      category: "Travel",
-      description: "Client meeting travel expenses",
-      amount: 450.75,
-      date: "2024-03-20",
-      status: "Approved",
-      submittedOn: "2024-03-22",
-    },
-    {
-      id: "RB-2024-002",
-      category: "Meals",
-      description: "Team lunch during conference",
-      amount: 125.5,
-      date: "2024-03-15",
-      status: "Processing",
-      submittedOn: "2024-03-18",
-    },
-    {
-      id: "RB-2024-001",
-      category: "Office Supplies",
-      description: "Ergonomic keyboard and mouse",
-      amount: 89.99,
-      date: "2024-03-10",
-      status: "Paid",
-      submittedOn: "2024-03-12",
-    },
-  ];
+  // State
+  const [reimbursements, setReimbursements] = useState<Reimbursement[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
+  // Form state
+  const [formData, setFormData] = useState({
+    type: "",
+    amount: "",
+    description: "",
+  });
+
+  // Fetch reimbursements data
+  useEffect(() => {
+    if (user?.employeeId) {
+      fetchReimbursements();
+      fetchStats();
+    }
+  }, [user]);
+
+  const fetchReimbursements = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `/api/reimbursement/employee/${user?.employeeId}`,
+      );
+      const data: ApiResponse<Reimbursement[]> = await response.json();
+
+      if (data.success && data.data) {
+        setReimbursements(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching reimbursements:", error);
+      setError("Failed to load reimbursements");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch(
+        `/api/reimbursement/employee/${user?.employeeId}/stats`,
+      );
+      const data: ApiResponse<any> = await response.json();
+
+      if (data.success && data.data) {
+        setStats(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching reimbursement stats:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (!formData.type || !formData.amount || !formData.description) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      const response = await fetch(
+        `/api/reimbursement/employee/${user?.employeeId}/submit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: formData.type,
+            amount: parseFloat(formData.amount),
+            description: formData.description,
+          }),
+        },
+      );
+
+      const data: ApiResponse<Reimbursement> = await response.json();
+
+      if (data.success) {
+        setSuccess("Reimbursement request submitted successfully!");
+        setFormData({
+          type: "",
+          amount: "",
+          description: "",
+        });
+        fetchReimbursements();
+        fetchStats();
+      } else {
+        setError(data.error || "Failed to submit reimbursement request");
+      }
+    } catch (error) {
+      console.error("Error submitting reimbursement:", error);
+      setError("Failed to submit reimbursement request");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "approved":
         return "bg-nalco-green text-white";
-      case "paid":
-        return "bg-nalco-blue text-white";
-      case "processing":
+      case "pending":
         return "bg-yellow-500 text-white";
       case "rejected":
         return "bg-nalco-red text-white";
+      case "paid":
+        return "bg-nalco-blue text-white";
       default:
         return "bg-nalco-gray text-white";
     }
   };
+
+  const formatReimbursementType = (type: string) => {
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-nalco-blue" />
+            <span className="ml-2 text-nalco-gray">
+              Loading reimbursements...
+            </span>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -96,227 +189,236 @@ export default function Reimbursements() {
                 Reimbursements
               </h1>
               <p className="text-nalco-gray">
-                Submit and track expense reimbursements
+                Submit and track your expense reimbursements
               </p>
             </div>
           </div>
-          <Button className="bg-nalco-red hover:bg-nalco-red/90">
-            <Plus className="h-4 w-4 mr-2" />
-            New Reimbursement
-          </Button>
         </div>
 
-        {/* Summary Cards */}
-        <div className="mb-8 grid gap-6 md:grid-cols-4">
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <CreditCard className="h-8 w-8 text-nalco-green" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Total Approved
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(2340.75)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <CreditCard className="h-8 w-8 text-yellow-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Pending</p>
-                <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(125.5)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <CreditCard className="h-8 w-8 text-nalco-blue" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Paid</p>
-                <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(1890.25)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <CreditCard className="h-8 w-8 text-nalco-red" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  This Month
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(666.24)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* New Reimbursement Form */}
-          <Card className="lg:col-span-1">
+        <div className="grid gap-6 lg:grid-cols-4">
+          {/* Reimbursement Stats */}
+          <Card className="lg:col-span-4">
             <CardHeader>
-              <CardTitle className="text-nalco-black">
-                New Reimbursement
+              <CardTitle className="flex items-center text-nalco-black">
+                <CreditCard className="h-5 w-5 mr-2" />
+                Reimbursement Overview
               </CardTitle>
-              <CardDescription>Submit a new expense claim</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="category">Expense Category</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="travel">Travel</SelectItem>
-                    <SelectItem value="meals">Meals & Entertainment</SelectItem>
-                    <SelectItem value="office">Office Supplies</SelectItem>
-                    <SelectItem value="training">
-                      Training & Education
-                    </SelectItem>
-                    <SelectItem value="communication">Communication</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+            <CardContent>
+              <div className="grid gap-6 md:grid-cols-4">
+                <Card>
+                  <CardContent className="flex items-center p-6">
+                    <CreditCard className="h-8 w-8 text-nalco-green" />
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-nalco-gray">
+                        Total Approved
+                      </p>
+                      <p className="text-2xl font-bold text-nalco-black">
+                        ₹{stats?.approvedAmount.toLocaleString() || 0}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="flex items-center p-6">
+                    <CreditCard className="h-8 w-8 text-yellow-500" />
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-nalco-gray">
+                        Pending
+                      </p>
+                      <p className="text-2xl font-bold text-nalco-black">
+                        {stats?.pending || 0}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="flex items-center p-6">
+                    <CreditCard className="h-8 w-8 text-nalco-blue" />
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-nalco-gray">
+                        Approved
+                      </p>
+                      <p className="text-2xl font-bold text-nalco-black">
+                        {stats?.approved || 0}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="flex items-center p-6">
+                    <CreditCard className="h-8 w-8 text-nalco-red" />
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-nalco-gray">
+                        Rejected
+                      </p>
+                      <p className="text-2xl font-bold text-nalco-black">
+                        {stats?.rejected || 0}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-
-              <div>
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="date">Expense Date</Label>
-                <Input id="date" type="date" />
-              </div>
-
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Brief description of the expense"
-                  rows={3}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="receipt">Receipt</Label>
-                <div className="flex items-center space-x-2">
-                  <Input id="receipt" type="file" accept="image/*,.pdf" />
-                  <Button variant="outline" size="sm">
-                    <Upload className="h-4 w-4" />
-                  </Button>
-                </div>
-                <p className="text-xs text-nalco-gray mt-1">
-                  Upload receipt (PDF, JPG, PNG)
-                </p>
-              </div>
-
-              <Button className="w-full bg-nalco-blue hover:bg-nalco-blue/90">
-                Submit Reimbursement
-              </Button>
             </CardContent>
           </Card>
 
-          {/* Reimbursement History */}
+          {/* New Reimbursement Request */}
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="text-nalco-black">
-                Reimbursement History
+                New Reimbursement Request
               </CardTitle>
               <CardDescription>
-                Track your submitted expense claims
+                Submit a new expense reimbursement
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {reimbursements.map((reimbursement) => (
-                  <div
-                    key={reimbursement.id}
-                    className="flex items-center justify-between border-b pb-4 last:border-b-0"
+              {error && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              {success && (
+                <Alert className="mb-4 border-nalco-green bg-nalco-green/10">
+                  <AlertDescription className="text-nalco-green">
+                    {success}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="type">Expense Category *</Label>
+                  <Select
+                    value={formData.type}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, type: value })
+                    }
                   >
-                    <div className="flex items-center space-x-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-nalco-blue/10">
-                        <CreditCard className="h-6 w-6 text-nalco-blue" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select expense category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="travel">Travel</SelectItem>
+                      <SelectItem value="medical">Medical</SelectItem>
+                      <SelectItem value="food">Food & Meals</SelectItem>
+                      <SelectItem value="accommodation">
+                        Accommodation
+                      </SelectItem>
+                      <SelectItem value="training">Training</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="amount">Amount (₹) *</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    placeholder="Enter amount"
+                    value={formData.amount}
+                    onChange={(e) =>
+                      setFormData({ ...formData, amount: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="description">Description *</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Provide details about the expense"
+                    rows={3}
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-nalco-blue hover:bg-nalco-blue/90"
+                  disabled={submitting}
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Submit Request
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Recent Reimbursements */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="text-nalco-black">
+                Recent Requests
+              </CardTitle>
+              <CardDescription>
+                Your recent reimbursement requests
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {reimbursements.length === 0 ? (
+                <div className="text-center py-8">
+                  <CreditCard className="h-12 w-12 text-nalco-gray mx-auto mb-4" />
+                  <p className="text-nalco-gray">
+                    No reimbursement requests found
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {reimbursements.slice(0, 5).map((reimbursement) => (
+                    <div
+                      key={reimbursement.id}
+                      className="flex items-center justify-between border-b pb-4 last:border-b-0"
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-nalco-blue/10">
+                          <CreditCard className="h-6 w-6 text-nalco-blue" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-nalco-black">
+                            {formatReimbursementType(reimbursement.type)}
+                          </h4>
+                          <p className="text-sm text-nalco-gray">
+                            ₹{reimbursement.amount} •{" "}
+                            {reimbursement.submittedDate}
+                          </p>
+                          <p className="text-xs text-nalco-gray">
+                            {reimbursement.description}
+                          </p>
+                          {reimbursement.rejectedReason && (
+                            <p className="text-xs text-nalco-red">
+                              Reason: {reimbursement.rejectedReason}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-medium text-nalco-black">
-                          {reimbursement.description}
-                        </h4>
-                        <p className="text-sm text-nalco-gray">
-                          {reimbursement.category} •{" "}
-                          {formatCurrency(reimbursement.amount)} •{" "}
-                          {reimbursement.date}
-                        </p>
-                        <p className="text-xs text-nalco-gray">
-                          Submitted on {reimbursement.submittedOn}
-                        </p>
+                      <div className="flex items-center space-x-2">
+                        <Badge className={getStatusColor(reimbursement.status)}>
+                          {reimbursement.status.charAt(0).toUpperCase() +
+                            reimbursement.status.slice(1)}
+                        </Badge>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={getStatusColor(reimbursement.status)}>
-                        {reimbursement.status}
-                      </Badge>
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
-
-        {/* Quick Tips */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-nalco-black">
-              Reimbursement Guidelines
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <h4 className="font-medium text-nalco-black mb-2">
-                  Eligible Expenses
-                </h4>
-                <ul className="text-sm text-nalco-gray space-y-1">
-                  <li>• Business travel and accommodation</li>
-                  <li>• Client meals and entertainment</li>
-                  <li>• Office supplies and equipment</li>
-                  <li>• Training and professional development</li>
-                  <li>• Communication expenses</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-medium text-nalco-black mb-2">
-                  Submission Requirements
-                </h4>
-                <ul className="text-sm text-nalco-gray space-y-1">
-                  <li>• Submit within 30 days of expense</li>
-                  <li>• Include original receipts</li>
-                  <li>• Provide detailed descriptions</li>
-                  <li>• Get manager approval for large amounts</li>
-                  <li>• Follow company expense policy</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </Layout>
   );
