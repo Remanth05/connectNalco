@@ -36,6 +36,9 @@ export default function Login() {
     setError("");
     setIsLoading(true);
 
+    // Clear any existing auth data first
+    localStorage.removeItem("auth");
+
     // Simple demo authentication
     setTimeout(() => {
       if (!formData.employeeId || !formData.password || !formData.role) {
@@ -67,29 +70,27 @@ export default function Login() {
       }
 
       // Store auth data in localStorage (demo purposes)
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          employeeId: formData.employeeId,
-          role: formData.role,
-          name:
-            formData.role === "admin"
-              ? "Admin User"
-              : formData.role === "authority"
-                ? "Authority User"
-                : "Employee User",
-          isAuthenticated: true,
-        }),
-      );
+      const authData = {
+        employeeId: formData.employeeId,
+        role: formData.role,
+        name:
+          formData.role === "admin"
+            ? "Admin User"
+            : formData.role === "authority"
+              ? "Authority User"
+              : "Employee User",
+        isAuthenticated: true,
+      };
 
-      // Redirect based on role
-      if (formData.role === "admin") {
-        navigate("/admin/dashboard");
-      } else if (formData.role === "authority") {
-        navigate("/authority/dashboard");
-      } else {
-        navigate("/portal");
-      }
+      localStorage.setItem("auth", JSON.stringify(authData));
+
+      // Force a page reload to ensure auth context is properly updated
+      window.location.href =
+        formData.role === "admin"
+          ? "/admin/dashboard"
+          : formData.role === "authority"
+            ? "/authority/dashboard"
+            : "/portal";
 
       setIsLoading(false);
     }, 1000);
