@@ -76,16 +76,16 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-nalco-red to-nalco-blue">
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nalco-red to-nalco-blue">
                 <Building2 className="h-6 w-6 text-white" />
               </div>
-              <div className="flex flex-col">
+              <div className="flex items-center space-x-1">
                 <span className="text-xl font-bold text-nalco-black">
-                  Connect
-                </span>
-                <span className="text-sm font-medium text-nalco-red">
                   NALCO
+                </span>
+                <span className="text-xl font-bold text-nalco-red">
+                  Connect
                 </span>
               </div>
             </Link>
