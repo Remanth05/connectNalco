@@ -150,31 +150,31 @@ export default function AuthorityDashboard() {
   const departmentStats = [
     {
       title: "Total Employees",
-      value: "156",
-      change: "+8 this month",
+      value: "8", // Based on our mock data
+      change: "Active employees",
       icon: Users,
       color: "text-nalco-blue",
     },
     {
       title: "Pending Approvals",
-      value: "12",
+      value: allPendingApprovals.length.toString(),
       change: "Requires attention",
       icon: Clock,
       color: "text-yellow-500",
     },
     {
-      title: "Active Issues",
-      value: "7",
-      change: "-3 resolved today",
-      icon: AlertTriangle,
-      color: "text-nalco-red",
-    },
-    {
-      title: "This Month's Leaves",
-      value: "34",
-      change: "18 approved",
+      title: "Leave Applications",
+      value: pendingLeaves.length.toString(),
+      change: "Pending review",
       icon: Calendar,
       color: "text-nalco-green",
+    },
+    {
+      title: "Reimbursements",
+      value: pendingReimbursements.length.toString(),
+      change: "Pending approval",
+      icon: FileText,
+      color: "text-nalco-red",
     },
   ];
 
