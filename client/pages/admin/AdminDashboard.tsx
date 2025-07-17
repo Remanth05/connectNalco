@@ -357,13 +357,36 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-4">
-              <Button className="bg-nalco-red hover:bg-nalco-red/90">
+              <Button
+                className="bg-nalco-red hover:bg-nalco-red/90"
+                onClick={() => handleQuickAction("create-user")}
+              >
                 Create New User
               </Button>
-              <Button variant="outline">Backup Database</Button>
-              <Button variant="outline">Generate Reports</Button>
-              <Button variant="outline">System Maintenance</Button>
-              <Button variant="outline">Security Audit</Button>
+              <Button
+                variant="outline"
+                onClick={() => handleQuickAction("backup")}
+              >
+                Backup Database
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleQuickAction("reports")}
+              >
+                Generate Reports
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleQuickAction("maintenance")}
+              >
+                System Maintenance
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleQuickAction("security")}
+              >
+                Security Audit
+              </Button>
             </div>
           </CardContent>
         </Card>
