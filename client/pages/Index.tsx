@@ -241,7 +241,7 @@ export default function Index() {
               Ready to Transform Your Workflow?
             </h2>
             <p className="mb-8 text-lg opacity-90">
-              Join thousands of NALCO employees already using ConnectNalco for
+              Join thousands of NALCO employees already using connectNALCO for
               seamless operations.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
