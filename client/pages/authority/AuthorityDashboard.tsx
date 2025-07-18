@@ -959,32 +959,175 @@ export default function AuthorityDashboard() {
           </Card>
         </div>
 
-        {/* Department Performance */}
+        {/* Department Performance & Interconnections */}
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-nalco-black">
+                Department Performance
+              </CardTitle>
+              <CardDescription>Key metrics for this month</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-nalco-green">94%</div>
+                  <p className="text-sm text-nalco-gray">Attendance Rate</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-nalco-blue">87%</div>
+                  <p className="text-sm text-nalco-gray">Project Completion</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-nalco-red">15</div>
+                  <p className="text-sm text-nalco-gray">Open Issues</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-nalco-green">
+                    4.2/5
+                  </div>
+                  <p className="text-sm text-nalco-gray">Team Satisfaction</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-nalco-black">
+                Cross-Department Impact
+              </CardTitle>
+              <CardDescription>
+                How your decisions affect other departments
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-nalco-green/10 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium">IT Department</p>
+                    <p className="text-xs text-nalco-gray">
+                      3 system access requests approved
+                    </p>
+                  </div>
+                  <Badge className="bg-nalco-green text-white">Active</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-nalco-blue/10 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium">Finance Department</p>
+                    <p className="text-xs text-nalco-gray">
+                      ₹{totalBudgetImpact.toLocaleString()} budget allocation
+                      pending
+                    </p>
+                  </div>
+                  <Badge className="bg-nalco-blue text-white">Pending</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-nalco-red/10 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium">Operations</p>
+                    <p className="text-xs text-nalco-gray">
+                      2 employees on approved leave
+                    </p>
+                  </div>
+                  <Badge className="bg-nalco-red text-white">Impact</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Department Activities */}
         <Card className="mt-6">
           <CardHeader>
             <CardTitle className="text-nalco-black">
-              Department Performance
+              Recent Department Activities
             </CardTitle>
-            <CardDescription>Key metrics for this month</CardDescription>
+            <CardDescription>
+              Track all department actions and their system-wide effects
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-6 md:grid-cols-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-nalco-green">94%</div>
-                <p className="text-sm text-nalco-gray">Attendance Rate</p>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-nalco-blue">87%</div>
-                <p className="text-sm text-nalco-gray">Project Completion</p>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-nalco-red">15</div>
-                <p className="text-sm text-nalco-gray">Open Issues</p>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-nalco-green">4.2/5</div>
-                <p className="text-sm text-nalco-gray">Team Satisfaction</p>
-              </div>
+            <div className="space-y-4">
+              {[
+                {
+                  action: "Leave Approved",
+                  employee: "Rajesh Kumar Singh",
+                  details: "3 days annual leave (April 15-17)",
+                  impact: "Recruiting team capacity reduced by 25%",
+                  time: "2 hours ago",
+                  type: "leave",
+                },
+                {
+                  action: "Reimbursement Processed",
+                  employee: "Sunita Devi",
+                  details: "₹3,200 medical reimbursement",
+                  impact: "Department budget: ₹3,200 allocated",
+                  time: "5 hours ago",
+                  type: "reimbursement",
+                },
+                {
+                  action: "New Employee Added",
+                  employee: "Training Program",
+                  details: "2 new trainees joined HR department",
+                  impact: "Team strength increased to 10 members",
+                  time: "1 day ago",
+                  type: "employee",
+                },
+                {
+                  action: "Issue Resolved",
+                  employee: "System Access",
+                  details: "IT access issue for new employees",
+                  impact: "3 employees now have full system access",
+                  time: "2 days ago",
+                  type: "issue",
+                },
+              ].map((activity, index) => (
+                <div
+                  key={index}
+                  className="flex items-start space-x-4 p-4 border rounded-lg"
+                >
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                      activity.type === "leave"
+                        ? "bg-nalco-blue/10"
+                        : activity.type === "reimbursement"
+                          ? "bg-nalco-green/10"
+                          : activity.type === "employee"
+                            ? "bg-nalco-red/10"
+                            : "bg-nalco-gray/10"
+                    }`}
+                  >
+                    {activity.type === "leave" && (
+                      <Calendar className={`h-5 w-5 text-nalco-blue`} />
+                    )}
+                    {activity.type === "reimbursement" && (
+                      <FileText className={`h-5 w-5 text-nalco-green`} />
+                    )}
+                    {activity.type === "employee" && (
+                      <Users className={`h-5 w-5 text-nalco-red`} />
+                    )}
+                    {activity.type === "issue" && (
+                      <AlertTriangle className={`h-5 w-5 text-nalco-gray`} />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-nalco-black">
+                        {activity.action}
+                      </h4>
+                      <span className="text-xs text-nalco-gray">
+                        {activity.time}
+                      </span>
+                    </div>
+                    <p className="text-sm text-nalco-gray">
+                      {activity.employee} - {activity.details}
+                    </p>
+                    <p className="text-xs text-nalco-blue font-medium">
+                      Impact: {activity.impact}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
