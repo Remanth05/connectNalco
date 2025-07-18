@@ -81,11 +81,11 @@ export default function Layout({ children }: LayoutProps) {
                 <Building2 className="h-6 w-6 text-white" />
               </div>
               <div className="flex items-center space-x-1">
+                <span className="text-xl font-bold text-nalco-red">
+                  connect
+                </span>
                 <span className="text-xl font-bold text-nalco-black">
                   NALCO
-                </span>
-                <span className="text-xl font-bold text-nalco-red">
-                  Connect
                 </span>
               </div>
             </Link>
