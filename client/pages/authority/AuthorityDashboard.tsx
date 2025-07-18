@@ -180,10 +180,36 @@ export default function AuthorityDashboard() {
       const data: ApiResponse<any> = await response.json();
 
       if (data.success) {
-        setSuccess(`${type} ${action}d successfully!`);
+        // Calculate department impact
+        let impactMessage = `${type} ${action}d successfully!`;
+
+        if (type === "leave" && action === "approve") {
+          const leaveApp =
+            selectedItem ||
+            allPendingApprovals.find((app) => app.id === id)?.details;
+          if (leaveApp) {
+            impactMessage += ` Employee ${leaveApp.employeeName} will be on leave for ${leaveApp.days} days. Team capacity temporarily reduced.`;
+          }
+        }
+
+        if (type === "reimbursement" && action === "approve") {
+          const reimb =
+            selectedItem ||
+            allPendingApprovals.find((app) => app.id === id)?.details;
+          if (reimb) {
+            impactMessage += ` Department budget impact: -₹${reimb.amount}. Processing payment to ${reimb.employeeName}.`;
+          }
+        }
+
+        setSuccess(impactMessage);
         setDialogOpen(false);
         setRejectionReason("");
         fetchPendingApprovals(); // Refresh the data
+
+        // Log department activity for interconnection tracking
+        console.log(
+          `Department Activity: ${user?.department} - ${type} ${action}d by ${user?.name}`,
+        );
       } else {
         setError(data.error || `Failed to ${action} ${type}`);
       }
