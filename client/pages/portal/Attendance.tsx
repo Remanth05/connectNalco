@@ -180,10 +180,29 @@ export default function Attendance() {
           <CardHeader>
             <CardTitle className="flex items-center text-nalco-black">
               <Calendar className="h-5 w-5 mr-2" />
-              Today's Status
+              Today's Status -{" "}
+              {currentTime.toLocaleDateString("en-IN", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            {success && (
+              <Alert className="mb-4 border-nalco-green bg-nalco-green/10">
+                <AlertDescription className="text-nalco-green">
+                  {success}
+                </AlertDescription>
+              </Alert>
+            )}
+
             <div className="grid gap-6 md:grid-cols-4">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
@@ -196,12 +215,20 @@ export default function Attendance() {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <div className="h-16 w-16 rounded-full bg-nalco-red/10 flex items-center justify-center">
-                    <XCircle className="h-8 w-8 text-nalco-red" />
+                  <div
+                    className={`h-16 w-16 rounded-full ${checkedOut ? "bg-nalco-green/10" : "bg-nalco-red/10"} flex items-center justify-center`}
+                  >
+                    {checkedOut ? (
+                      <CheckCircle className="h-8 w-8 text-nalco-green" />
+                    ) : (
+                      <XCircle className="h-8 w-8 text-nalco-red" />
+                    )}
                   </div>
                 </div>
                 <p className="text-sm text-nalco-gray">Check Out</p>
-                <p className="text-xl font-bold text-nalco-black">-</p>
+                <p className="text-xl font-bold text-nalco-black">
+                  {checkedOut ? checkOutTime : "-"}
+                </p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
@@ -210,16 +237,39 @@ export default function Attendance() {
                   </div>
                 </div>
                 <p className="text-sm text-nalco-gray">Hours Today</p>
-                <p className="text-xl font-bold text-nalco-black">7h 45m</p>
+                <p className="text-xl font-bold text-nalco-black">
+                  {calculateWorkingHours()}
+                </p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <Button className="bg-nalco-red hover:bg-nalco-red/90">
-                    Check Out
+                  <Button
+                    className="bg-nalco-red hover:bg-nalco-red/90"
+                    onClick={handleCheckOut}
+                    disabled={checkedOut || processing}
+                  >
+                    {processing ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Checking Out...
+                      </>
+                    ) : checkedOut ? (
+                      "Checked Out"
+                    ) : (
+                      "Check Out"
+                    )}
                   </Button>
                 </div>
                 <p className="text-sm text-nalco-gray">Current Status</p>
-                <Badge className="bg-nalco-green text-white">Working</Badge>
+                <Badge
+                  className={
+                    checkedOut
+                      ? "bg-nalco-red text-white"
+                      : "bg-nalco-green text-white"
+                  }
+                >
+                  {checkedOut ? "Checked Out" : "Working"}
+                </Badge>
               </div>
             </div>
           </CardContent>
