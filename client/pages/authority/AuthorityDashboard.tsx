@@ -200,6 +200,355 @@ export default function AuthorityDashboard() {
     setDialogOpen(true);
   };
 
+  const handleModuleAccess = async (
+    moduleType: string,
+    moduleTitle: string,
+  ) => {
+    setModuleLoading(moduleType);
+    setError("");
+    setSuccess("");
+
+    try {
+      // Simulate module access and data loading
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setModuleDialog({
+        open: true,
+        type: moduleType,
+        title: moduleTitle,
+      });
+
+      setSuccess(`${moduleTitle} module accessed successfully!`);
+    } catch (error) {
+      setError(`Failed to access ${moduleTitle} module. Please try again.`);
+    } finally {
+      setModuleLoading(null);
+    }
+  };
+
+  const getModuleContent = (type: string) => {
+    switch (type) {
+      case "employees":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Department Employees</h3>
+              <Button
+                size="sm"
+                className="bg-nalco-blue hover:bg-nalco-blue/90"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Employee
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {[
+                {
+                  name: "Rajesh Kumar Singh",
+                  designation: "HR Executive",
+                  status: "Active",
+                },
+                {
+                  name: "Sunita Devi",
+                  designation: "HR Assistant",
+                  status: "Active",
+                },
+                {
+                  name: "Mohammad Alam",
+                  designation: "Trainee",
+                  status: "On Leave",
+                },
+              ].map((emp, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
+                  <div>
+                    <p className="font-medium">{emp.name}</p>
+                    <p className="text-sm text-nalco-gray">{emp.designation}</p>
+                  </div>
+                  <Badge
+                    className={
+                      emp.status === "Active"
+                        ? "bg-nalco-green text-white"
+                        : "bg-yellow-500 text-white"
+                    }
+                  >
+                    {emp.status}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "leave-approvals":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Pending Leave Approvals</h3>
+              <Button size="sm" variant="outline">
+                <Filter className="h-4 w-4 mr-2" />
+                Filter
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {pendingLeaves.map((leave) => (
+                <div
+                  key={leave.id}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
+                  <div>
+                    <p className="font-medium">{leave.employeeName}</p>
+                    <p className="text-sm text-nalco-gray">
+                      {leave.leaveType} - {leave.days} days
+                    </p>
+                    <p className="text-xs text-nalco-gray">
+                      {leave.startDate} to {leave.endDate}
+                    </p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      className="bg-nalco-green hover:bg-nalco-green/90"
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-nalco-red"
+                    >
+                      Reject
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "issues":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Department Issues</h3>
+              <Button size="sm" className="bg-nalco-red hover:bg-nalco-red/90">
+                <Plus className="h-4 w-4 mr-2" />
+                Report Issue
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {[
+                {
+                  title: "System Access Issue",
+                  priority: "High",
+                  status: "Open",
+                  reporter: "Kavitha Reddy",
+                },
+                {
+                  title: "Printer Not Working",
+                  priority: "Medium",
+                  status: "In Progress",
+                  reporter: "Rajesh Kumar",
+                },
+                {
+                  title: "Training Request",
+                  priority: "Low",
+                  status: "Resolved",
+                  reporter: "Sunita Devi",
+                },
+              ].map((issue, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
+                  <div>
+                    <p className="font-medium">{issue.title}</p>
+                    <p className="text-sm text-nalco-gray">
+                      Reported by: {issue.reporter}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge
+                      className={
+                        issue.priority === "High"
+                          ? "bg-nalco-red text-white"
+                          : issue.priority === "Medium"
+                            ? "bg-yellow-500 text-white"
+                            : "bg-nalco-blue text-white"
+                      }
+                    >
+                      {issue.priority}
+                    </Badge>
+                    <Badge
+                      className={
+                        issue.status === "Open"
+                          ? "bg-nalco-red text-white"
+                          : issue.status === "In Progress"
+                            ? "bg-yellow-500 text-white"
+                            : "bg-nalco-green text-white"
+                      }
+                    >
+                      {issue.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "reimbursements":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Pending Reimbursements</h3>
+              <Button size="sm" variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {pendingReimbursements.map((reimb) => (
+                <div
+                  key={reimb.id}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
+                  <div>
+                    <p className="font-medium">{reimb.employeeName}</p>
+                    <p className="text-sm text-nalco-gray">
+                      {reimb.type} - ₹{reimb.amount}
+                    </p>
+                    <p className="text-xs text-nalco-gray">
+                      {reimb.description}
+                    </p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      className="bg-nalco-green hover:bg-nalco-green/90"
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-nalco-red"
+                    >
+                      Reject
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "reports":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Department Reports</h3>
+              <Button
+                size="sm"
+                className="bg-nalco-blue hover:bg-nalco-blue/90"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Generate Report
+              </Button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Attendance Report</h4>
+                  <p className="text-2xl font-bold text-nalco-green">94%</p>
+                  <p className="text-sm text-nalco-gray">
+                    Current month average
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Leave Utilization</h4>
+                  <p className="text-2xl font-bold text-nalco-blue">68%</p>
+                  <p className="text-sm text-nalco-gray">Annual leave taken</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Performance Score</h4>
+                  <p className="text-2xl font-bold text-nalco-green">4.2/5</p>
+                  <p className="text-sm text-nalco-gray">Department average</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Training Hours</h4>
+                  <p className="text-2xl font-bold text-nalco-red">156</p>
+                  <p className="text-sm text-nalco-gray">Total this quarter</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+      case "directory":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Team Directory</h3>
+              <div className="flex space-x-2">
+                <Button size="sm" variant="outline">
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
+                <Button
+                  size="sm"
+                  className="bg-nalco-blue hover:bg-nalco-blue/90"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              {[
+                {
+                  name: "Rajesh Kumar Singh",
+                  role: "HR Executive",
+                  email: "rajesh.singh@nalco.com",
+                  phone: "+91-9876543210",
+                },
+                {
+                  name: "Sunita Devi",
+                  role: "HR Assistant",
+                  email: "sunita.devi@nalco.com",
+                  phone: "+91-9876543213",
+                },
+                {
+                  name: "Mohammad Alam",
+                  role: "Trainee",
+                  email: "mohammad.alam@nalco.com",
+                  phone: "+91-9876543214",
+                },
+              ].map((contact, index) => (
+                <div key={index} className="p-3 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">{contact.name}</p>
+                      <p className="text-sm text-nalco-gray">{contact.role}</p>
+                    </div>
+                    <div className="text-right text-sm">
+                      <p className="text-nalco-blue">{contact.email}</p>
+                      <p className="text-nalco-gray">{contact.phone}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      default:
+        return <div>Module content not available</div>;
+    }
+  };
+
   // Combine pending approvals from both leave and reimbursements
   const allPendingApprovals = [
     ...pendingLeaves.map((leave) => ({
