@@ -61,6 +61,18 @@ export default function AuthorityDashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
 
+  // Module action states
+  const [moduleDialog, setModuleDialog] = useState<{
+    open: boolean;
+    type: string;
+    title: string;
+  }>({
+    open: false,
+    type: "",
+    title: "",
+  });
+  const [moduleLoading, setModuleLoading] = useState<string | null>(null);
+
   // Fetch pending approvals on component mount
   useEffect(() => {
     if (user?.employeeId) {
