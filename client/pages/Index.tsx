@@ -98,10 +98,10 @@ export default function Index() {
                 <Building2 className="h-10 w-10 text-white" />
               </div>
               <h1 className="text-4xl font-bold tracking-tight text-nalco-black lg:text-6xl">
-                NALCO
                 <span className="bg-gradient-to-r from-nalco-red to-nalco-blue bg-clip-text text-transparent">
-                  Connect
+                  connect
                 </span>
+                NALCO
               </h1>
             </div>
 
