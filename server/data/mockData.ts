@@ -231,7 +231,7 @@ export const mockEmployees: Employee[] = [
   },
 ];
 
-// Mock Departments
+// Mock Departments (NALCO Scale Budgets in INR Crores)
 export const mockDepartments: Department[] = [
   {
     id: "DEPT001",
@@ -239,38 +239,38 @@ export const mockDepartments: Department[] = [
     head: "Dr. Priya Sharma",
     headEmployeeId: "AUTH001",
     totalEmployees: 15,
-    location: "Bhubaneswar",
-    budget: 5000000,
+    location: "Bhubaneswar Corporate Office",
+    budget: 50000000, // ₹5 Crores - HR operations, training, recruitment
     isActive: true,
   },
   {
     id: "DEPT002",
-    name: "Finance",
+    name: "Finance & Accounts",
     head: "Suresh Babu",
     headEmployeeId: "AUTH002",
     totalEmployees: 22,
-    location: "Bhubaneswar",
-    budget: 8000000,
+    location: "Bhubaneswar Corporate Office",
+    budget: 120000000, // ₹12 Crores - Financial operations, audit, compliance
     isActive: true,
   },
   {
     id: "DEPT003",
-    name: "Operations",
+    name: "Plant Operations",
     head: "Ramesh Chandran",
     headEmployeeId: "AUTH003",
     totalEmployees: 145,
-    location: "Angul",
-    budget: 25000000,
+    location: "NALCO Angul/Damanjodi",
+    budget: 500000000, // ₹50 Crores - Plant operations, maintenance, production
     isActive: true,
   },
   {
     id: "DEPT004",
-    name: "Engineering",
+    name: "Engineering & Projects",
     head: "Anita Das",
     headEmployeeId: "AUTH004",
     totalEmployees: 89,
-    location: "Damanjodi",
-    budget: 15000000,
+    location: "Damanjodi/Angul",
+    budget: 350000000, // ₹35 Crores - Engineering projects, R&D, modernization
     isActive: true,
   },
   {
@@ -279,8 +279,8 @@ export const mockDepartments: Department[] = [
     head: "Prakash Joshi",
     headEmployeeId: "AUTH005",
     totalEmployees: 34,
-    location: "Mumbai",
-    budget: 12000000,
+    location: "Bhubaneswar/Regional Offices",
+    budget: 80000000, // ₹8 Crores - Marketing, sales operations, customer relations
     isActive: true,
   },
 ];
