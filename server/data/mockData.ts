@@ -352,16 +352,17 @@ export const mockLeaveBalances: LeaveBalance[] = [
   },
 ];
 
-// Mock Reimbursements
+// Mock Reimbursements (Indian Standards)
 export const mockReimbursements: Reimbursement[] = [
   {
     id: "REIMB001",
     employeeId: "EMP001",
     employeeName: "Rajesh Kumar Singh",
     type: "travel",
-    amount: 2500,
+    amount: 4500, // Train ticket (Bhubaneswar-Delhi) + Local travel
     currency: "INR",
-    description: "Travel expenses for training program in Delhi",
+    description:
+      "Official travel to Delhi for NALCO training program - AC 2-Tier train ticket + local conveyance",
     submittedDate: "2024-03-15",
     status: "pending",
   },
@@ -370,13 +371,28 @@ export const mockReimbursements: Reimbursement[] = [
     employeeId: "EMP004",
     employeeName: "Lakshmi Narayanan",
     type: "medical",
-    amount: 1200,
+    amount: 3200, // Medical reimbursement as per NALCO policy
     currency: "INR",
-    description: "Medical checkup expenses",
+    description:
+      "Annual health checkup at NALCO empanelled hospital - Full body checkup including ECG, Blood tests",
     submittedDate: "2024-03-10",
     status: "approved",
     approvedBy: "AUTH004",
     approvedDate: "2024-03-12",
+  },
+  {
+    id: "REIMB003",
+    employeeId: "EMP003",
+    employeeName: "Mohammad Alam",
+    type: "food",
+    amount: 850, // Daily meal allowance for outstation duty
+    currency: "INR",
+    description:
+      "Meal expenses during plant inspection duty at NALCO Angul - 2 days @ ₹425/day",
+    submittedDate: "2024-03-18",
+    status: "approved",
+    approvedBy: "AUTH003",
+    approvedDate: "2024-03-20",
   },
 ];
 
