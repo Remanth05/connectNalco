@@ -206,7 +206,7 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-nalco-black lg:text-4xl">
-              Why Choose ConnectNalco?
+              Why Choose connectNALCO?
             </h2>
             <p className="text-lg text-nalco-gray">
               Built specifically for NALCO's operational needs and employee
