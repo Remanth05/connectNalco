@@ -747,8 +747,26 @@ export default function AuthorityDashboard() {
                               variant="outline"
                               size="sm"
                               className="w-full"
+                              onClick={() =>
+                                handleModuleAccess(
+                                  module.path.split("/").pop() || "",
+                                  module.title,
+                                )
+                              }
+                              disabled={
+                                moduleLoading ===
+                                (module.path.split("/").pop() || "")
+                              }
                             >
-                              Access Module
+                              {moduleLoading ===
+                              (module.path.split("/").pop() || "") ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                  Loading...
+                                </>
+                              ) : (
+                                "Access Module"
+                              )}
                             </Button>
                           </div>
                         </div>
