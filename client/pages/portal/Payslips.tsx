@@ -97,7 +97,7 @@ export default function Payslips() {
                   Gross Salary
                 </p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(75000)}
+                  {formatCurrency(114500)}
                 </p>
               </div>
             </CardContent>
@@ -110,7 +110,7 @@ export default function Payslips() {
                   Net Salary
                 </p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(62500)}
+                  {formatCurrency(86150)}
                 </p>
               </div>
             </CardContent>
@@ -123,7 +123,7 @@ export default function Payslips() {
                   Total Deductions
                 </p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(12500)}
+                  {formatCurrency(28350)}
                 </p>
               </div>
             </CardContent>
@@ -134,7 +134,7 @@ export default function Payslips() {
               <div className="ml-4">
                 <p className="text-sm font-medium text-nalco-gray">Tax (YTD)</p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(18750)}
+                  {formatCurrency(55500)}
                 </p>
               </div>
             </CardContent>
