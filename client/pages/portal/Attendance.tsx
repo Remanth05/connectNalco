@@ -8,11 +8,81 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Clock, Calendar, CheckCircle, XCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  ArrowLeft,
+  Clock,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  Loader2,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Attendance() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // State for attendance tracking
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [checkedOut, setCheckedOut] = useState(false);
+  const [checkOutTime, setCheckOutTime] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  // Update current time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const calculateWorkingHours = () => {
+    const checkInTime = new Date();
+    checkInTime.setHours(9, 15, 0, 0); // 9:15 AM check-in time
+
+    const currentOrCheckOut =
+      checkedOut && checkOutTime
+        ? new Date(`${new Date().toDateString()} ${checkOutTime}`)
+        : currentTime;
+
+    const diffMs = currentOrCheckOut.getTime() - checkInTime.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+    const hours = Math.floor(diffHours);
+    const minutes = Math.floor((diffHours - hours) * 60);
+
+    return `${hours}h ${minutes}m`;
+  };
+
+  const handleCheckOut = async () => {
+    setProcessing(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const checkOutTimeString = currentTime.toLocaleTimeString("en-US", {
+        hour12: true,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      // Simulate API call to update attendance
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      setCheckedOut(true);
+      setCheckOutTime(checkOutTimeString);
+      setSuccess(`Successfully checked out at ${checkOutTimeString}`);
+    } catch (error) {
+      setError("Failed to check out. Please try again.");
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   const attendanceData = [
     {
