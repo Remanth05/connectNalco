@@ -120,7 +120,7 @@ export default function Login() {
               </div>
               <div>
                 <h1 className="text-4xl lg:text-5xl font-bold text-nalco-black">
-                  NALCO<span className="text-nalco-red">Connect</span>
+                  <span className="text-nalco-red">connect</span>NALCO
                 </h1>
                 <p className="text-sm text-nalco-blue font-medium">
                   Digital Workplace Portal
