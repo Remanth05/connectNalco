@@ -1019,6 +1019,45 @@ export default function AuthorityDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Module Access Dialog */}
+      <Dialog
+        open={moduleDialog.open}
+        onOpenChange={(open) => setModuleDialog({ ...moduleDialog, open })}
+      >
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-nalco-black">
+              {moduleDialog.title}
+            </DialogTitle>
+            <DialogDescription>
+              Manage {moduleDialog.title.toLowerCase()} for your department
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">{getModuleContent(moduleDialog.type)}</div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() =>
+                setModuleDialog({ open: false, type: "", title: "" })
+              }
+            >
+              Close
+            </Button>
+            <Button
+              className="bg-nalco-blue hover:bg-nalco-blue/90"
+              onClick={() => {
+                setSuccess("Actions saved successfully!");
+                setModuleDialog({ open: false, type: "", title: "" });
+              }}
+            >
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }
