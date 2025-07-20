@@ -142,7 +142,7 @@ export default function Facilities() {
     },
   ];
 
-  const bookings = [
+    const [bookings, setBookings] = useState([
     {
       id: "BK-001",
       facility: "Conference Room A",
@@ -150,6 +150,7 @@ export default function Facilities() {
       time: "10:00 AM - 11:30 AM",
       purpose: "Team Standup",
       status: "Confirmed",
+      bookedBy: user?.name || "Current User"
     },
     {
       id: "BK-002",
@@ -158,8 +159,112 @@ export default function Facilities() {
       time: "2:00 PM - 4:00 PM",
       purpose: "Product Demo",
       status: "Pending",
+      bookedBy: user?.name || "Current User"
     },
-  ];
+  ]);
+
+  const handleQuickBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (!quickBookingForm.facility || !quickBookingForm.date || !quickBookingForm.startTime || !quickBookingForm.endTime) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const bookingId = `BK-${String(bookings.length + 1).padStart(3, "0")}`;
+      const newBooking = {
+        id: bookingId,
+        facility: quickBookingForm.facility,
+        date: quickBookingForm.date,
+        time: `${quickBookingForm.startTime} - ${quickBookingForm.endTime}`,
+        purpose: quickBookingForm.purpose || "General meeting",
+        status: "Confirmed",
+        bookedBy: user?.name || "Current User"
+      };
+
+      setBookings([...bookings, newBooking]);
+      setSuccess(`Facility booked successfully! Booking ID: ${bookingId}`);
+      setQuickBookingForm({
+        facility: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        purpose: "",
+        attendees: ""
+      });
+    } catch (error) {
+      setError("Failed to book facility. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleNewBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (!newBookingForm.facility || !newBookingForm.date || !newBookingForm.startTime || !newBookingForm.endTime) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const bookingId = `BK-${String(bookings.length + 1).padStart(3, "0")}`;
+      const newBooking = {
+        id: bookingId,
+        facility: newBookingForm.facility,
+        date: newBookingForm.date,
+        time: `${newBookingForm.startTime} - ${newBookingForm.endTime}`,
+        purpose: newBookingForm.purpose || "General meeting",
+        status: "Pending",
+        bookedBy: user?.name || "Current User"
+      };
+
+      setBookings([...bookings, newBooking]);
+      setSuccess(`Booking request submitted! Booking ID: ${bookingId}`);
+      setNewBookingOpen(false);
+      setNewBookingForm({
+        facility: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        purpose: "",
+        attendees: "",
+        specialRequests: "",
+        recurring: false
+      });
+    } catch (error) {
+      setError("Failed to submit booking request. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleBookFacility = (facilityName: string) => {
+    setNewBookingForm({...newBookingForm, facility: facilityName});
+    setNewBookingOpen(true);
+  };
+
+  const handleCancelBooking = async (bookingId: string) => {
+    try {
+      setBookings(bookings.filter(booking => booking.id !== bookingId));
+      setSuccess("Booking cancelled successfully!");
+    } catch (error) {
+      setError("Failed to cancel booking.");
+    }
+  };
 
   const getAvailabilityColor = (availability: string) => {
     switch (availability.toLowerCase()) {
