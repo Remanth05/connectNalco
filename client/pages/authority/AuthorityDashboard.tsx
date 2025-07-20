@@ -593,14 +593,23 @@ export default function AuthorityDashboard() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-nalco-black">
-            Authority Dashboard
-          </h1>
-          <p className="text-nalco-gray">
-            Welcome back, {user?.name}. Manage your department efficiently.
-          </p>
+                {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-nalco-black">
+              Authority Dashboard
+            </h1>
+            <p className="text-nalco-gray">
+              Welcome back, {user?.name}. Manage your department efficiently.
+            </p>
+          </div>
+          <Button
+            className="bg-nalco-red hover:bg-nalco-red/90"
+            onClick={() => navigate("/issues")}
+          >
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Report Issue
+          </Button>
         </div>
 
         {/* Department Statistics */}
