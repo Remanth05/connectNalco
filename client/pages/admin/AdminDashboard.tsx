@@ -393,11 +393,19 @@ export default function AdminDashboard() {
               >
                 System Maintenance
               </Button>
-              <Button
+                            <Button
                 variant="outline"
                 onClick={() => handleQuickAction("security")}
               >
                 Security Audit
+              </Button>
+              <Button
+                variant="outline"
+                className="text-nalco-red hover:text-nalco-red border-nalco-red"
+                onClick={() => handleQuickAction("report-issue")}
+              >
+                <AlertTriangle className="h-4 w-4 mr-2" />
+                Report System Issue
               </Button>
             </div>
           </CardContent>
