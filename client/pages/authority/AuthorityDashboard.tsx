@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { LeaveApplication, Reimbursement, ApiResponse } from "@shared/api";
 
 export default function AuthorityDashboard() {
@@ -56,20 +57,16 @@ export default function AuthorityDashboard() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Dialog states
+    // Dialog states
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
 
   // Module action states
-  const [moduleDialog, setModuleDialog] = useState<{
-    open: boolean;
-    type: string;
-    title: string;
-  }>({
+  const [moduleDialog, setModuleDialog] = useState<{open: boolean, type: string, title: string}>({
     open: false,
     type: "",
-    title: "",
+    title: ""
   });
   const [moduleLoading, setModuleLoading] = useState<string | null>(null);
 
@@ -179,23 +176,19 @@ export default function AuthorityDashboard() {
 
       const data: ApiResponse<any> = await response.json();
 
-      if (data.success) {
+            if (data.success) {
         // Calculate department impact
         let impactMessage = `${type} ${action}d successfully!`;
 
         if (type === "leave" && action === "approve") {
-          const leaveApp =
-            selectedItem ||
-            allPendingApprovals.find((app) => app.id === id)?.details;
+          const leaveApp = selectedItem || allPendingApprovals.find(app => app.id === id)?.details;
           if (leaveApp) {
             impactMessage += ` Employee ${leaveApp.employeeName} will be on leave for ${leaveApp.days} days. Team capacity temporarily reduced.`;
           }
         }
 
         if (type === "reimbursement" && action === "approve") {
-          const reimb =
-            selectedItem ||
-            allPendingApprovals.find((app) => app.id === id)?.details;
+          const reimb = selectedItem || allPendingApprovals.find(app => app.id === id)?.details;
           if (reimb) {
             impactMessage += ` Department budget impact: -₹${reimb.amount}. Processing payment to ${reimb.employeeName}.`;
           }
@@ -207,9 +200,7 @@ export default function AuthorityDashboard() {
         fetchPendingApprovals(); // Refresh the data
 
         // Log department activity for interconnection tracking
-        console.log(
-          `Department Activity: ${user?.department} - ${type} ${action}d by ${user?.name}`,
-        );
+        console.log(`Department Activity: ${user?.department} - ${type} ${action}d by ${user?.name}`);
       } else {
         setError(data.error || `Failed to ${action} ${type}`);
       }
@@ -221,27 +212,24 @@ export default function AuthorityDashboard() {
     }
   };
 
-  const openRejectionDialog = (item: any, type: "leave" | "reimbursement") => {
+    const openRejectionDialog = (item: any, type: "leave" | "reimbursement") => {
     setSelectedItem({ ...item, type });
     setDialogOpen(true);
   };
 
-  const handleModuleAccess = async (
-    moduleType: string,
-    moduleTitle: string,
-  ) => {
+  const handleModuleAccess = async (moduleType: string, moduleTitle: string) => {
     setModuleLoading(moduleType);
     setError("");
     setSuccess("");
 
     try {
       // Simulate module access and data loading
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       setModuleDialog({
         open: true,
         type: moduleType,
-        title: moduleTitle,
+        title: moduleTitle
       });
 
       setSuccess(`${moduleTitle} module accessed successfully!`);
@@ -259,47 +247,23 @@ export default function AuthorityDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Employees</h3>
-              <Button
-                size="sm"
-                className="bg-nalco-blue hover:bg-nalco-blue/90"
-              >
+              <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Employee
               </Button>
             </div>
             <div className="space-y-2">
               {[
-                {
-                  name: "Rajesh Kumar Singh",
-                  designation: "HR Executive",
-                  status: "Active",
-                },
-                {
-                  name: "Sunita Devi",
-                  designation: "HR Assistant",
-                  status: "Active",
-                },
-                {
-                  name: "Mohammad Alam",
-                  designation: "Trainee",
-                  status: "On Leave",
-                },
+                { name: "Rajesh Kumar Singh", designation: "HR Executive", status: "Active" },
+                { name: "Sunita Devi", designation: "HR Assistant", status: "Active" },
+                { name: "Mohammad Alam", designation: "Trainee", status: "On Leave" },
               ].map((emp, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 border rounded-lg"
-                >
+                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
                     <p className="font-medium">{emp.name}</p>
                     <p className="text-sm text-nalco-gray">{emp.designation}</p>
                   </div>
-                  <Badge
-                    className={
-                      emp.status === "Active"
-                        ? "bg-nalco-green text-white"
-                        : "bg-yellow-500 text-white"
-                    }
-                  >
+                  <Badge className={emp.status === "Active" ? "bg-nalco-green text-white" : "bg-yellow-500 text-white"}>
                     {emp.status}
                   </Badge>
                 </div>
@@ -319,31 +283,17 @@ export default function AuthorityDashboard() {
             </div>
             <div className="space-y-2">
               {pendingLeaves.map((leave) => (
-                <div
-                  key={leave.id}
-                  className="flex items-center justify-between p-3 border rounded-lg"
-                >
+                <div key={leave.id} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
                     <p className="font-medium">{leave.employeeName}</p>
-                    <p className="text-sm text-nalco-gray">
-                      {leave.leaveType} - {leave.days} days
-                    </p>
-                    <p className="text-xs text-nalco-gray">
-                      {leave.startDate} to {leave.endDate}
-                    </p>
+                    <p className="text-sm text-nalco-gray">{leave.leaveType} - {leave.days} days</p>
+                    <p className="text-xs text-nalco-gray">{leave.startDate} to {leave.endDate}</p>
                   </div>
                   <div className="flex space-x-2">
-                    <Button
-                      size="sm"
-                      className="bg-nalco-green hover:bg-nalco-green/90"
-                    >
+                    <Button size="sm" className="bg-nalco-green hover:bg-nalco-green/90">
                       Approve
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-nalco-red"
-                    >
+                    <Button size="sm" variant="outline" className="text-nalco-red">
                       Reject
                     </Button>
                   </div>
@@ -364,56 +314,28 @@ export default function AuthorityDashboard() {
             </div>
             <div className="space-y-2">
               {[
-                {
-                  title: "System Access Issue",
-                  priority: "High",
-                  status: "Open",
-                  reporter: "Kavitha Reddy",
-                },
-                {
-                  title: "Printer Not Working",
-                  priority: "Medium",
-                  status: "In Progress",
-                  reporter: "Rajesh Kumar",
-                },
-                {
-                  title: "Training Request",
-                  priority: "Low",
-                  status: "Resolved",
-                  reporter: "Sunita Devi",
-                },
+                { title: "System Access Issue", priority: "High", status: "Open", reporter: "Kavitha Reddy" },
+                { title: "Printer Not Working", priority: "Medium", status: "In Progress", reporter: "Rajesh Kumar" },
+                { title: "Training Request", priority: "Low", status: "Resolved", reporter: "Sunita Devi" },
               ].map((issue, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 border rounded-lg"
-                >
+                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
                     <p className="font-medium">{issue.title}</p>
-                    <p className="text-sm text-nalco-gray">
-                      Reported by: {issue.reporter}
-                    </p>
+                    <p className="text-sm text-nalco-gray">Reported by: {issue.reporter}</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge
-                      className={
-                        issue.priority === "High"
-                          ? "bg-nalco-red text-white"
-                          : issue.priority === "Medium"
-                            ? "bg-yellow-500 text-white"
-                            : "bg-nalco-blue text-white"
-                      }
-                    >
+                    <Badge className={
+                      issue.priority === "High" ? "bg-nalco-red text-white" :
+                      issue.priority === "Medium" ? "bg-yellow-500 text-white" :
+                      "bg-nalco-blue text-white"
+                    }>
                       {issue.priority}
                     </Badge>
-                    <Badge
-                      className={
-                        issue.status === "Open"
-                          ? "bg-nalco-red text-white"
-                          : issue.status === "In Progress"
-                            ? "bg-yellow-500 text-white"
-                            : "bg-nalco-green text-white"
-                      }
-                    >
+                    <Badge className={
+                      issue.status === "Open" ? "bg-nalco-red text-white" :
+                      issue.status === "In Progress" ? "bg-yellow-500 text-white" :
+                      "bg-nalco-green text-white"
+                    }>
                       {issue.status}
                     </Badge>
                   </div>
@@ -434,31 +356,17 @@ export default function AuthorityDashboard() {
             </div>
             <div className="space-y-2">
               {pendingReimbursements.map((reimb) => (
-                <div
-                  key={reimb.id}
-                  className="flex items-center justify-between p-3 border rounded-lg"
-                >
+                <div key={reimb.id} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
                     <p className="font-medium">{reimb.employeeName}</p>
-                    <p className="text-sm text-nalco-gray">
-                      {reimb.type} - ₹{reimb.amount}
-                    </p>
-                    <p className="text-xs text-nalco-gray">
-                      {reimb.description}
-                    </p>
+                    <p className="text-sm text-nalco-gray">{reimb.type} - ₹{reimb.amount}</p>
+                    <p className="text-xs text-nalco-gray">{reimb.description}</p>
                   </div>
                   <div className="flex space-x-2">
-                    <Button
-                      size="sm"
-                      className="bg-nalco-green hover:bg-nalco-green/90"
-                    >
+                    <Button size="sm" className="bg-nalco-green hover:bg-nalco-green/90">
                       Approve
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-nalco-red"
-                    >
+                    <Button size="sm" variant="outline" className="text-nalco-red">
                       Reject
                     </Button>
                   </div>
@@ -472,10 +380,7 @@ export default function AuthorityDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Reports</h3>
-              <Button
-                size="sm"
-                className="bg-nalco-blue hover:bg-nalco-blue/90"
-              >
+              <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
                 <Download className="h-4 w-4 mr-2" />
                 Generate Report
               </Button>
@@ -485,9 +390,7 @@ export default function AuthorityDashboard() {
                 <CardContent className="p-4">
                   <h4 className="font-medium mb-2">Attendance Report</h4>
                   <p className="text-2xl font-bold text-nalco-green">94%</p>
-                  <p className="text-sm text-nalco-gray">
-                    Current month average
-                  </p>
+                  <p className="text-sm text-nalco-gray">Current month average</p>
                 </CardContent>
               </Card>
               <Card>
@@ -524,10 +427,7 @@ export default function AuthorityDashboard() {
                   <Search className="h-4 w-4 mr-2" />
                   Search
                 </Button>
-                <Button
-                  size="sm"
-                  className="bg-nalco-blue hover:bg-nalco-blue/90"
-                >
+                <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
                   <Download className="h-4 w-4 mr-2" />
                   Export
                 </Button>
@@ -535,24 +435,9 @@ export default function AuthorityDashboard() {
             </div>
             <div className="space-y-2">
               {[
-                {
-                  name: "Rajesh Kumar Singh",
-                  role: "HR Executive",
-                  email: "rajesh.singh@nalco.com",
-                  phone: "+91-9876543210",
-                },
-                {
-                  name: "Sunita Devi",
-                  role: "HR Assistant",
-                  email: "sunita.devi@nalco.com",
-                  phone: "+91-9876543213",
-                },
-                {
-                  name: "Mohammad Alam",
-                  role: "Trainee",
-                  email: "mohammad.alam@nalco.com",
-                  phone: "+91-9876543214",
-                },
+                { name: "Rajesh Kumar Singh", role: "HR Executive", email: "rajesh.singh@nalco.com", phone: "+91-9876543210" },
+                { name: "Sunita Devi", role: "HR Assistant", email: "sunita.devi@nalco.com", phone: "+91-9876543213" },
+                { name: "Mohammad Alam", role: "Trainee", email: "mohammad.alam@nalco.com", phone: "+91-9876543214" },
               ].map((contact, index) => (
                 <div key={index} className="p-3 border rounded-lg">
                   <div className="flex items-center justify-between">
@@ -601,11 +486,8 @@ export default function AuthorityDashboard() {
     })),
   ];
 
-  // Calculate dynamic department stats with real-time updates
-  const totalBudgetImpact = pendingReimbursements.reduce(
-    (sum, reimb) => sum + reimb.amount,
-    0,
-  );
+    // Calculate dynamic department stats with real-time updates
+  const totalBudgetImpact = pendingReimbursements.reduce((sum, reimb) => sum + reimb.amount, 0);
   const departmentEmployeeCount = 8; // Based on HR department in mockData
   const activeIssues = 15; // From department performance data
 
@@ -622,8 +504,7 @@ export default function AuthorityDashboard() {
       value: allPendingApprovals.length.toString(),
       change: `${allPendingApprovals.length > 5 ? "High" : "Normal"} workload`,
       icon: Clock,
-      color:
-        allPendingApprovals.length > 5 ? "text-nalco-red" : "text-yellow-500",
+      color: allPendingApprovals.length > 5 ? "text-nalco-red" : "text-yellow-500",
     },
     {
       title: "Budget Impact",
@@ -778,23 +659,14 @@ export default function AuthorityDashboard() {
                             <p className="text-sm text-nalco-gray mb-3">
                               {module.description}
                             </p>
-                            <Button
+                                                        <Button
                               variant="outline"
                               size="sm"
                               className="w-full"
-                              onClick={() =>
-                                handleModuleAccess(
-                                  module.path.split("/").pop() || "",
-                                  module.title,
-                                )
-                              }
-                              disabled={
-                                moduleLoading ===
-                                (module.path.split("/").pop() || "")
-                              }
+                              onClick={() => handleModuleAccess(module.path.split('/').pop() || "", module.title)}
+                              disabled={moduleLoading === (module.path.split('/').pop() || "")}
                             >
-                              {moduleLoading ===
-                              (module.path.split("/").pop() || "") ? (
+                              {moduleLoading === (module.path.split('/').pop() || "") ? (
                                 <>
                                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                   Loading...
@@ -959,7 +831,7 @@ export default function AuthorityDashboard() {
           </Card>
         </div>
 
-        {/* Department Performance & Interconnections */}
+                {/* Department Performance & Interconnections */}
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
@@ -983,9 +855,7 @@ export default function AuthorityDashboard() {
                   <p className="text-sm text-nalco-gray">Open Issues</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-nalco-green">
-                    4.2/5
-                  </div>
+                  <div className="text-2xl font-bold text-nalco-green">4.2/5</div>
                   <p className="text-sm text-nalco-gray">Team Satisfaction</p>
                 </div>
               </div>
@@ -997,37 +867,28 @@ export default function AuthorityDashboard() {
               <CardTitle className="text-nalco-black">
                 Cross-Department Impact
               </CardTitle>
-              <CardDescription>
-                How your decisions affect other departments
-              </CardDescription>
+              <CardDescription>How your decisions affect other departments</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-3 bg-nalco-green/10 rounded-lg">
                   <div>
                     <p className="text-sm font-medium">IT Department</p>
-                    <p className="text-xs text-nalco-gray">
-                      3 system access requests approved
-                    </p>
+                    <p className="text-xs text-nalco-gray">3 system access requests approved</p>
                   </div>
                   <Badge className="bg-nalco-green text-white">Active</Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-nalco-blue/10 rounded-lg">
                   <div>
                     <p className="text-sm font-medium">Finance Department</p>
-                    <p className="text-xs text-nalco-gray">
-                      ₹{totalBudgetImpact.toLocaleString()} budget allocation
-                      pending
-                    </p>
+                    <p className="text-xs text-nalco-gray">₹{totalBudgetImpact.toLocaleString()} budget allocation pending</p>
                   </div>
                   <Badge className="bg-nalco-blue text-white">Pending</Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-nalco-red/10 rounded-lg">
                   <div>
                     <p className="text-sm font-medium">Operations</p>
-                    <p className="text-xs text-nalco-gray">
-                      2 employees on approved leave
-                    </p>
+                    <p className="text-xs text-nalco-gray">2 employees on approved leave</p>
                   </div>
                   <Badge className="bg-nalco-red text-white">Impact</Badge>
                 </div>
@@ -1055,7 +916,7 @@ export default function AuthorityDashboard() {
                   details: "3 days annual leave (April 15-17)",
                   impact: "Recruiting team capacity reduced by 25%",
                   time: "2 hours ago",
-                  type: "leave",
+                  type: "leave"
                 },
                 {
                   action: "Reimbursement Processed",
@@ -1063,7 +924,7 @@ export default function AuthorityDashboard() {
                   details: "₹3,200 medical reimbursement",
                   impact: "Department budget: ₹3,200 allocated",
                   time: "5 hours ago",
-                  type: "reimbursement",
+                  type: "reimbursement"
                 },
                 {
                   action: "New Employee Added",
@@ -1071,7 +932,7 @@ export default function AuthorityDashboard() {
                   details: "2 new trainees joined HR department",
                   impact: "Team strength increased to 10 members",
                   time: "1 day ago",
-                  type: "employee",
+                  type: "employee"
                 },
                 {
                   action: "Issue Resolved",
@@ -1079,52 +940,28 @@ export default function AuthorityDashboard() {
                   details: "IT access issue for new employees",
                   impact: "3 employees now have full system access",
                   time: "2 days ago",
-                  type: "issue",
-                },
+                  type: "issue"
+                }
               ].map((activity, index) => (
-                <div
-                  key={index}
-                  className="flex items-start space-x-4 p-4 border rounded-lg"
-                >
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-                      activity.type === "leave"
-                        ? "bg-nalco-blue/10"
-                        : activity.type === "reimbursement"
-                          ? "bg-nalco-green/10"
-                          : activity.type === "employee"
-                            ? "bg-nalco-red/10"
-                            : "bg-nalco-gray/10"
-                    }`}
-                  >
-                    {activity.type === "leave" && (
-                      <Calendar className={`h-5 w-5 text-nalco-blue`} />
-                    )}
-                    {activity.type === "reimbursement" && (
-                      <FileText className={`h-5 w-5 text-nalco-green`} />
-                    )}
-                    {activity.type === "employee" && (
-                      <Users className={`h-5 w-5 text-nalco-red`} />
-                    )}
-                    {activity.type === "issue" && (
-                      <AlertTriangle className={`h-5 w-5 text-nalco-gray`} />
-                    )}
+                <div key={index} className="flex items-start space-x-4 p-4 border rounded-lg">
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                    activity.type === "leave" ? "bg-nalco-blue/10" :
+                    activity.type === "reimbursement" ? "bg-nalco-green/10" :
+                    activity.type === "employee" ? "bg-nalco-red/10" :
+                    "bg-nalco-gray/10"
+                  }`}>
+                    {activity.type === "leave" && <Calendar className={`h-5 w-5 text-nalco-blue`} />}
+                    {activity.type === "reimbursement" && <FileText className={`h-5 w-5 text-nalco-green`} />}
+                    {activity.type === "employee" && <Users className={`h-5 w-5 text-nalco-red`} />}
+                    {activity.type === "issue" && <AlertTriangle className={`h-5 w-5 text-nalco-gray`} />}
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-nalco-black">
-                        {activity.action}
-                      </h4>
-                      <span className="text-xs text-nalco-gray">
-                        {activity.time}
-                      </span>
+                      <h4 className="font-medium text-nalco-black">{activity.action}</h4>
+                      <span className="text-xs text-nalco-gray">{activity.time}</span>
                     </div>
-                    <p className="text-sm text-nalco-gray">
-                      {activity.employee} - {activity.details}
-                    </p>
-                    <p className="text-xs text-nalco-blue font-medium">
-                      Impact: {activity.impact}
-                    </p>
+                    <p className="text-sm text-nalco-gray">{activity.employee} - {activity.details}</p>
+                    <p className="text-xs text-nalco-blue font-medium">Impact: {activity.impact}</p>
                   </div>
                 </div>
               ))}
@@ -1196,13 +1033,10 @@ export default function AuthorityDashboard() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+            </Dialog>
 
       {/* Module Access Dialog */}
-      <Dialog
-        open={moduleDialog.open}
-        onOpenChange={(open) => setModuleDialog({ ...moduleDialog, open })}
-      >
+      <Dialog open={moduleDialog.open} onOpenChange={(open) => setModuleDialog({...moduleDialog, open})}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-nalco-black">
@@ -1213,14 +1047,14 @@ export default function AuthorityDashboard() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-4">{getModuleContent(moduleDialog.type)}</div>
+          <div className="py-4">
+            {getModuleContent(moduleDialog.type)}
+          </div>
 
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() =>
-                setModuleDialog({ open: false, type: "", title: "" })
-              }
+              onClick={() => setModuleDialog({open: false, type: "", title: ""})}
             >
               Close
             </Button>
@@ -1228,7 +1062,7 @@ export default function AuthorityDashboard() {
               className="bg-nalco-blue hover:bg-nalco-blue/90"
               onClick={() => {
                 setSuccess("Actions saved successfully!");
-                setModuleDialog({ open: false, type: "", title: "" });
+                setModuleDialog({open: false, type: "", title: ""});
               }}
             >
               Save Changes
