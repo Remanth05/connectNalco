@@ -500,8 +500,8 @@ export default function Issues() {
             <SelectTrigger className="w-40">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All Status</SelectItem>
+                        <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="open">Open</SelectItem>
               <SelectItem value="in progress">In Progress</SelectItem>
               <SelectItem value="resolved">Resolved</SelectItem>
