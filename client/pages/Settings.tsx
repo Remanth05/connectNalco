@@ -97,17 +97,56 @@ export default function Settings() {
     fontSize: "medium",
   });
 
-  const handleSave = async (section: string) => {
+    const handleSave = async (section: string) => {
     setSaving(section);
     setError("");
     setSuccess("");
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       setSuccess(`${section} settings saved successfully!`);
+
+      // Redirect to appropriate dashboard after successful save
+      setTimeout(() => {
+        if (user?.role === "admin") {
+          navigate("/admin/dashboard");
+        } else if (user?.role === "authority") {
+          navigate("/authority/dashboard");
+        } else {
+          navigate("/portal");
+        }
+      }, 2000);
     } catch (error) {
       setError(`Failed to save ${section} settings. Please try again.`);
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  const handlePhotoUpload = async (file: File) => {
+    try {
+      setError("");
+      setSuccess("");
+
+      // Validate file
+      if (!file.type.startsWith('image/')) {
+        setError("Please select a valid image file");
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setError("File size must be less than 5MB");
+        return;
+      }
+
+      // Simulate upload
+      setSaving("photo");
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      setSuccess("Profile photo updated successfully!");
+    } catch (error) {
+      setError("Failed to upload photo. Please try again.");
     } finally {
       setSaving(null);
     }
@@ -140,31 +179,19 @@ export default function Settings() {
 
         <Tabs defaultValue="profile" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger
-              value="profile"
-              className="flex items-center space-x-2"
-            >
+            <TabsTrigger value="profile" className="flex items-center space-x-2">
               <User className="h-4 w-4" />
               <span>Profile</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="notifications"
-              className="flex items-center space-x-2"
-            >
+            <TabsTrigger value="notifications" className="flex items-center space-x-2">
               <Bell className="h-4 w-4" />
               <span>Notifications</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="security"
-              className="flex items-center space-x-2"
-            >
+            <TabsTrigger value="security" className="flex items-center space-x-2">
               <Shield className="h-4 w-4" />
               <span>Security</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="appearance"
-              className="flex items-center space-x-2"
-            >
+            <TabsTrigger value="appearance" className="flex items-center space-x-2">
               <Palette className="h-4 w-4" />
               <span>Appearance</span>
             </TabsTrigger>
@@ -198,8 +225,7 @@ export default function Settings() {
                       <DialogHeader>
                         <DialogTitle>Change Profile Photo</DialogTitle>
                         <DialogDescription>
-                          Upload a new profile picture. Recommended size:
-                          400x400px
+                          Upload a new profile picture. Recommended size: 400x400px
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4">
@@ -218,9 +244,7 @@ export default function Settings() {
                     <Input
                       id="name"
                       value={profileData.name}
-                      onChange={(e) =>
-                        setProfileData({ ...profileData, name: e.target.value })
-                      }
+                      onChange={(e) => setProfileData({...profileData, name: e.target.value})}
                     />
                   </div>
                   <div>
@@ -229,12 +253,7 @@ export default function Settings() {
                       id="email"
                       type="email"
                       value={profileData.email}
-                      onChange={(e) =>
-                        setProfileData({
-                          ...profileData,
-                          email: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setProfileData({...profileData, email: e.target.value})}
                     />
                   </div>
                   <div>
@@ -242,12 +261,7 @@ export default function Settings() {
                     <Input
                       id="phone"
                       value={profileData.phone}
-                      onChange={(e) =>
-                        setProfileData({
-                          ...profileData,
-                          phone: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
                     />
                   </div>
                   <div>
@@ -255,12 +269,7 @@ export default function Settings() {
                     <Input
                       id="designation"
                       value={profileData.designation}
-                      onChange={(e) =>
-                        setProfileData({
-                          ...profileData,
-                          designation: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setProfileData({...profileData, designation: e.target.value})}
                     />
                   </div>
                   <div>
@@ -276,12 +285,7 @@ export default function Settings() {
                     <Input
                       id="emergencyContact"
                       value={profileData.emergencyContact}
-                      onChange={(e) =>
-                        setProfileData({
-                          ...profileData,
-                          emergencyContact: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setProfileData({...profileData, emergencyContact: e.target.value})}
                     />
                   </div>
                 </div>
@@ -292,9 +296,7 @@ export default function Settings() {
                     id="bio"
                     rows={3}
                     value={profileData.bio}
-                    onChange={(e) =>
-                      setProfileData({ ...profileData, bio: e.target.value })
-                    }
+                    onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
                   />
                 </div>
 
@@ -304,12 +306,7 @@ export default function Settings() {
                     id="address"
                     rows={2}
                     value={profileData.address}
-                    onChange={(e) =>
-                      setProfileData({
-                        ...profileData,
-                        address: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setProfileData({...profileData, address: e.target.value})}
                   />
                 </div>
 
@@ -348,139 +345,82 @@ export default function Settings() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
-                  <h4 className="font-medium text-nalco-black">
-                    General Notifications
-                  </h4>
+                  <h4 className="font-medium text-nalco-black">General Notifications</h4>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium">
-                          Email Notifications
-                        </p>
-                        <p className="text-xs text-nalco-gray">
-                          Receive notifications via email
-                        </p>
+                        <p className="text-sm font-medium">Email Notifications</p>
+                        <p className="text-xs text-nalco-gray">Receive notifications via email</p>
                       </div>
                       <Switch
                         checked={notificationSettings.emailNotifications}
-                        onCheckedChange={(checked) =>
-                          setNotificationSettings({
-                            ...notificationSettings,
-                            emailNotifications: checked,
-                          })
-                        }
+                        onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, emailNotifications: checked})}
                       />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium">
-                          Push Notifications
-                        </p>
-                        <p className="text-xs text-nalco-gray">
-                          Receive browser push notifications
-                        </p>
+                        <p className="text-sm font-medium">Push Notifications</p>
+                        <p className="text-xs text-nalco-gray">Receive browser push notifications</p>
                       </div>
                       <Switch
                         checked={notificationSettings.pushNotifications}
-                        onCheckedChange={(checked) =>
-                          setNotificationSettings({
-                            ...notificationSettings,
-                            pushNotifications: checked,
-                          })
-                        }
+                        onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, pushNotifications: checked})}
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="font-medium text-nalco-black">
-                    Specific Notifications
-                  </h4>
+                  <h4 className="font-medium text-nalco-black">Specific Notifications</h4>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">Leave Approvals</p>
-                        <p className="text-xs text-nalco-gray">
-                          When your leave is approved or rejected
-                        </p>
+                        <p className="text-xs text-nalco-gray">When your leave is approved or rejected</p>
                       </div>
                       <Switch
                         checked={notificationSettings.leaveApprovals}
-                        onCheckedChange={(checked) =>
-                          setNotificationSettings({
-                            ...notificationSettings,
-                            leaveApprovals: checked,
-                          })
-                        }
+                        onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, leaveApprovals: checked})}
                       />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">Payslip Generated</p>
-                        <p className="text-xs text-nalco-gray">
-                          When your monthly payslip is ready
-                        </p>
+                        <p className="text-xs text-nalco-gray">When your monthly payslip is ready</p>
                       </div>
                       <Switch
                         checked={notificationSettings.payslipGenerated}
-                        onCheckedChange={(checked) =>
-                          setNotificationSettings({
-                            ...notificationSettings,
-                            payslipGenerated: checked,
-                          })
-                        }
+                        onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, payslipGenerated: checked})}
                       />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">System Updates</p>
-                        <p className="text-xs text-nalco-gray">
-                          Updates about system maintenance
-                        </p>
+                        <p className="text-xs text-nalco-gray">Updates about system maintenance</p>
                       </div>
                       <Switch
                         checked={notificationSettings.systemUpdates}
-                        onCheckedChange={(checked) =>
-                          setNotificationSettings({
-                            ...notificationSettings,
-                            systemUpdates: checked,
-                          })
-                        }
+                        onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, systemUpdates: checked})}
                       />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">Weekly Reports</p>
-                        <p className="text-xs text-nalco-gray">
-                          Weekly attendance and performance summary
-                        </p>
+                        <p className="text-xs text-nalco-gray">Weekly attendance and performance summary</p>
                       </div>
                       <Switch
                         checked={notificationSettings.weeklyReports}
-                        onCheckedChange={(checked) =>
-                          setNotificationSettings({
-                            ...notificationSettings,
-                            weeklyReports: checked,
-                          })
-                        }
+                        onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, weeklyReports: checked})}
                       />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">Urgent Alerts</p>
-                        <p className="text-xs text-nalco-gray">
-                          Critical notifications and emergency alerts
-                        </p>
+                        <p className="text-xs text-nalco-gray">Critical notifications and emergency alerts</p>
                       </div>
                       <Switch
                         checked={notificationSettings.urgentAlerts}
-                        onCheckedChange={(checked) =>
-                          setNotificationSettings({
-                            ...notificationSettings,
-                            urgentAlerts: checked,
-                          })
-                        }
+                        onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, urgentAlerts: checked})}
                       />
                     </div>
                   </div>
@@ -528,12 +468,7 @@ export default function Settings() {
                         id="currentPassword"
                         type={showPassword ? "text" : "password"}
                         value={securitySettings.currentPassword}
-                        onChange={(e) =>
-                          setSecuritySettings({
-                            ...securitySettings,
-                            currentPassword: e.target.value,
-                          })
-                        }
+                        onChange={(e) => setSecuritySettings({...securitySettings, currentPassword: e.target.value})}
                       />
                       <Button
                         type="button"
@@ -556,28 +491,16 @@ export default function Settings() {
                       id="newPassword"
                       type="password"
                       value={securitySettings.newPassword}
-                      onChange={(e) =>
-                        setSecuritySettings({
-                          ...securitySettings,
-                          newPassword: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setSecuritySettings({...securitySettings, newPassword: e.target.value})}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="confirmPassword">
-                      Confirm New Password
-                    </Label>
+                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
                     <Input
                       id="confirmPassword"
                       type="password"
                       value={securitySettings.confirmPassword}
-                      onChange={(e) =>
-                        setSecuritySettings({
-                          ...securitySettings,
-                          confirmPassword: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setSecuritySettings({...securitySettings, confirmPassword: e.target.value})}
                     />
                   </div>
                   <Button
@@ -610,52 +533,29 @@ export default function Settings() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium">
-                        Two-Factor Authentication
-                      </p>
-                      <p className="text-xs text-nalco-gray">
-                        Add an extra layer of security
-                      </p>
+                      <p className="text-sm font-medium">Two-Factor Authentication</p>
+                      <p className="text-xs text-nalco-gray">Add an extra layer of security</p>
                     </div>
                     <Switch
                       checked={securitySettings.twoFactorAuth}
-                      onCheckedChange={(checked) =>
-                        setSecuritySettings({
-                          ...securitySettings,
-                          twoFactorAuth: checked,
-                        })
-                      }
+                      onCheckedChange={(checked) => setSecuritySettings({...securitySettings, twoFactorAuth: checked})}
                     />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium">Login Alerts</p>
-                      <p className="text-xs text-nalco-gray">
-                        Get notified of new sign-ins
-                      </p>
+                      <p className="text-xs text-nalco-gray">Get notified of new sign-ins</p>
                     </div>
                     <Switch
                       checked={securitySettings.loginAlerts}
-                      onCheckedChange={(checked) =>
-                        setSecuritySettings({
-                          ...securitySettings,
-                          loginAlerts: checked,
-                        })
-                      }
+                      onCheckedChange={(checked) => setSecuritySettings({...securitySettings, loginAlerts: checked})}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="sessionTimeout">
-                      Session Timeout (minutes)
-                    </Label>
+                    <Label htmlFor="sessionTimeout">Session Timeout (minutes)</Label>
                     <Select
                       value={securitySettings.sessionTimeout}
-                      onValueChange={(value) =>
-                        setSecuritySettings({
-                          ...securitySettings,
-                          sessionTimeout: value,
-                        })
-                      }
+                      onValueChange={(value) => setSecuritySettings({...securitySettings, sessionTimeout: value})}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -705,12 +605,7 @@ export default function Settings() {
                     <Label htmlFor="theme">Theme</Label>
                     <Select
                       value={appearanceSettings.theme}
-                      onValueChange={(value) =>
-                        setAppearanceSettings({
-                          ...appearanceSettings,
-                          theme: value,
-                        })
-                      }
+                      onValueChange={(value) => setAppearanceSettings({...appearanceSettings, theme: value})}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -726,12 +621,7 @@ export default function Settings() {
                     <Label htmlFor="language">Language</Label>
                     <Select
                       value={appearanceSettings.language}
-                      onValueChange={(value) =>
-                        setAppearanceSettings({
-                          ...appearanceSettings,
-                          language: value,
-                        })
-                      }
+                      onValueChange={(value) => setAppearanceSettings({...appearanceSettings, language: value})}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -747,20 +637,13 @@ export default function Settings() {
                     <Label htmlFor="timezone">Timezone</Label>
                     <Select
                       value={appearanceSettings.timezone}
-                      onValueChange={(value) =>
-                        setAppearanceSettings({
-                          ...appearanceSettings,
-                          timezone: value,
-                        })
-                      }
+                      onValueChange={(value) => setAppearanceSettings({...appearanceSettings, timezone: value})}
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="IST">
-                          IST (India Standard Time)
-                        </SelectItem>
+                        <SelectItem value="IST">IST (India Standard Time)</SelectItem>
                         <SelectItem value="UTC">UTC</SelectItem>
                         <SelectItem value="GMT">GMT</SelectItem>
                       </SelectContent>
@@ -770,12 +653,7 @@ export default function Settings() {
                     <Label htmlFor="dateFormat">Date Format</Label>
                     <Select
                       value={appearanceSettings.dateFormat}
-                      onValueChange={(value) =>
-                        setAppearanceSettings({
-                          ...appearanceSettings,
-                          dateFormat: value,
-                        })
-                      }
+                      onValueChange={(value) => setAppearanceSettings({...appearanceSettings, dateFormat: value})}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -791,12 +669,7 @@ export default function Settings() {
                     <Label htmlFor="currency">Currency</Label>
                     <Select
                       value={appearanceSettings.currency}
-                      onValueChange={(value) =>
-                        setAppearanceSettings({
-                          ...appearanceSettings,
-                          currency: value,
-                        })
-                      }
+                      onValueChange={(value) => setAppearanceSettings({...appearanceSettings, currency: value})}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -812,12 +685,7 @@ export default function Settings() {
                     <Label htmlFor="fontSize">Font Size</Label>
                     <Select
                       value={appearanceSettings.fontSize}
-                      onValueChange={(value) =>
-                        setAppearanceSettings({
-                          ...appearanceSettings,
-                          fontSize: value,
-                        })
-                      }
+                      onValueChange={(value) => setAppearanceSettings({...appearanceSettings, fontSize: value})}
                     >
                       <SelectTrigger>
                         <SelectValue />
