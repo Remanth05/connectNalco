@@ -194,14 +194,23 @@ export default function AdminDashboard() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-nalco-black">
-            Admin Dashboard
-          </h1>
-          <p className="text-nalco-gray">
-            Welcome back, {user?.name}. Manage your system from here.
-          </p>
+                {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-nalco-black">
+              Admin Dashboard
+            </h1>
+            <p className="text-nalco-gray">
+              Welcome back, {user?.name}. Manage your system from here.
+            </p>
+          </div>
+          <Button
+            className="bg-nalco-red hover:bg-nalco-red/90"
+            onClick={() => handleQuickAction("report-issue")}
+          >
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Report Issue
+          </Button>
         </div>
 
         {/* System Statistics */}
