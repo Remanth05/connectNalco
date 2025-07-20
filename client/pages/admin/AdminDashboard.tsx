@@ -36,7 +36,7 @@ export default function AdminDashboard() {
     // navigate(modulePath);
   };
 
-  const handleQuickAction = (action: string) => {
+    const handleQuickAction = (action: string) => {
     switch (action) {
       case "create-user":
         alert("Create New User functionality\nFeature coming soon!");
@@ -60,6 +60,9 @@ export default function AdminDashboard() {
         alert(
           "Security Audit initiated...\nAudit report will be available shortly.",
         );
+        break;
+      case "report-issue":
+        navigate("/issues");
         break;
       default:
         alert("Feature coming soon!");
