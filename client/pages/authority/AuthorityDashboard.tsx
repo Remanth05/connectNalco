@@ -46,6 +46,7 @@ import { LeaveApplication, Reimbursement, ApiResponse } from "@shared/api";
 
 export default function AuthorityDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // State for pending approvals
   const [pendingLeaves, setPendingLeaves] = useState<LeaveApplication[]>([]);
