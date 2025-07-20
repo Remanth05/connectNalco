@@ -231,11 +231,37 @@ export default function Settings() {
                           Upload a new profile picture. Recommended size: 400x400px
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="space-y-4">
-                        <Input type="file" accept="image/*" />
+                                            <div className="space-y-4">
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setSelectedFile(file);
+                            }
+                          }}
+                        />
+                        {selectedFile && (
+                          <div className="text-sm text-nalco-gray">
+                            Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                          </div>
+                        )}
                       </div>
                       <DialogFooter>
-                        <Button>Upload Photo</Button>
+                        <Button
+                          onClick={() => selectedFile && handlePhotoUpload(selectedFile)}
+                          disabled={!selectedFile || saving === "photo"}
+                        >
+                          {saving === "photo" ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Uploading...
+                            </>
+                          ) : (
+                            "Upload Photo"
+                          )}
+                        </Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
