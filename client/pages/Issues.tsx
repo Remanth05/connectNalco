@@ -275,7 +275,22 @@ export default function Issues() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-8">
+        {/* Alerts */}
+        {success && (
+          <Alert className="mb-6 border-nalco-green bg-nalco-green/10">
+            <CheckCircle className="h-4 w-4" />
+            <AlertDescription className="text-nalco-green">
+              {success}
+            </AlertDescription>
+          </Alert>
+        )}
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -286,10 +301,127 @@ export default function Issues() {
               Report, track, and resolve plant issues efficiently.
             </p>
           </div>
-          <Button className="bg-nalco-red hover:bg-nalco-red/90">
-            <Plus className="mr-2 h-4 w-4" />
-            Report New Issue
-          </Button>
+          <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-nalco-red hover:bg-nalco-red/90">
+                <Plus className="mr-2 h-4 w-4" />
+                Report New Issue
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Report New Issue</DialogTitle>
+                <DialogDescription>
+                  Provide detailed information about the issue you're reporting
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleSubmitIssue} className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="title">Issue Title *</Label>
+                    <Input
+                      id="title"
+                      placeholder="Brief description of the issue"
+                      value={newIssue.title}
+                      onChange={(e) => setNewIssue({...newIssue, title: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="category">Category *</Label>
+                    <Select
+                      value={newIssue.category}
+                      onValueChange={(value) => setNewIssue({...newIssue, category: value})}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="electrical">Electrical</SelectItem>
+                        <SelectItem value="mechanical">Mechanical</SelectItem>
+                        <SelectItem value="safety">Safety</SelectItem>
+                        <SelectItem value="infrastructure">Infrastructure</SelectItem>
+                        <SelectItem value="it">IT & Technology</SelectItem>
+                        <SelectItem value="environmental">Environmental</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="priority">Priority *</Label>
+                    <Select
+                      value={newIssue.priority}
+                      onValueChange={(value) => setNewIssue({...newIssue, priority: value})}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                        <SelectItem value="critical">Critical</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      placeholder="Specific location of the issue"
+                      value={newIssue.location}
+                      onChange={(e) => setNewIssue({...newIssue, location: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="description">Detailed Description *</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Provide a detailed description of the issue, including steps to reproduce if applicable"
+                    rows={4}
+                    value={newIssue.description}
+                    onChange={(e) => setNewIssue({...newIssue, description: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className="flex items-center space-x-2 p-4 bg-nalco-blue/5 rounded-lg">
+                  <Upload className="h-5 w-5 text-nalco-blue" />
+                  <div>
+                    <p className="text-sm font-medium">Attach Files (Optional)</p>
+                    <p className="text-xs text-nalco-gray">Upload photos or documents related to this issue</p>
+                  </div>
+                  <Button type="button" variant="outline" size="sm">
+                    Choose Files
+                  </Button>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setReportDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-nalco-red hover:bg-nalco-red/90"
+                    disabled={submitting}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      "Submit Issue"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Issue Stats */}
