@@ -27,13 +27,31 @@ export default function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handleModuleAccess = (modulePath: string, moduleTitle: string) => {
-    // For demo purposes, show an alert for now
-    // In a real application, these would navigate to actual module pages
-    alert(`Accessing ${moduleTitle} module...\nFeature coming soon!`);
+    const [moduleDialog, setModuleDialog] = useState<{open: boolean, type: string, title: string}>({
+    open: false,
+    type: "",
+    title: ""
+  });
+  const [moduleLoading, setModuleLoading] = useState<string | null>(null);
 
-    // You can uncomment this to enable navigation when pages are created:
-    // navigate(modulePath);
+  const handleModuleAccess = async (modulePath: string, moduleTitle: string) => {
+    const moduleType = modulePath.split('/').pop() || "";
+    setModuleLoading(moduleType);
+
+    try {
+      // Simulate module loading
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      setModuleDialog({
+        open: true,
+        type: moduleType,
+        title: moduleTitle
+      });
+    } catch (error) {
+      alert(`Failed to access ${moduleTitle} module. Please try again.`);
+    } finally {
+      setModuleLoading(null);
+    }
   };
 
     const handleQuickAction = (action: string) => {
