@@ -115,7 +115,7 @@ export default function Login() {
         <div className="text-center lg:text-left">
           <div className="flex items-center justify-center lg:justify-start mb-4">
             <div className="flex items-center space-x-3">
-                                                        <div className="flex h-16 w-16 items-center justify-center rounded-xl overflow-hidden">
+              <div className="flex h-16 w-16 items-center justify-center rounded-xl overflow-hidden">
                 <img
                   src="/logo.jpg"
                   alt="Company Logo"

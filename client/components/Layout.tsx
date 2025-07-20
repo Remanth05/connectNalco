@@ -76,8 +76,8 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-                        <Link to="/" className="flex items-center space-x-3">
-                                          <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden">
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden">
                 <img
                   src="/logo.jpg"
                   alt="Company Logo"

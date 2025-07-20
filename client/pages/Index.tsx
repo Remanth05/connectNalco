@@ -94,7 +94,7 @@ export default function Index() {
             </div>
 
             <div className="flex items-center justify-center mb-6">
-                                                        <div className="flex h-20 w-20 items-center justify-center rounded-2xl overflow-hidden mr-4">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl overflow-hidden mr-4">
                 <img
                   src="/logo.jpg"
                   alt="Company Logo"
