@@ -243,30 +243,171 @@ export default function AuthorityDashboard() {
 
   const getModuleContent = (type: string) => {
     switch (type) {
-      case "employees":
+            case "employees":
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Employees</h3>
-              <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Employee
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Employee
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Add New Employee</DialogTitle>
+                    <DialogDescription>
+                      Add a new employee to your department
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label>Full Name</Label>
+                      <Input placeholder="Enter employee name" />
+                    </div>
+                    <div>
+                      <Label>Employee ID</Label>
+                      <Input placeholder="EMP###" />
+                    </div>
+                    <div>
+                      <Label>Email</Label>
+                      <Input placeholder="employee@nalco.com" type="email" />
+                    </div>
+                    <div>
+                      <Label>Designation</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select designation" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="executive">Executive</SelectItem>
+                          <SelectItem value="assistant">Assistant</SelectItem>
+                          <SelectItem value="trainee">Trainee</SelectItem>
+                          <SelectItem value="manager">Manager</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Join Date</Label>
+                      <Input type="date" />
+                    </div>
+                    <div>
+                      <Label>Phone</Label>
+                      <Input placeholder="+91-9876543210" />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline">Cancel</Button>
+                    <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                      Add Employee
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="space-y-2">
               {[
-                { name: "Rajesh Kumar Singh", designation: "HR Executive", status: "Active" },
-                { name: "Sunita Devi", designation: "HR Assistant", status: "Active" },
-                { name: "Mohammad Alam", designation: "Trainee", status: "On Leave" },
+                {
+                  name: "Rajesh Kumar Singh",
+                  designation: "HR Executive",
+                  status: "Active",
+                  id: "EMP001",
+                  email: "rajesh.singh@nalco.com",
+                  phone: "+91-9876543210",
+                  joinDate: "2022-03-15"
+                },
+                {
+                  name: "Sunita Devi",
+                  designation: "HR Assistant",
+                  status: "Active",
+                  id: "EMP002",
+                  email: "sunita.devi@nalco.com",
+                  phone: "+91-9876543213",
+                  joinDate: "2021-07-20"
+                },
+                {
+                  name: "Mohammad Alam",
+                  designation: "Trainee",
+                  status: "On Leave",
+                  id: "EMP003",
+                  email: "mohammad.alam@nalco.com",
+                  phone: "+91-9876543214",
+                  joinDate: "2023-11-05"
+                },
               ].map((emp, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">{emp.name}</p>
-                    <p className="text-sm text-nalco-gray">{emp.designation}</p>
+                <div key={index} className="flex items-center justify-between p-3 border rounded-lg hover:bg-nalco-gray/5">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button className="text-left hover:text-nalco-blue transition-colors">
+                            <p className="font-medium cursor-pointer">{emp.name}</p>
+                            <p className="text-sm text-nalco-gray">{emp.designation} • {emp.id}</p>
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl">
+                          <DialogHeader>
+                            <DialogTitle>Employee Profile - {emp.name}</DialogTitle>
+                            <DialogDescription>
+                              View and manage employee information
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-2">
+                              <div>
+                                <Label>Employee ID</Label>
+                                <Input value={emp.id} disabled />
+                              </div>
+                              <div>
+                                <Label>Full Name</Label>
+                                <Input value={emp.name} />
+                              </div>
+                              <div>
+                                <Label>Email</Label>
+                                <Input value={emp.email} />
+                              </div>
+                              <div>
+                                <Label>Phone</Label>
+                                <Input value={emp.phone} />
+                              </div>
+                              <div>
+                                <Label>Designation</Label>
+                                <Input value={emp.designation} />
+                              </div>
+                              <div>
+                                <Label>Join Date</Label>
+                                <Input value={emp.joinDate} type="date" />
+                              </div>
+                            </div>
+                            <div>
+                              <Label>Status</Label>
+                              <Select value={emp.status.toLowerCase()}>
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="active">Active</SelectItem>
+                                  <SelectItem value="on leave">On Leave</SelectItem>
+                                  <SelectItem value="inactive">Inactive</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline">Close</Button>
+                            <Button className="bg-nalco-green hover:bg-nalco-green/90">
+                              Save Changes
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <Badge className={emp.status === "Active" ? "bg-nalco-green text-white" : "bg-yellow-500 text-white"}>
+                        {emp.status}
+                      </Badge>
+                    </div>
                   </div>
-                  <Badge className={emp.status === "Active" ? "bg-nalco-green text-white" : "bg-yellow-500 text-white"}>
-                    {emp.status}
-                  </Badge>
                 </div>
               ))}
             </div>
