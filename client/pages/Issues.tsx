@@ -511,8 +511,8 @@ export default function Issues() {
             <SelectTrigger className="w-40">
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All Priority</SelectItem>
+                        <SelectContent>
+              <SelectItem value="all">All Priority</SelectItem>
               <SelectItem value="low">Low</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>
               <SelectItem value="high">High</SelectItem>
