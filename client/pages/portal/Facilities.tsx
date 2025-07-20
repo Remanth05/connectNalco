@@ -18,6 +18,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   ArrowLeft,
   Building2,
@@ -28,11 +38,46 @@ import {
   Coffee,
   Car,
   Plus,
+  Loader2,
+  CheckCircle,
+  Eye,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Facilities() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [newBookingOpen, setNewBookingOpen] = useState(false);
+  const [quickBooking, setQuickBooking] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  // Form states
+  const [quickBookingForm, setQuickBookingForm] = useState({
+    facility: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    purpose: "",
+    attendees: ""
+  });
+
+  const [newBookingForm, setNewBookingForm] = useState({
+    facility: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    purpose: "",
+    attendees: "",
+    specialRequests: "",
+    recurring: false
+  });
 
   const facilities = [
     {
@@ -97,7 +142,7 @@ export default function Facilities() {
     },
   ];
 
-  const bookings = [
+    const [bookings, setBookings] = useState([
     {
       id: "BK-001",
       facility: "Conference Room A",
@@ -105,6 +150,7 @@ export default function Facilities() {
       time: "10:00 AM - 11:30 AM",
       purpose: "Team Standup",
       status: "Confirmed",
+      bookedBy: user?.name || "Current User"
     },
     {
       id: "BK-002",
@@ -113,8 +159,112 @@ export default function Facilities() {
       time: "2:00 PM - 4:00 PM",
       purpose: "Product Demo",
       status: "Pending",
+      bookedBy: user?.name || "Current User"
     },
-  ];
+  ]);
+
+  const handleQuickBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (!quickBookingForm.facility || !quickBookingForm.date || !quickBookingForm.startTime || !quickBookingForm.endTime) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const bookingId = `BK-${String(bookings.length + 1).padStart(3, "0")}`;
+      const newBooking = {
+        id: bookingId,
+        facility: quickBookingForm.facility,
+        date: quickBookingForm.date,
+        time: `${quickBookingForm.startTime} - ${quickBookingForm.endTime}`,
+        purpose: quickBookingForm.purpose || "General meeting",
+        status: "Confirmed",
+        bookedBy: user?.name || "Current User"
+      };
+
+      setBookings([...bookings, newBooking]);
+      setSuccess(`Facility booked successfully! Booking ID: ${bookingId}`);
+      setQuickBookingForm({
+        facility: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        purpose: "",
+        attendees: ""
+      });
+    } catch (error) {
+      setError("Failed to book facility. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleNewBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (!newBookingForm.facility || !newBookingForm.date || !newBookingForm.startTime || !newBookingForm.endTime) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const bookingId = `BK-${String(bookings.length + 1).padStart(3, "0")}`;
+      const newBooking = {
+        id: bookingId,
+        facility: newBookingForm.facility,
+        date: newBookingForm.date,
+        time: `${newBookingForm.startTime} - ${newBookingForm.endTime}`,
+        purpose: newBookingForm.purpose || "General meeting",
+        status: "Pending",
+        bookedBy: user?.name || "Current User"
+      };
+
+      setBookings([...bookings, newBooking]);
+      setSuccess(`Booking request submitted! Booking ID: ${bookingId}`);
+      setNewBookingOpen(false);
+      setNewBookingForm({
+        facility: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        purpose: "",
+        attendees: "",
+        specialRequests: "",
+        recurring: false
+      });
+    } catch (error) {
+      setError("Failed to submit booking request. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleBookFacility = (facilityName: string) => {
+    setNewBookingForm({...newBookingForm, facility: facilityName});
+    setNewBookingOpen(true);
+  };
+
+  const handleCancelBooking = async (bookingId: string) => {
+    try {
+      setBookings(bookings.filter(booking => booking.id !== bookingId));
+      setSuccess("Booking cancelled successfully!");
+    } catch (error) {
+      setError("Failed to cancel booking.");
+    }
+  };
 
   const getAvailabilityColor = (availability: string) => {
     switch (availability.toLowerCase()) {
@@ -146,7 +296,22 @@ export default function Facilities() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-8">
+        {/* Alerts */}
+        {success && (
+          <Alert className="mb-6 border-nalco-green bg-nalco-green/10">
+            <CheckCircle className="h-4 w-4" />
+            <AlertDescription className="text-nalco-green">
+              {success}
+            </AlertDescription>
+          </Alert>
+        )}
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center">
@@ -168,10 +333,128 @@ export default function Facilities() {
               </p>
             </div>
           </div>
-          <Button className="bg-nalco-red hover:bg-nalco-red/90">
-            <Plus className="h-4 w-4 mr-2" />
-            New Booking
-          </Button>
+          <Dialog open={newBookingOpen} onOpenChange={setNewBookingOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-nalco-red hover:bg-nalco-red/90">
+                <Plus className="h-4 w-4 mr-2" />
+                New Booking
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>New Facility Booking</DialogTitle>
+                <DialogDescription>
+                  Reserve a facility for your meeting or event
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleNewBooking} className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="newFacility">Facility *</Label>
+                    <Select
+                      value={newBookingForm.facility}
+                      onValueChange={(value) => setNewBookingForm({...newBookingForm, facility: value})}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select facility" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {facilities.filter(f => f.availability === "Available").map(facility => (
+                          <SelectItem key={facility.id} value={facility.name}>
+                            {facility.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="newDate">Date *</Label>
+                    <Input
+                      id="newDate"
+                      type="date"
+                      value={newBookingForm.date}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, date: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="newStartTime">Start Time *</Label>
+                    <Input
+                      id="newStartTime"
+                      type="time"
+                      value={newBookingForm.startTime}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, startTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="newEndTime">End Time *</Label>
+                    <Input
+                      id="newEndTime"
+                      type="time"
+                      value={newBookingForm.endTime}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, endTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="newAttendees">Number of Attendees</Label>
+                    <Input
+                      id="newAttendees"
+                      type="number"
+                      placeholder="0"
+                      value={newBookingForm.attendees}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, attendees: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="newPurpose">Purpose</Label>
+                  <Textarea
+                    id="newPurpose"
+                    placeholder="Meeting purpose or description"
+                    rows={3}
+                    value={newBookingForm.purpose}
+                    onChange={(e) => setNewBookingForm({...newBookingForm, purpose: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="specialRequests">Special Requests</Label>
+                  <Textarea
+                    id="specialRequests"
+                    placeholder="Any special equipment or setup requirements"
+                    rows={2}
+                    value={newBookingForm.specialRequests}
+                    onChange={(e) => setNewBookingForm({...newBookingForm, specialRequests: e.target.value})}
+                  />
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setNewBookingOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-nalco-red hover:bg-nalco-red/90"
+                    disabled={submitting}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Booking...
+                      </>
+                    ) : (
+                      "Submit Booking"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
@@ -181,60 +464,99 @@ export default function Facilities() {
               <CardTitle className="text-nalco-black">Quick Booking</CardTitle>
               <CardDescription>Reserve a facility quickly</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="facility">Facility</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select facility" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="conference-a">
-                      Conference Room A
-                    </SelectItem>
-                    <SelectItem value="conference-b">
-                      Conference Room B
-                    </SelectItem>
-                    <SelectItem value="training-a">Training Room A</SelectItem>
-                    <SelectItem value="training-b">Training Room B</SelectItem>
-                    <SelectItem value="phone-booth">Phone Booth</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="date">Date</Label>
-                <Input id="date" type="date" />
-              </div>
-
-              <div className="grid gap-4 grid-cols-2">
+                        <CardContent>
+              <form onSubmit={handleQuickBooking} className="space-y-4">
                 <div>
-                  <Label htmlFor="startTime">Start Time</Label>
-                  <Input id="startTime" type="time" />
+                  <Label htmlFor="facility">Facility</Label>
+                  <Select
+                    value={quickBookingForm.facility}
+                    onValueChange={(value) => setQuickBookingForm({...quickBookingForm, facility: value})}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select facility" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {facilities.filter(f => f.availability === "Available").map(facility => (
+                        <SelectItem key={facility.id} value={facility.name}>
+                          {facility.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+
                 <div>
-                  <Label htmlFor="endTime">End Time</Label>
-                  <Input id="endTime" type="time" />
+                  <Label htmlFor="date">Date</Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={quickBookingForm.date}
+                    onChange={(e) => setQuickBookingForm({...quickBookingForm, date: e.target.value})}
+                    required
+                  />
                 </div>
-              </div>
 
-              <div>
-                <Label htmlFor="purpose">Purpose</Label>
-                <Textarea
-                  id="purpose"
-                  placeholder="Meeting purpose or description"
-                  rows={3}
-                />
-              </div>
+                <div className="grid gap-4 grid-cols-2">
+                  <div>
+                    <Label htmlFor="startTime">Start Time</Label>
+                    <Input
+                      id="startTime"
+                      type="time"
+                      value={quickBookingForm.startTime}
+                      onChange={(e) => setQuickBookingForm({...quickBookingForm, startTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="endTime">End Time</Label>
+                    <Input
+                      id="endTime"
+                      type="time"
+                      value={quickBookingForm.endTime}
+                      onChange={(e) => setQuickBookingForm({...quickBookingForm, endTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div>
-                <Label htmlFor="attendees">Number of Attendees</Label>
-                <Input id="attendees" type="number" placeholder="0" />
-              </div>
+                <div>
+                  <Label htmlFor="purpose">Purpose</Label>
+                  <Textarea
+                    id="purpose"
+                    placeholder="Meeting purpose or description"
+                    rows={3}
+                    value={quickBookingForm.purpose}
+                    onChange={(e) => setQuickBookingForm({...quickBookingForm, purpose: e.target.value})}
+                  />
+                </div>
 
-              <Button className="w-full bg-nalco-blue hover:bg-nalco-blue/90">
-                Book Facility
-              </Button>
+                <div>
+                  <Label htmlFor="attendees">Number of Attendees</Label>
+                  <Input
+                    id="attendees"
+                    type="number"
+                    placeholder="0"
+                    value={quickBookingForm.attendees}
+                    onChange={(e) => setQuickBookingForm({...quickBookingForm, attendees: e.target.value})}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-nalco-blue hover:bg-nalco-blue/90"
+                  disabled={submitting}
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Booking...
+                    </>
+                  ) : (
+                    "Book Facility"
+                  )}
+                </Button>
+              </form>
             </CardContent>
           </Card>
 
@@ -298,11 +620,12 @@ export default function Facilities() {
                                 </Badge>
                               )}
                             </div>
-                            <Button
+                                                        <Button
                               variant="outline"
                               size="sm"
                               className="w-full"
                               disabled={facility.availability === "Occupied"}
+                              onClick={() => facility.availability === "Available" ? handleBookFacility(facility.name) : null}
                             >
                               {facility.availability === "Available"
                                 ? "Book Now"
@@ -349,18 +672,37 @@ export default function Facilities() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                                        <div className="flex items-center space-x-2">
                       <Badge className={getStatusColor(booking.status)}>
                         {booking.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setNewBookingForm({
+                            facility: booking.facility,
+                            date: booking.date,
+                            startTime: booking.time.split(" - ")[0],
+                            endTime: booking.time.split(" - ")[1],
+                            purpose: booking.purpose,
+                            attendees: "",
+                            specialRequests: "",
+                            recurring: false
+                          });
+                          setNewBookingOpen(true);
+                        }}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
                         Modify
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         className="text-nalco-red hover:text-nalco-red"
+                        onClick={() => handleCancelBooking(booking.id)}
                       >
+                        <Trash2 className="h-4 w-4 mr-2" />
                         Cancel
                       </Button>
                     </div>

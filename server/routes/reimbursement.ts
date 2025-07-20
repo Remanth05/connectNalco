@@ -143,6 +143,26 @@ export const processReimbursement: RequestHandler = (req, res) => {
 
     reimbursements[reimbursementIndex] = updatedReimbursement;
 
+    // Log department activity for interconnection
+    console.log(
+      `Department ${processingUser.department}: Reimbursement ${action}d for ${reimbursement.employeeName} by ${processingUser.name}`,
+    );
+    console.log(
+      `Amount: ₹${reimbursement.amount} for ${reimbursement.type} - ${reimbursement.description}`,
+    );
+
+    // Update department budget tracking if approved
+    if (action === "approve") {
+      console.log(
+        `Department ${processingUser.department} budget impact: -₹${reimbursement.amount}`,
+      );
+    }
+
+    // Notify employee about status change (in real system would send email/notification)
+    console.log(
+      `Notification sent to ${reimbursement.employeeName}: Reimbursement ${action}d`,
+    );
+
     res.json({
       success: true,
       data: updatedReimbursement,

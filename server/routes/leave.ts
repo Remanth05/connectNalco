@@ -161,7 +161,7 @@ export const processLeaveApplication: RequestHandler = (req, res) => {
 
     leaveApplications[applicationIndex] = updatedApplication;
 
-    // Update leave balance if approved
+    // Update leave balance if approved and notify related systems
     if (action === "approve") {
       const balanceIndex = leaveBalances.findIndex(
         (balance) => balance.employeeId === application.employeeId,
@@ -195,6 +195,22 @@ export const processLeaveApplication: RequestHandler = (req, res) => {
         }
 
         leaveBalances[balanceIndex] = updatedBalance;
+
+        // Log department activity for interconnection
+        console.log(
+          `Department ${processingUser.department}: Leave ${action}d for ${application.employeeName} by ${processingUser.name}`,
+        );
+
+        // Update employee status in mock data if needed
+        const employeeIndex = mockUsers.findIndex(
+          (user) => user.employeeId === application.employeeId,
+        );
+        if (employeeIndex !== -1) {
+          // Could update employee status, last leave date, etc.
+          console.log(
+            `Employee ${application.employeeName} leave balance updated. Remaining: ${updatedBalance.totalRemaining} days`,
+          );
+        }
       }
     }
 

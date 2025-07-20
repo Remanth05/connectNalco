@@ -102,10 +102,10 @@ export default function Index() {
                 />
               </div>
               <h1 className="text-4xl font-bold tracking-tight text-nalco-black lg:text-6xl">
-                NALCO
                 <span className="bg-gradient-to-r from-nalco-red to-nalco-blue bg-clip-text text-transparent">
-                  Connect
+                  connect
                 </span>
+                NALCO
               </h1>
             </div>
 
@@ -210,7 +210,7 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-nalco-black lg:text-4xl">
-              Why Choose ConnectNalco?
+              Why Choose connectNALCO?
             </h2>
             <p className="text-lg text-nalco-gray">
               Built specifically for NALCO's operational needs and employee
@@ -245,7 +245,7 @@ export default function Index() {
               Ready to Transform Your Workflow?
             </h2>
             <p className="mb-8 text-lg opacity-90">
-              Join thousands of NALCO employees already using ConnectNalco for
+              Join thousands of NALCO employees already using connectNALCO for
               seamless operations.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">

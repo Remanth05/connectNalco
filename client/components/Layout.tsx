@@ -85,11 +85,11 @@ export default function Layout({ children }: LayoutProps) {
                 />
               </div>
               <div className="flex items-center space-x-1">
+                <span className="text-xl font-bold text-nalco-red">
+                  connect
+                </span>
                 <span className="text-xl font-bold text-nalco-black">
                   NALCO
-                </span>
-                <span className="text-xl font-bold text-nalco-red">
-                  Connect
                 </span>
               </div>
             </Link>
@@ -220,7 +220,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex items-center space-x-2">
               <Building2 className="h-5 w-5 text-nalco-red" />
               <span className="text-sm font-medium text-nalco-black">
-                ConnectNalco - NALCO Damanjodi Plant Management System
+                connectNALCO - NALCO Damanjodi Plant Management System
               </span>
             </div>
             <p className="text-sm text-nalco-gray">

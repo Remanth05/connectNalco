@@ -7,6 +7,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   AlertTriangle,
   Plus,
@@ -19,11 +40,38 @@ import {
   Wrench,
   Shield,
   Building,
+  Loader2,
+  Upload,
+  Eye,
+  Edit,
+  User,
+  Calendar,
+  Tag,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Issues() {
+  const { user } = useAuth();
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [selectedIssue, setSelectedIssue] = useState<any>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+
+  // Form state for new issue
+  const [newIssue, setNewIssue] = useState({
+    title: "",
+    description: "",
+    category: "",
+    priority: "",
+    location: "",
+    urgency: "medium",
+  });
   const issueStats = [
     {
       icon: AlertTriangle,
@@ -82,44 +130,138 @@ export default function Issues() {
     },
   ];
 
-  const recentIssues = [
+  const [recentIssues, setRecentIssues] = useState([
     {
       id: "INC-2024-001",
       title: "Conveyor belt malfunction in Section A",
+      description:
+        "Main conveyor belt in Section A is making unusual noises and has stopped intermittently. Requires immediate inspection.",
       category: "Mechanical",
       priority: "High",
       status: "In Progress",
       assignee: "Rajesh Kumar",
       created: "2 hours ago",
+      location: "Section A - Production Floor",
+      reportedBy: "Mohammad Alam",
+      estimatedResolution: "Tomorrow",
     },
     {
       id: "INC-2024-002",
       title: "Emergency lighting not working in Block B",
+      description:
+        "Emergency lighting system in Block B is completely non-functional. This is a critical safety issue.",
       category: "Electrical",
       priority: "Critical",
       status: "Open",
       assignee: "Unassigned",
       created: "4 hours ago",
+      location: "Block B - Emergency Exit Routes",
+      reportedBy: "Geeta Mishra",
+      estimatedResolution: "Within 6 hours",
     },
     {
       id: "INC-2024-003",
       title: "Chemical spill in processing unit",
+      description:
+        "Minor chemical spill in Unit 3. Area has been secured and cleaned. Documentation required.",
       category: "Safety",
       priority: "Critical",
       status: "Resolved",
       assignee: "Safety Team",
       created: "1 day ago",
+      location: "Unit 3 - Chemical Processing",
+      reportedBy: "Ravi Teja",
+      estimatedResolution: "Completed",
     },
     {
       id: "INC-2024-004",
       title: "Air conditioning not working in Admin block",
+      description:
+        "HVAC system in admin building is not functioning properly. Temperature control issues.",
       category: "Infrastructure",
       priority: "Medium",
       status: "Open",
       assignee: "Maintenance",
       created: "2 days ago",
+      location: "Admin Block - All Floors",
+      reportedBy: "Sunita Devi",
+      estimatedResolution: "This week",
     },
-  ];
+  ]);
+
+  const handleSubmitIssue = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (
+        !newIssue.title ||
+        !newIssue.description ||
+        !newIssue.category ||
+        !newIssue.priority
+      ) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const issueId = `INC-2024-${String(recentIssues.length + 1).padStart(3, "0")}`;
+      const issue = {
+        id: issueId,
+        title: newIssue.title,
+        description: newIssue.description,
+        category: newIssue.category,
+        priority: newIssue.priority,
+        status: "Open",
+        assignee: "Unassigned",
+        created: "Just now",
+        location: newIssue.location || "Not specified",
+        reportedBy: user?.name || "Anonymous",
+        estimatedResolution: "Pending assessment",
+      };
+
+      setRecentIssues([issue, ...recentIssues]);
+      setSuccess(`Issue ${issueId} has been reported successfully!`);
+      setReportDialogOpen(false);
+      setNewIssue({
+        title: "",
+        description: "",
+        category: "",
+        priority: "",
+        location: "",
+        urgency: "medium",
+      });
+    } catch (error) {
+      setError("Failed to submit issue. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleViewIssue = (issue: any) => {
+    setSelectedIssue(issue);
+    setViewDialogOpen(true);
+  };
+
+  const filteredIssues = recentIssues.filter((issue) => {
+    const matchesSearch =
+      issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      issue.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      !statusFilter ||
+      statusFilter === "all" ||
+      issue.status.toLowerCase() === statusFilter.toLowerCase();
+    const matchesPriority =
+      !priorityFilter ||
+      priorityFilter === "all" ||
+      issue.priority.toLowerCase() === priorityFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
@@ -150,6 +292,21 @@ export default function Issues() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
+        {/* Alerts */}
+        {success && (
+          <Alert className="mb-6 border-nalco-green bg-nalco-green/10">
+            <CheckCircle className="h-4 w-4" />
+            <AlertDescription className="text-nalco-green">
+              {success}
+            </AlertDescription>
+          </Alert>
+        )}
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -160,10 +317,145 @@ export default function Issues() {
               Report, track, and resolve plant issues efficiently.
             </p>
           </div>
-          <Button className="bg-nalco-red hover:bg-nalco-red/90">
-            <Plus className="mr-2 h-4 w-4" />
-            Report New Issue
-          </Button>
+          <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-nalco-red hover:bg-nalco-red/90">
+                <Plus className="mr-2 h-4 w-4" />
+                Report New Issue
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Report New Issue</DialogTitle>
+                <DialogDescription>
+                  Provide detailed information about the issue you're reporting
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleSubmitIssue} className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="title">Issue Title *</Label>
+                    <Input
+                      id="title"
+                      placeholder="Brief description of the issue"
+                      value={newIssue.title}
+                      onChange={(e) =>
+                        setNewIssue({ ...newIssue, title: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="category">Category *</Label>
+                    <Select
+                      value={newIssue.category}
+                      onValueChange={(value) =>
+                        setNewIssue({ ...newIssue, category: value })
+                      }
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="electrical">Electrical</SelectItem>
+                        <SelectItem value="mechanical">Mechanical</SelectItem>
+                        <SelectItem value="safety">Safety</SelectItem>
+                        <SelectItem value="infrastructure">
+                          Infrastructure
+                        </SelectItem>
+                        <SelectItem value="it">IT & Technology</SelectItem>
+                        <SelectItem value="environmental">
+                          Environmental
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="priority">Priority *</Label>
+                    <Select
+                      value={newIssue.priority}
+                      onValueChange={(value) =>
+                        setNewIssue({ ...newIssue, priority: value })
+                      }
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                        <SelectItem value="critical">Critical</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      placeholder="Specific location of the issue"
+                      value={newIssue.location}
+                      onChange={(e) =>
+                        setNewIssue({ ...newIssue, location: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="description">Detailed Description *</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Provide a detailed description of the issue, including steps to reproduce if applicable"
+                    rows={4}
+                    value={newIssue.description}
+                    onChange={(e) =>
+                      setNewIssue({ ...newIssue, description: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="flex items-center space-x-2 p-4 bg-nalco-blue/5 rounded-lg">
+                  <Upload className="h-5 w-5 text-nalco-blue" />
+                  <div>
+                    <p className="text-sm font-medium">
+                      Attach Files (Optional)
+                    </p>
+                    <p className="text-xs text-nalco-gray">
+                      Upload photos or documents related to this issue
+                    </p>
+                  </div>
+                  <Button type="button" variant="outline" size="sm">
+                    Choose Files
+                  </Button>
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setReportDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-nalco-red hover:bg-nalco-red/90"
+                    disabled={submitting}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      "Submit Issue"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Issue Stats */}
@@ -231,12 +523,36 @@ export default function Issues() {
         <div className="mb-6 flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nalco-gray" />
-            <Input placeholder="Search issues..." className="pl-10" />
+            <Input
+              placeholder="Search issues..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-          <Button variant="outline">
-            <Filter className="mr-2 h-4 w-4" />
-            Filters
-          </Button>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="All Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="open">Open</SelectItem>
+              <SelectItem value="in progress">In Progress</SelectItem>
+              <SelectItem value="resolved">Resolved</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="All Priority" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Priority</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="critical">Critical</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Issues List */}
@@ -249,48 +565,212 @@ export default function Issues() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentIssues.map((issue, index) => (
-                <div
-                  key={index}
-                  className="rounded-lg border p-4 transition-all hover:bg-nalco-gray/5"
-                >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center gap-2">
-                        <span className="font-mono text-sm text-nalco-blue">
-                          {issue.id}
-                        </span>
-                        <Badge
-                          variant="secondary"
-                          className={getPriorityColor(issue.priority)}
-                        >
-                          {issue.priority}
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className={getStatusColor(issue.status)}
-                        >
-                          {issue.status}
-                        </Badge>
+              {filteredIssues.length === 0 ? (
+                <div className="text-center py-8">
+                  <AlertTriangle className="h-12 w-12 text-nalco-gray mx-auto mb-4" />
+                  <p className="text-nalco-gray">
+                    No issues found matching your criteria
+                  </p>
+                </div>
+              ) : (
+                filteredIssues.map((issue, index) => (
+                  <div
+                    key={index}
+                    className="rounded-lg border p-4 transition-all hover:bg-nalco-gray/5"
+                  >
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex-1">
+                        <div className="mb-2 flex items-center gap-2">
+                          <span className="font-mono text-sm text-nalco-blue">
+                            {issue.id}
+                          </span>
+                          <Badge
+                            variant="secondary"
+                            className={getPriorityColor(issue.priority)}
+                          >
+                            {issue.priority}
+                          </Badge>
+                          <Badge
+                            variant="secondary"
+                            className={getStatusColor(issue.status)}
+                          >
+                            {issue.status}
+                          </Badge>
+                        </div>
+                        <h3 className="mb-1 font-semibold text-nalco-black">
+                          {issue.title}
+                        </h3>
+                        <div className="flex items-center gap-4 text-sm text-nalco-gray">
+                          <span>Category: {issue.category}</span>
+                          <span>Assignee: {issue.assignee}</span>
+                          <span>Created: {issue.created}</span>
+                        </div>
                       </div>
-                      <h3 className="mb-1 font-semibold text-nalco-black">
-                        {issue.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-sm text-nalco-gray">
-                        <span>Category: {issue.category}</span>
-                        <span>Assignee: {issue.assignee}</span>
-                        <span>Created: {issue.created}</span>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewIssue(issue)}
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </Button>
+                        {user?.role === "authority" ||
+                        user?.role === "admin" ? (
+                          <Button
+                            size="sm"
+                            className="bg-nalco-blue hover:bg-nalco-blue/90"
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Assign
+                          </Button>
+                        ) : null}
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
+
+        {/* View Issue Dialog */}
+        <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                <span>{selectedIssue?.id}</span>
+                <Badge
+                  className={getPriorityColor(selectedIssue?.priority || "")}
+                >
+                  {selectedIssue?.priority}
+                </Badge>
+                <Badge className={getStatusColor(selectedIssue?.status || "")}>
+                  {selectedIssue?.status}
+                </Badge>
+              </DialogTitle>
+              <DialogDescription>
+                Issue details and tracking information
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedIssue && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-nalco-black mb-2">
+                    {selectedIssue.title}
+                  </h3>
+                  <p className="text-nalco-gray">{selectedIssue.description}</p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Tag className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Category:</span>
+                      <span className="text-sm">{selectedIssue.category}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Building className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Location:</span>
+                      <span className="text-sm">{selectedIssue.location}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <User className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Reported by:</span>
+                      <span className="text-sm">
+                        {selectedIssue.reportedBy}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <User className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Assigned to:</span>
+                      <span className="text-sm">{selectedIssue.assignee}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Created:</span>
+                      <span className="text-sm">{selectedIssue.created}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Clock className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">
+                        Est. Resolution:
+                      </span>
+                      <span className="text-sm">
+                        {selectedIssue.estimatedResolution}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Activity Timeline */}
+                <div>
+                  <h4 className="font-medium mb-3">Activity Timeline</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3 p-3 bg-nalco-green/10 rounded-lg">
+                      <CheckCircle className="h-5 w-5 text-nalco-green mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium">Issue Created</p>
+                        <p className="text-xs text-nalco-gray">
+                          Reported by {selectedIssue.reportedBy} •{" "}
+                          {selectedIssue.created}
+                        </p>
+                      </div>
+                    </div>
+                    {selectedIssue.status === "In Progress" && (
+                      <div className="flex items-start space-x-3 p-3 bg-nalco-blue/10 rounded-lg">
+                        <Clock className="h-5 w-5 text-nalco-blue mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">
+                            Investigation Started
+                          </p>
+                          <p className="text-xs text-nalco-gray">
+                            Assigned to {selectedIssue.assignee} • 1 hour ago
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {selectedIssue.status === "Resolved" && (
+                      <div className="flex items-start space-x-3 p-3 bg-nalco-green/10 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-nalco-green mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Issue Resolved</p>
+                          <p className="text-xs text-nalco-gray">
+                            Completed by {selectedIssue.assignee} •{" "}
+                            {selectedIssue.created}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions for authorities/admins */}
+                {(user?.role === "authority" || user?.role === "admin") && (
+                  <div className="flex space-x-4 pt-4 border-t">
+                    <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                      Assign to Team
+                    </Button>
+                    <Button variant="outline">Update Status</Button>
+                    <Button variant="outline">Add Comment</Button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setViewDialogOpen(false)}
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );

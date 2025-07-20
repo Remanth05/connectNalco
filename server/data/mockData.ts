@@ -231,7 +231,7 @@ export const mockEmployees: Employee[] = [
   },
 ];
 
-// Mock Departments
+// Mock Departments (NALCO Scale Budgets in INR Crores)
 export const mockDepartments: Department[] = [
   {
     id: "DEPT001",
@@ -239,38 +239,38 @@ export const mockDepartments: Department[] = [
     head: "Dr. Priya Sharma",
     headEmployeeId: "AUTH001",
     totalEmployees: 15,
-    location: "Bhubaneswar",
-    budget: 5000000,
+    location: "Bhubaneswar Corporate Office",
+    budget: 50000000, // ₹5 Crores - HR operations, training, recruitment
     isActive: true,
   },
   {
     id: "DEPT002",
-    name: "Finance",
+    name: "Finance & Accounts",
     head: "Suresh Babu",
     headEmployeeId: "AUTH002",
     totalEmployees: 22,
-    location: "Bhubaneswar",
-    budget: 8000000,
+    location: "Bhubaneswar Corporate Office",
+    budget: 120000000, // ₹12 Crores - Financial operations, audit, compliance
     isActive: true,
   },
   {
     id: "DEPT003",
-    name: "Operations",
+    name: "Plant Operations",
     head: "Ramesh Chandran",
     headEmployeeId: "AUTH003",
     totalEmployees: 145,
-    location: "Angul",
-    budget: 25000000,
+    location: "NALCO Angul/Damanjodi",
+    budget: 500000000, // ₹50 Crores - Plant operations, maintenance, production
     isActive: true,
   },
   {
     id: "DEPT004",
-    name: "Engineering",
+    name: "Engineering & Projects",
     head: "Anita Das",
     headEmployeeId: "AUTH004",
     totalEmployees: 89,
-    location: "Damanjodi",
-    budget: 15000000,
+    location: "Damanjodi/Angul",
+    budget: 350000000, // ₹35 Crores - Engineering projects, R&D, modernization
     isActive: true,
   },
   {
@@ -279,8 +279,8 @@ export const mockDepartments: Department[] = [
     head: "Prakash Joshi",
     headEmployeeId: "AUTH005",
     totalEmployees: 34,
-    location: "Mumbai",
-    budget: 12000000,
+    location: "Bhubaneswar/Regional Offices",
+    budget: 80000000, // ₹8 Crores - Marketing, sales operations, customer relations
     isActive: true,
   },
 ];
@@ -352,16 +352,17 @@ export const mockLeaveBalances: LeaveBalance[] = [
   },
 ];
 
-// Mock Reimbursements
+// Mock Reimbursements (Indian Standards)
 export const mockReimbursements: Reimbursement[] = [
   {
     id: "REIMB001",
     employeeId: "EMP001",
     employeeName: "Rajesh Kumar Singh",
     type: "travel",
-    amount: 2500,
+    amount: 4500, // Train ticket (Bhubaneswar-Delhi) + Local travel
     currency: "INR",
-    description: "Travel expenses for training program in Delhi",
+    description:
+      "Official travel to Delhi for NALCO training program - AC 2-Tier train ticket + local conveyance",
     submittedDate: "2024-03-15",
     status: "pending",
   },
@@ -370,13 +371,28 @@ export const mockReimbursements: Reimbursement[] = [
     employeeId: "EMP004",
     employeeName: "Lakshmi Narayanan",
     type: "medical",
-    amount: 1200,
+    amount: 3200, // Medical reimbursement as per NALCO policy
     currency: "INR",
-    description: "Medical checkup expenses",
+    description:
+      "Annual health checkup at NALCO empanelled hospital - Full body checkup including ECG, Blood tests",
     submittedDate: "2024-03-10",
     status: "approved",
     approvedBy: "AUTH004",
     approvedDate: "2024-03-12",
+  },
+  {
+    id: "REIMB003",
+    employeeId: "EMP003",
+    employeeName: "Mohammad Alam",
+    type: "food",
+    amount: 850, // Daily meal allowance for outstation duty
+    currency: "INR",
+    description:
+      "Meal expenses during plant inspection duty at NALCO Angul - 2 days @ ₹425/day",
+    submittedDate: "2024-03-18",
+    status: "approved",
+    approvedBy: "AUTH003",
+    approvedDate: "2024-03-20",
   },
 ];
 
@@ -465,7 +481,7 @@ export const mockIssues: Issue[] = [
   },
 ];
 
-// Mock Payslips
+// Mock Payslips (Updated for NALCO Indian Standards)
 export const mockPayslips: Payslip[] = [
   {
     id: "PAY001_2024_03",
@@ -473,18 +489,18 @@ export const mockPayslips: Payslip[] = [
     employeeName: "Rajesh Kumar Singh",
     month: "March",
     year: 2024,
-    basicSalary: 45000,
-    hra: 18000,
-    allowances: 5000,
-    overtime: 2000,
-    bonus: 0,
-    grossSalary: 70000,
-    pf: 5400,
-    esi: 490,
-    tax: 8000,
-    otherDeductions: 0,
-    totalDeductions: 13890,
-    netSalary: 56110,
+    basicSalary: 65000, // NALCO Executive Level Basic Pay
+    hra: 26000, // 40% of Basic as per NALCO HRA structure
+    allowances: 12000, // DA + Transport + Medical Allowance
+    overtime: 3500, // Overtime @ ₹350/hour for 10 hours
+    bonus: 8000, // Performance Bonus
+    grossSalary: 114500,
+    pf: 7800, // 12% of Basic Salary (EPF)
+    esi: 850, // ESI @ 0.75% of Gross (up to ceiling)
+    tax: 18500, // Income Tax as per New Tax Regime
+    otherDeductions: 1200, // Professional Tax + Union Fee
+    totalDeductions: 28350,
+    netSalary: 86150,
     generatedDate: "2024-03-31",
     paidDate: "2024-04-01",
     status: "paid",
@@ -495,18 +511,18 @@ export const mockPayslips: Payslip[] = [
     employeeName: "Sunita Devi",
     month: "March",
     year: 2024,
-    basicSalary: 50000,
-    hra: 20000,
-    allowances: 6000,
-    overtime: 1000,
-    bonus: 5000,
-    grossSalary: 82000,
-    pf: 6000,
-    esi: 574,
-    tax: 12000,
-    otherDeductions: 500,
-    totalDeductions: 19074,
-    netSalary: 62926,
+    basicSalary: 72000, // Senior Officer Level
+    hra: 28800, // 40% of Basic
+    allowances: 15000, // DA + Special Allowances
+    overtime: 2800, // Weekend Work Compensation
+    bonus: 10000, // Annual Performance Bonus (Prorated)
+    grossSalary: 128600,
+    pf: 8640, // 12% of Basic
+    esi: 965, // ESI Contribution
+    tax: 22000, // Income Tax
+    otherDeductions: 1500, // Professional Tax + Other Deductions
+    totalDeductions: 33105,
+    netSalary: 95495,
     generatedDate: "2024-03-31",
     status: "generated",
   },

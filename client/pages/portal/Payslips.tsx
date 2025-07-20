@@ -27,41 +27,41 @@ export default function Payslips() {
     {
       id: "PS-2024-03",
       month: "March 2024",
-      grossSalary: 75000,
-      netSalary: 62500,
+      grossSalary: 114500,
+      netSalary: 86150,
       date: "2024-03-31",
       status: "Available",
     },
     {
       id: "PS-2024-02",
       month: "February 2024",
-      grossSalary: 75000,
-      netSalary: 62500,
+      grossSalary: 112000,
+      netSalary: 84200,
       date: "2024-02-29",
       status: "Available",
     },
     {
       id: "PS-2024-01",
       month: "January 2024",
-      grossSalary: 75000,
-      netSalary: 62500,
+      grossSalary: 110000,
+      netSalary: 82500,
       date: "2024-01-31",
       status: "Available",
     },
     {
       id: "PS-2023-12",
       month: "December 2023",
-      grossSalary: 70000,
-      netSalary: 58500,
+      grossSalary: 118000,
+      netSalary: 88900,
       date: "2023-12-31",
       status: "Available",
     },
   ];
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "USD",
+      currency: "INR",
     }).format(amount);
   };
 
@@ -97,7 +97,7 @@ export default function Payslips() {
                   Gross Salary
                 </p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(75000)}
+                  {formatCurrency(114500)}
                 </p>
               </div>
             </CardContent>
@@ -110,7 +110,7 @@ export default function Payslips() {
                   Net Salary
                 </p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(62500)}
+                  {formatCurrency(86150)}
                 </p>
               </div>
             </CardContent>
@@ -123,7 +123,7 @@ export default function Payslips() {
                   Total Deductions
                 </p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(12500)}
+                  {formatCurrency(28350)}
                 </p>
               </div>
             </CardContent>
@@ -134,7 +134,7 @@ export default function Payslips() {
               <div className="ml-4">
                 <p className="text-sm font-medium text-nalco-gray">Tax (YTD)</p>
                 <p className="text-2xl font-bold text-nalco-black">
-                  {formatCurrency(18750)}
+                  {formatCurrency(55500)}
                 </p>
               </div>
             </CardContent>

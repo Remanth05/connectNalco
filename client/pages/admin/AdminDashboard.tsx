@@ -8,6 +8,24 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Users,
   Building2,
@@ -19,27 +37,57 @@ import {
   CheckCircle,
   Clock,
   TrendingUp,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  Download,
+  Upload,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handleModuleAccess = (modulePath: string, moduleTitle: string) => {
-    // For demo purposes, show an alert for now
-    // In a real application, these would navigate to actual module pages
-    alert(`Accessing ${moduleTitle} module...\nFeature coming soon!`);
+    const [moduleDialog, setModuleDialog] = useState<{open: boolean, type: string, title: string}>({
+    open: false,
+    type: "",
+    title: ""
+  });
+  const [moduleLoading, setModuleLoading] = useState<string | null>(null);
 
-    // You can uncomment this to enable navigation when pages are created:
-    // navigate(modulePath);
+  const handleModuleAccess = async (modulePath: string, moduleTitle: string) => {
+    const moduleType = modulePath.split('/').pop() || "";
+    setModuleLoading(moduleType);
+
+    try {
+      // Simulate module loading
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      setModuleDialog({
+        open: true,
+        type: moduleType,
+        title: moduleTitle
+      });
+    } catch (error) {
+      alert(`Failed to access ${moduleTitle} module. Please try again.`);
+    } finally {
+      setModuleLoading(null);
+    }
   };
 
-  const handleQuickAction = (action: string) => {
+      const handleQuickAction = (action: string) => {
     switch (action) {
       case "create-user":
-        alert("Create New User functionality\nFeature coming soon!");
+        setModuleDialog({
+          open: true,
+          type: "create-user",
+          title: "Create New User"
+        });
         break;
       case "backup":
         alert(
@@ -61,8 +109,326 @@ export default function AdminDashboard() {
           "Security Audit initiated...\nAudit report will be available shortly.",
         );
         break;
+      case "report-issue":
+        navigate("/issues");
+        break;
       default:
         alert("Feature coming soon!");
+    }
+  };
+
+  const getModuleContent = (type: string) => {
+    switch (type) {
+      case "users":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">User Management</h3>
+              <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
+                <Plus className="h-4 w-4 mr-2" />
+                Add User
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {[
+                { name: "Rajesh Kumar Singh", role: "Employee", id: "EMP001", status: "Active" },
+                { name: "Dr. Priya Sharma", role: "Authority", id: "AUTH001", status: "Active" },
+                { name: "Vikram Patel", role: "Admin", id: "ADMIN001", status: "Active" },
+                { name: "Sunita Devi", role: "Employee", id: "EMP002", status: "Inactive" },
+              ].map((user, index) => (
+                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{user.name}</p>
+                    <p className="text-sm text-nalco-gray">{user.role} • {user.id}</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge className={user.status === "Active" ? "bg-nalco-green text-white" : "bg-nalco-red text-white"}>
+                      {user.status}
+                    </Badge>
+                    <Button size="sm" variant="outline">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "departments":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Department Setup</h3>
+              <Button size="sm" className="bg-nalco-green hover:bg-nalco-green/90">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Department
+              </Button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                { name: "Human Resources", head: "Dr. Priya Sharma", employees: 15, budget: "₹5 Crores" },
+                { name: "Finance & Accounts", head: "Suresh Babu", employees: 22, budget: "₹12 Crores" },
+                { name: "Plant Operations", head: "Ramesh Chandran", employees: 145, budget: "₹50 Crores" },
+                { name: "Engineering", head: "Anita Das", employees: 89, budget: "₹35 Crores" },
+              ].map((dept, index) => (
+                <Card key={index}>
+                  <CardContent className="p-4">
+                    <h4 className="font-medium mb-2">{dept.name}</h4>
+                    <p className="text-sm text-nalco-gray mb-1">Head: {dept.head}</p>
+                    <p className="text-sm text-nalco-gray mb-1">Employees: {dept.employees}</p>
+                    <p className="text-sm text-nalco-gray mb-3">Budget: {dept.budget}</p>
+                    <div className="flex space-x-2">
+                      <Button size="sm" variant="outline" className="flex-1">
+                        <Eye className="h-4 w-4 mr-2" />
+                        View
+                      </Button>
+                      <Button size="sm" variant="outline" className="flex-1">
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        );
+      case "settings":
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">System Settings</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">General Settings</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm">System Name</span>
+                      <span className="text-sm font-medium">connectNALCO</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Version</span>
+                      <span className="text-sm font-medium">v2.1.0</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Timezone</span>
+                      <span className="text-sm font-medium">IST</span>
+                    </div>
+                  </div>
+                  <Button size="sm" className="w-full mt-3">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Settings
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Email Configuration</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm">SMTP Server</span>
+                      <span className="text-sm font-medium">Configured</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">SSL/TLS</span>
+                      <span className="text-sm font-medium">Enabled</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Status</span>
+                      <Badge className="bg-nalco-green text-white">Active</Badge>
+                    </div>
+                  </div>
+                  <Button size="sm" className="w-full mt-3">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Configure
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+      case "reports":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Reports & Analytics</h3>
+              <Button size="sm" className="bg-nalco-red hover:bg-nalco-red/90">
+                <Download className="h-4 w-4 mr-2" />
+                Generate Report
+              </Button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <h4 className="font-medium mb-2">System Usage</h4>
+                  <p className="text-2xl font-bold text-nalco-blue">89%</p>
+                  <p className="text-sm text-nalco-gray">Overall utilization</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <h4 className="font-medium mb-2">Active Users</h4>
+                  <p className="text-2xl font-bold text-nalco-green">248</p>
+                  <p className="text-sm text-nalco-gray">Currently online</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <h4 className="font-medium mb-2">Data Storage</h4>
+                  <p className="text-2xl font-bold text-nalco-red">2.4TB</p>
+                  <p className="text-sm text-nalco-gray">Total used</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+      case "security":
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Security Center</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Security Status</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm">Firewall</span>
+                      <Badge className="bg-nalco-green text-white">Active</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">SSL Certificate</span>
+                      <Badge className="bg-nalco-green text-white">Valid</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Last Backup</span>
+                      <span className="text-sm">2 hours ago</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Recent Alerts</h4>
+                  <div className="space-y-2">
+                    <div className="text-sm">
+                      <p className="font-medium">Failed login attempt</p>
+                      <p className="text-nalco-gray">From 192.168.1.100 • 2h ago</p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium">Unusual data access</p>
+                      <p className="text-nalco-gray">User: EMP005 • 5h ago</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+      case "database":
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Database Management</h3>
+              <Button size="sm" className="bg-purple-600 hover:bg-purple-600/90">
+                <Upload className="h-4 w-4 mr-2" />
+                Backup Now
+              </Button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Database Status</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm">Connection</span>
+                      <Badge className="bg-nalco-green text-white">Healthy</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Size</span>
+                      <span className="text-sm">1.2 GB</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Tables</span>
+                      <span className="text-sm">45</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-2">Backup History</h4>
+                  <div className="space-y-2">
+                    <div className="text-sm">
+                      <p className="font-medium">Auto Backup #247</p>
+                      <p className="text-nalco-gray">March 26, 2024 • 2:00 AM</p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium">Manual Backup #246</p>
+                      <p className="text-nalco-gray">March 25, 2024 • 4:30 PM</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+      case "create-user":
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Create New User</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label>Full Name</Label>
+                <Input placeholder="Enter full name" />
+              </div>
+              <div>
+                <Label>Employee ID</Label>
+                <Input placeholder="EMP###" />
+              </div>
+              <div>
+                <Label>Email</Label>
+                <Input placeholder="user@nalco.com" type="email" />
+              </div>
+              <div>
+                <Label>Phone</Label>
+                <Input placeholder="+91-9876543210" />
+              </div>
+              <div>
+                <Label>Department</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hr">Human Resources</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="engineering">Engineering</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Role</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="employee">Employee</SelectItem>
+                    <SelectItem value="authority">Authority</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Label>Additional Notes</Label>
+              <Textarea placeholder="Any additional information about the user" rows={3} />
+            </div>
+          </div>
+        );
+      default:
+        return <div>Module content not available</div>;
     }
   };
 
@@ -191,14 +557,23 @@ export default function AdminDashboard() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-nalco-black">
-            Admin Dashboard
-          </h1>
-          <p className="text-nalco-gray">
-            Welcome back, {user?.name}. Manage your system from here.
-          </p>
+                {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-nalco-black">
+              Admin Dashboard
+            </h1>
+            <p className="text-nalco-gray">
+              Welcome back, {user?.name}. Manage your system from here.
+            </p>
+          </div>
+          <Button
+            className="bg-nalco-red hover:bg-nalco-red/90"
+            onClick={() => handleQuickAction("report-issue")}
+          >
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Report Issue
+          </Button>
         </div>
 
         {/* System Statistics */}
@@ -259,7 +634,7 @@ export default function AdminDashboard() {
                             <p className="text-sm text-nalco-gray mb-3">
                               {module.description}
                             </p>
-                            <Button
+                                                        <Button
                               variant="outline"
                               size="sm"
                               className="w-full hover:bg-nalco-blue hover:text-white transition-colors"
@@ -267,8 +642,16 @@ export default function AdminDashboard() {
                                 e.stopPropagation();
                                 handleModuleAccess(module.path, module.title);
                               }}
+                              disabled={moduleLoading === module.path.split('/').pop()}
                             >
-                              Access Module
+                              {moduleLoading === module.path.split('/').pop() ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                  Loading...
+                                </>
+                              ) : (
+                                "Access Module"
+                              )}
                             </Button>
                           </div>
                         </div>
@@ -381,15 +764,70 @@ export default function AdminDashboard() {
               >
                 System Maintenance
               </Button>
-              <Button
+                            <Button
                 variant="outline"
                 onClick={() => handleQuickAction("security")}
               >
                 Security Audit
               </Button>
+              <Button
+                variant="outline"
+                className="text-nalco-red hover:text-nalco-red border-nalco-red"
+                onClick={() => handleQuickAction("report-issue")}
+              >
+                <AlertTriangle className="h-4 w-4 mr-2" />
+                Report System Issue
+              </Button>
             </div>
           </CardContent>
-        </Card>
+                </Card>
+
+        {/* Module Access Dialog */}
+        <Dialog open={moduleDialog.open} onOpenChange={(open) => setModuleDialog({...moduleDialog, open})}>
+          <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-nalco-black">
+                {moduleDialog.title}
+              </DialogTitle>
+              <DialogDescription>
+                Manage {moduleDialog.title.toLowerCase()} and system configurations
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="py-4">
+              {getModuleContent(moduleDialog.type)}
+            </div>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setModuleDialog({open: false, type: "", title: ""})}
+              >
+                Close
+              </Button>
+              {moduleDialog.type === "create-user" && (
+                <Button
+                  className="bg-nalco-blue hover:bg-nalco-blue/90"
+                  onClick={() => {
+                    alert("User created successfully!");
+                    setModuleDialog({open: false, type: "", title: ""});
+                  }}
+                >
+                  Create User
+                </Button>
+              )}
+              <Button
+                className="bg-nalco-green hover:bg-nalco-green/90"
+                onClick={() => {
+                  alert("Changes saved successfully!");
+                  setModuleDialog({open: false, type: "", title: ""});
+                }}
+              >
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
