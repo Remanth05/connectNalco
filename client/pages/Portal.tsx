@@ -177,17 +177,100 @@ export default function Portal() {
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <FileText className="h-8 w-8 text-nalco-green" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Pending Tasks
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">3</p>
+                    <Dialog open={tasksDialogOpen} onOpenChange={setTasksDialogOpen}>
+            <DialogTrigger asChild>
+              <Card className="cursor-pointer transition-all hover:shadow-lg hover:shadow-nalco-green/10">
+                <CardContent className="flex items-center p-6">
+                  <FileText className="h-8 w-8 text-nalco-green" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-nalco-gray">
+                      Pending Tasks
+                    </p>
+                    <p className="text-2xl font-bold text-nalco-black">{pendingTasks.length}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="flex items-center space-x-2">
+                  <FileText className="h-5 w-5" />
+                  <span>Pending Tasks</span>
+                  <Badge className="bg-nalco-green text-white">{pendingTasks.length} tasks</Badge>
+                </DialogTitle>
+                <DialogDescription>
+                  Tasks requiring your attention and action
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                {pendingTasks.map((task, index) => (
+                  <div key={index} className="border rounded-lg p-4 hover:bg-nalco-gray/5 transition-colors">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className="font-mono text-sm text-nalco-blue">{task.id}</span>
+                          <Badge className={getPriorityColor(task.priority)}>
+                            {task.priority}
+                          </Badge>
+                          <Badge variant="outline">{task.type}</Badge>
+                        </div>
+                        <h3 className="font-semibold text-nalco-black mb-1">{task.title}</h3>
+                        <p className="text-sm text-nalco-gray mb-2">{task.description}</p>
+                        <div className="flex items-center space-x-4 text-xs text-nalco-gray">
+                          <span>Due: {task.dueDate}</span>
+                          <span>Assigned to: {user?.name}</span>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2 ml-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleTaskAction(task)}
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          {task.action}
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="bg-nalco-green hover:bg-nalco-green/90"
+                          onClick={() => {
+                            // Mark as completed logic here
+                            setTasksDialogOpen(false);
+                          }}
+                        >
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Mark Complete
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {pendingTasks.length === 0 && (
+                  <div className="text-center py-8">
+                    <CheckCircle className="h-12 w-12 text-nalco-green mx-auto mb-4" />
+                    <p className="text-nalco-gray">No pending tasks! Great job staying on top of things.</p>
+                  </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
+
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setTasksDialogOpen(false)}
+                >
+                  Close
+                </Button>
+                <Button
+                  className="bg-nalco-blue hover:bg-nalco-blue/90"
+                  onClick={() => navigate("/portal/tasks")}
+                >
+                  View All Tasks
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           <Card>
             <CardContent className="flex items-center p-6">
               <Users className="h-8 w-8 text-nalco-red" />
