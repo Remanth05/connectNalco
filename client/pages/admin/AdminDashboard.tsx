@@ -634,7 +634,7 @@ export default function AdminDashboard() {
                             <p className="text-sm text-nalco-gray mb-3">
                               {module.description}
                             </p>
-                            <Button
+                                                        <Button
                               variant="outline"
                               size="sm"
                               className="w-full hover:bg-nalco-blue hover:text-white transition-colors"
@@ -642,8 +642,16 @@ export default function AdminDashboard() {
                                 e.stopPropagation();
                                 handleModuleAccess(module.path, module.title);
                               }}
+                              disabled={moduleLoading === module.path.split('/').pop()}
                             >
-                              Access Module
+                              {moduleLoading === module.path.split('/').pop() ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                  Loading...
+                                </>
+                              ) : (
+                                "Access Module"
+                              )}
                             </Button>
                           </div>
                         </div>
