@@ -592,7 +592,131 @@ export default function Issues() {
               )}
             </div>
           </CardContent>
-        </Card>
+                </Card>
+
+        {/* View Issue Dialog */}
+        <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                <span>{selectedIssue?.id}</span>
+                <Badge className={getPriorityColor(selectedIssue?.priority || "")}>
+                  {selectedIssue?.priority}
+                </Badge>
+                <Badge className={getStatusColor(selectedIssue?.status || "")}>
+                  {selectedIssue?.status}
+                </Badge>
+              </DialogTitle>
+              <DialogDescription>
+                Issue details and tracking information
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedIssue && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-nalco-black mb-2">
+                    {selectedIssue.title}
+                  </h3>
+                  <p className="text-nalco-gray">{selectedIssue.description}</p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Tag className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Category:</span>
+                      <span className="text-sm">{selectedIssue.category}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Building className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Location:</span>
+                      <span className="text-sm">{selectedIssue.location}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <User className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Reported by:</span>
+                      <span className="text-sm">{selectedIssue.reportedBy}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <User className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Assigned to:</span>
+                      <span className="text-sm">{selectedIssue.assignee}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Created:</span>
+                      <span className="text-sm">{selectedIssue.created}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Clock className="h-4 w-4 text-nalco-gray" />
+                      <span className="text-sm font-medium">Est. Resolution:</span>
+                      <span className="text-sm">{selectedIssue.estimatedResolution}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Activity Timeline */}
+                <div>
+                  <h4 className="font-medium mb-3">Activity Timeline</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3 p-3 bg-nalco-green/10 rounded-lg">
+                      <CheckCircle className="h-5 w-5 text-nalco-green mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium">Issue Created</p>
+                        <p className="text-xs text-nalco-gray">Reported by {selectedIssue.reportedBy} • {selectedIssue.created}</p>
+                      </div>
+                    </div>
+                    {selectedIssue.status === "In Progress" && (
+                      <div className="flex items-start space-x-3 p-3 bg-nalco-blue/10 rounded-lg">
+                        <Clock className="h-5 w-5 text-nalco-blue mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Investigation Started</p>
+                          <p className="text-xs text-nalco-gray">Assigned to {selectedIssue.assignee} • 1 hour ago</p>
+                        </div>
+                      </div>
+                    )}
+                    {selectedIssue.status === "Resolved" && (
+                      <div className="flex items-start space-x-3 p-3 bg-nalco-green/10 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-nalco-green mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Issue Resolved</p>
+                          <p className="text-xs text-nalco-gray">Completed by {selectedIssue.assignee} • {selectedIssue.created}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions for authorities/admins */}
+                {(user?.role === "authority" || user?.role === "admin") && (
+                  <div className="flex space-x-4 pt-4 border-t">
+                    <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                      Assign to Team
+                    </Button>
+                    <Button variant="outline">
+                      Update Status
+                    </Button>
+                    <Button variant="outline">
+                      Add Comment
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setViewDialogOpen(false)}
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
