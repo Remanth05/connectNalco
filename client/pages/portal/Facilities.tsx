@@ -620,11 +620,12 @@ export default function Facilities() {
                                 </Badge>
                               )}
                             </div>
-                            <Button
+                                                        <Button
                               variant="outline"
                               size="sm"
                               className="w-full"
                               disabled={facility.availability === "Occupied"}
+                              onClick={() => facility.availability === "Available" ? handleBookFacility(facility.name) : null}
                             >
                               {facility.availability === "Available"
                                 ? "Book Now"
