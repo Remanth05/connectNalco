@@ -238,11 +238,11 @@ export default function Issues() {
     setViewDialogOpen(true);
   };
 
-  const filteredIssues = recentIssues.filter(issue => {
+    const filteredIssues = recentIssues.filter(issue => {
     const matchesSearch = issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          issue.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = !statusFilter || issue.status.toLowerCase() === statusFilter.toLowerCase();
-    const matchesPriority = !priorityFilter || issue.priority.toLowerCase() === priorityFilter.toLowerCase();
+    const matchesStatus = !statusFilter || statusFilter === "all" || issue.status.toLowerCase() === statusFilter.toLowerCase();
+    const matchesPriority = !priorityFilter || priorityFilter === "all" || issue.priority.toLowerCase() === priorityFilter.toLowerCase();
 
     return matchesSearch && matchesStatus && matchesPriority;
   });
