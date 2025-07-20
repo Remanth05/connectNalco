@@ -59,7 +59,7 @@ export default function Issues() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-    const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
 
@@ -130,11 +130,12 @@ export default function Issues() {
     },
   ];
 
-    const [recentIssues, setRecentIssues] = useState([
+  const [recentIssues, setRecentIssues] = useState([
     {
       id: "INC-2024-001",
       title: "Conveyor belt malfunction in Section A",
-      description: "Main conveyor belt in Section A is making unusual noises and has stopped intermittently. Requires immediate inspection.",
+      description:
+        "Main conveyor belt in Section A is making unusual noises and has stopped intermittently. Requires immediate inspection.",
       category: "Mechanical",
       priority: "High",
       status: "In Progress",
@@ -142,12 +143,13 @@ export default function Issues() {
       created: "2 hours ago",
       location: "Section A - Production Floor",
       reportedBy: "Mohammad Alam",
-      estimatedResolution: "Tomorrow"
+      estimatedResolution: "Tomorrow",
     },
     {
       id: "INC-2024-002",
       title: "Emergency lighting not working in Block B",
-      description: "Emergency lighting system in Block B is completely non-functional. This is a critical safety issue.",
+      description:
+        "Emergency lighting system in Block B is completely non-functional. This is a critical safety issue.",
       category: "Electrical",
       priority: "Critical",
       status: "Open",
@@ -155,12 +157,13 @@ export default function Issues() {
       created: "4 hours ago",
       location: "Block B - Emergency Exit Routes",
       reportedBy: "Geeta Mishra",
-      estimatedResolution: "Within 6 hours"
+      estimatedResolution: "Within 6 hours",
     },
     {
       id: "INC-2024-003",
       title: "Chemical spill in processing unit",
-      description: "Minor chemical spill in Unit 3. Area has been secured and cleaned. Documentation required.",
+      description:
+        "Minor chemical spill in Unit 3. Area has been secured and cleaned. Documentation required.",
       category: "Safety",
       priority: "Critical",
       status: "Resolved",
@@ -168,12 +171,13 @@ export default function Issues() {
       created: "1 day ago",
       location: "Unit 3 - Chemical Processing",
       reportedBy: "Ravi Teja",
-      estimatedResolution: "Completed"
+      estimatedResolution: "Completed",
     },
     {
       id: "INC-2024-004",
       title: "Air conditioning not working in Admin block",
-      description: "HVAC system in admin building is not functioning properly. Temperature control issues.",
+      description:
+        "HVAC system in admin building is not functioning properly. Temperature control issues.",
       category: "Infrastructure",
       priority: "Medium",
       status: "Open",
@@ -181,7 +185,7 @@ export default function Issues() {
       created: "2 days ago",
       location: "Admin Block - All Floors",
       reportedBy: "Sunita Devi",
-      estimatedResolution: "This week"
+      estimatedResolution: "This week",
     },
   ]);
 
@@ -192,13 +196,18 @@ export default function Issues() {
     setSuccess("");
 
     try {
-      if (!newIssue.title || !newIssue.description || !newIssue.category || !newIssue.priority) {
+      if (
+        !newIssue.title ||
+        !newIssue.description ||
+        !newIssue.category ||
+        !newIssue.priority
+      ) {
         setError("Please fill in all required fields");
         return;
       }
 
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const issueId = `INC-2024-${String(recentIssues.length + 1).padStart(3, "0")}`;
       const issue = {
@@ -212,7 +221,7 @@ export default function Issues() {
         created: "Just now",
         location: newIssue.location || "Not specified",
         reportedBy: user?.name || "Anonymous",
-        estimatedResolution: "Pending assessment"
+        estimatedResolution: "Pending assessment",
       };
 
       setRecentIssues([issue, ...recentIssues]);
@@ -238,11 +247,18 @@ export default function Issues() {
     setViewDialogOpen(true);
   };
 
-    const filteredIssues = recentIssues.filter(issue => {
-    const matchesSearch = issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         issue.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = !statusFilter || statusFilter === "all" || issue.status.toLowerCase() === statusFilter.toLowerCase();
-    const matchesPriority = !priorityFilter || priorityFilter === "all" || issue.priority.toLowerCase() === priorityFilter.toLowerCase();
+  const filteredIssues = recentIssues.filter((issue) => {
+    const matchesSearch =
+      issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      issue.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      !statusFilter ||
+      statusFilter === "all" ||
+      issue.status.toLowerCase() === statusFilter.toLowerCase();
+    const matchesPriority =
+      !priorityFilter ||
+      priorityFilter === "all" ||
+      issue.priority.toLowerCase() === priorityFilter.toLowerCase();
 
     return matchesSearch && matchesStatus && matchesPriority;
   });
@@ -275,7 +291,7 @@ export default function Issues() {
 
   return (
     <Layout>
-            <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8">
         {/* Alerts */}
         {success && (
           <Alert className="mb-6 border-nalco-green bg-nalco-green/10">
@@ -323,7 +339,9 @@ export default function Issues() {
                       id="title"
                       placeholder="Brief description of the issue"
                       value={newIssue.title}
-                      onChange={(e) => setNewIssue({...newIssue, title: e.target.value})}
+                      onChange={(e) =>
+                        setNewIssue({ ...newIssue, title: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -331,7 +349,9 @@ export default function Issues() {
                     <Label htmlFor="category">Category *</Label>
                     <Select
                       value={newIssue.category}
-                      onValueChange={(value) => setNewIssue({...newIssue, category: value})}
+                      onValueChange={(value) =>
+                        setNewIssue({ ...newIssue, category: value })
+                      }
                       required
                     >
                       <SelectTrigger>
@@ -341,9 +361,13 @@ export default function Issues() {
                         <SelectItem value="electrical">Electrical</SelectItem>
                         <SelectItem value="mechanical">Mechanical</SelectItem>
                         <SelectItem value="safety">Safety</SelectItem>
-                        <SelectItem value="infrastructure">Infrastructure</SelectItem>
+                        <SelectItem value="infrastructure">
+                          Infrastructure
+                        </SelectItem>
                         <SelectItem value="it">IT & Technology</SelectItem>
-                        <SelectItem value="environmental">Environmental</SelectItem>
+                        <SelectItem value="environmental">
+                          Environmental
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -351,7 +375,9 @@ export default function Issues() {
                     <Label htmlFor="priority">Priority *</Label>
                     <Select
                       value={newIssue.priority}
-                      onValueChange={(value) => setNewIssue({...newIssue, priority: value})}
+                      onValueChange={(value) =>
+                        setNewIssue({ ...newIssue, priority: value })
+                      }
                       required
                     >
                       <SelectTrigger>
@@ -371,7 +397,9 @@ export default function Issues() {
                       id="location"
                       placeholder="Specific location of the issue"
                       value={newIssue.location}
-                      onChange={(e) => setNewIssue({...newIssue, location: e.target.value})}
+                      onChange={(e) =>
+                        setNewIssue({ ...newIssue, location: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -382,15 +410,21 @@ export default function Issues() {
                     placeholder="Provide a detailed description of the issue, including steps to reproduce if applicable"
                     rows={4}
                     value={newIssue.description}
-                    onChange={(e) => setNewIssue({...newIssue, description: e.target.value})}
+                    onChange={(e) =>
+                      setNewIssue({ ...newIssue, description: e.target.value })
+                    }
                     required
                   />
                 </div>
                 <div className="flex items-center space-x-2 p-4 bg-nalco-blue/5 rounded-lg">
                   <Upload className="h-5 w-5 text-nalco-blue" />
                   <div>
-                    <p className="text-sm font-medium">Attach Files (Optional)</p>
-                    <p className="text-xs text-nalco-gray">Upload photos or documents related to this issue</p>
+                    <p className="text-sm font-medium">
+                      Attach Files (Optional)
+                    </p>
+                    <p className="text-xs text-nalco-gray">
+                      Upload photos or documents related to this issue
+                    </p>
                   </div>
                   <Button type="button" variant="outline" size="sm">
                     Choose Files
@@ -485,7 +519,7 @@ export default function Issues() {
           </div>
         </div>
 
-                {/* Filters and Search */}
+        {/* Filters and Search */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nalco-gray" />
@@ -496,22 +530,22 @@ export default function Issues() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-40">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
-                        <SelectContent>
+            <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="open">Open</SelectItem>
               <SelectItem value="in progress">In Progress</SelectItem>
               <SelectItem value="resolved">Resolved</SelectItem>
             </SelectContent>
           </Select>
-                    <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+          <Select value={priorityFilter} onValueChange={setPriorityFilter}>
             <SelectTrigger className="w-40">
               <SelectValue placeholder="All Priority" />
             </SelectTrigger>
-                        <SelectContent>
+            <SelectContent>
               <SelectItem value="all">All Priority</SelectItem>
               <SelectItem value="low">Low</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>
@@ -529,12 +563,14 @@ export default function Issues() {
               Latest issues reported across all departments
             </CardDescription>
           </CardHeader>
-                    <CardContent>
+          <CardContent>
             <div className="space-y-4">
               {filteredIssues.length === 0 ? (
                 <div className="text-center py-8">
                   <AlertTriangle className="h-12 w-12 text-nalco-gray mx-auto mb-4" />
-                  <p className="text-nalco-gray">No issues found matching your criteria</p>
+                  <p className="text-nalco-gray">
+                    No issues found matching your criteria
+                  </p>
                 </div>
               ) : (
                 filteredIssues.map((issue, index) => (
@@ -579,8 +615,12 @@ export default function Issues() {
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </Button>
-                        {user?.role === "authority" || user?.role === "admin" ? (
-                          <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
+                        {user?.role === "authority" ||
+                        user?.role === "admin" ? (
+                          <Button
+                            size="sm"
+                            className="bg-nalco-blue hover:bg-nalco-blue/90"
+                          >
                             <Edit className="h-4 w-4 mr-2" />
                             Assign
                           </Button>
@@ -592,7 +632,7 @@ export default function Issues() {
               )}
             </div>
           </CardContent>
-                </Card>
+        </Card>
 
         {/* View Issue Dialog */}
         <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
@@ -600,7 +640,9 @@ export default function Issues() {
             <DialogHeader>
               <DialogTitle className="flex items-center space-x-2">
                 <span>{selectedIssue?.id}</span>
-                <Badge className={getPriorityColor(selectedIssue?.priority || "")}>
+                <Badge
+                  className={getPriorityColor(selectedIssue?.priority || "")}
+                >
                   {selectedIssue?.priority}
                 </Badge>
                 <Badge className={getStatusColor(selectedIssue?.status || "")}>
@@ -636,7 +678,9 @@ export default function Issues() {
                     <div className="flex items-center space-x-2">
                       <User className="h-4 w-4 text-nalco-gray" />
                       <span className="text-sm font-medium">Reported by:</span>
-                      <span className="text-sm">{selectedIssue.reportedBy}</span>
+                      <span className="text-sm">
+                        {selectedIssue.reportedBy}
+                      </span>
                     </div>
                   </div>
                   <div className="space-y-3">
@@ -652,8 +696,12 @@ export default function Issues() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <Clock className="h-4 w-4 text-nalco-gray" />
-                      <span className="text-sm font-medium">Est. Resolution:</span>
-                      <span className="text-sm">{selectedIssue.estimatedResolution}</span>
+                      <span className="text-sm font-medium">
+                        Est. Resolution:
+                      </span>
+                      <span className="text-sm">
+                        {selectedIssue.estimatedResolution}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -666,15 +714,22 @@ export default function Issues() {
                       <CheckCircle className="h-5 w-5 text-nalco-green mt-0.5" />
                       <div>
                         <p className="text-sm font-medium">Issue Created</p>
-                        <p className="text-xs text-nalco-gray">Reported by {selectedIssue.reportedBy} • {selectedIssue.created}</p>
+                        <p className="text-xs text-nalco-gray">
+                          Reported by {selectedIssue.reportedBy} •{" "}
+                          {selectedIssue.created}
+                        </p>
                       </div>
                     </div>
                     {selectedIssue.status === "In Progress" && (
                       <div className="flex items-start space-x-3 p-3 bg-nalco-blue/10 rounded-lg">
                         <Clock className="h-5 w-5 text-nalco-blue mt-0.5" />
                         <div>
-                          <p className="text-sm font-medium">Investigation Started</p>
-                          <p className="text-xs text-nalco-gray">Assigned to {selectedIssue.assignee} • 1 hour ago</p>
+                          <p className="text-sm font-medium">
+                            Investigation Started
+                          </p>
+                          <p className="text-xs text-nalco-gray">
+                            Assigned to {selectedIssue.assignee} • 1 hour ago
+                          </p>
                         </div>
                       </div>
                     )}
@@ -683,7 +738,10 @@ export default function Issues() {
                         <CheckCircle className="h-5 w-5 text-nalco-green mt-0.5" />
                         <div>
                           <p className="text-sm font-medium">Issue Resolved</p>
-                          <p className="text-xs text-nalco-gray">Completed by {selectedIssue.assignee} • {selectedIssue.created}</p>
+                          <p className="text-xs text-nalco-gray">
+                            Completed by {selectedIssue.assignee} •{" "}
+                            {selectedIssue.created}
+                          </p>
                         </div>
                       </div>
                     )}
@@ -696,12 +754,8 @@ export default function Issues() {
                     <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
                       Assign to Team
                     </Button>
-                    <Button variant="outline">
-                      Update Status
-                    </Button>
-                    <Button variant="outline">
-                      Add Comment
-                    </Button>
+                    <Button variant="outline">Update Status</Button>
+                    <Button variant="outline">Add Comment</Button>
                   </div>
                 )}
               </div>
