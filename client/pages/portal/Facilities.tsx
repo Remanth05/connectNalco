@@ -464,60 +464,99 @@ export default function Facilities() {
               <CardTitle className="text-nalco-black">Quick Booking</CardTitle>
               <CardDescription>Reserve a facility quickly</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="facility">Facility</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select facility" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="conference-a">
-                      Conference Room A
-                    </SelectItem>
-                    <SelectItem value="conference-b">
-                      Conference Room B
-                    </SelectItem>
-                    <SelectItem value="training-a">Training Room A</SelectItem>
-                    <SelectItem value="training-b">Training Room B</SelectItem>
-                    <SelectItem value="phone-booth">Phone Booth</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="date">Date</Label>
-                <Input id="date" type="date" />
-              </div>
-
-              <div className="grid gap-4 grid-cols-2">
+                        <CardContent>
+              <form onSubmit={handleQuickBooking} className="space-y-4">
                 <div>
-                  <Label htmlFor="startTime">Start Time</Label>
-                  <Input id="startTime" type="time" />
+                  <Label htmlFor="facility">Facility</Label>
+                  <Select
+                    value={quickBookingForm.facility}
+                    onValueChange={(value) => setQuickBookingForm({...quickBookingForm, facility: value})}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select facility" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {facilities.filter(f => f.availability === "Available").map(facility => (
+                        <SelectItem key={facility.id} value={facility.name}>
+                          {facility.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+
                 <div>
-                  <Label htmlFor="endTime">End Time</Label>
-                  <Input id="endTime" type="time" />
+                  <Label htmlFor="date">Date</Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={quickBookingForm.date}
+                    onChange={(e) => setQuickBookingForm({...quickBookingForm, date: e.target.value})}
+                    required
+                  />
                 </div>
-              </div>
 
-              <div>
-                <Label htmlFor="purpose">Purpose</Label>
-                <Textarea
-                  id="purpose"
-                  placeholder="Meeting purpose or description"
-                  rows={3}
-                />
-              </div>
+                <div className="grid gap-4 grid-cols-2">
+                  <div>
+                    <Label htmlFor="startTime">Start Time</Label>
+                    <Input
+                      id="startTime"
+                      type="time"
+                      value={quickBookingForm.startTime}
+                      onChange={(e) => setQuickBookingForm({...quickBookingForm, startTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="endTime">End Time</Label>
+                    <Input
+                      id="endTime"
+                      type="time"
+                      value={quickBookingForm.endTime}
+                      onChange={(e) => setQuickBookingForm({...quickBookingForm, endTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div>
-                <Label htmlFor="attendees">Number of Attendees</Label>
-                <Input id="attendees" type="number" placeholder="0" />
-              </div>
+                <div>
+                  <Label htmlFor="purpose">Purpose</Label>
+                  <Textarea
+                    id="purpose"
+                    placeholder="Meeting purpose or description"
+                    rows={3}
+                    value={quickBookingForm.purpose}
+                    onChange={(e) => setQuickBookingForm({...quickBookingForm, purpose: e.target.value})}
+                  />
+                </div>
 
-              <Button className="w-full bg-nalco-blue hover:bg-nalco-blue/90">
-                Book Facility
-              </Button>
+                <div>
+                  <Label htmlFor="attendees">Number of Attendees</Label>
+                  <Input
+                    id="attendees"
+                    type="number"
+                    placeholder="0"
+                    value={quickBookingForm.attendees}
+                    onChange={(e) => setQuickBookingForm({...quickBookingForm, attendees: e.target.value})}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-nalco-blue hover:bg-nalco-blue/90"
+                  disabled={submitting}
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Booking...
+                    </>
+                  ) : (
+                    "Book Facility"
+                  )}
+                </Button>
+              </form>
             </CardContent>
           </Card>
 
