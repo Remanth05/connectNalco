@@ -780,7 +780,54 @@ export default function AdminDashboard() {
               </Button>
             </div>
           </CardContent>
-        </Card>
+                </Card>
+
+        {/* Module Access Dialog */}
+        <Dialog open={moduleDialog.open} onOpenChange={(open) => setModuleDialog({...moduleDialog, open})}>
+          <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-nalco-black">
+                {moduleDialog.title}
+              </DialogTitle>
+              <DialogDescription>
+                Manage {moduleDialog.title.toLowerCase()} and system configurations
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="py-4">
+              {getModuleContent(moduleDialog.type)}
+            </div>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setModuleDialog({open: false, type: "", title: ""})}
+              >
+                Close
+              </Button>
+              {moduleDialog.type === "create-user" && (
+                <Button
+                  className="bg-nalco-blue hover:bg-nalco-blue/90"
+                  onClick={() => {
+                    alert("User created successfully!");
+                    setModuleDialog({open: false, type: "", title: ""});
+                  }}
+                >
+                  Create User
+                </Button>
+              )}
+              <Button
+                className="bg-nalco-green hover:bg-nalco-green/90"
+                onClick={() => {
+                  alert("Changes saved successfully!");
+                  setModuleDialog({open: false, type: "", title: ""});
+                }}
+              >
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
