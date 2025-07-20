@@ -130,44 +130,122 @@ export default function Issues() {
     },
   ];
 
-  const recentIssues = [
+    const [recentIssues, setRecentIssues] = useState([
     {
       id: "INC-2024-001",
       title: "Conveyor belt malfunction in Section A",
+      description: "Main conveyor belt in Section A is making unusual noises and has stopped intermittently. Requires immediate inspection.",
       category: "Mechanical",
       priority: "High",
       status: "In Progress",
       assignee: "Rajesh Kumar",
       created: "2 hours ago",
+      location: "Section A - Production Floor",
+      reportedBy: "Mohammad Alam",
+      estimatedResolution: "Tomorrow"
     },
     {
       id: "INC-2024-002",
       title: "Emergency lighting not working in Block B",
+      description: "Emergency lighting system in Block B is completely non-functional. This is a critical safety issue.",
       category: "Electrical",
       priority: "Critical",
       status: "Open",
       assignee: "Unassigned",
       created: "4 hours ago",
+      location: "Block B - Emergency Exit Routes",
+      reportedBy: "Geeta Mishra",
+      estimatedResolution: "Within 6 hours"
     },
     {
       id: "INC-2024-003",
       title: "Chemical spill in processing unit",
+      description: "Minor chemical spill in Unit 3. Area has been secured and cleaned. Documentation required.",
       category: "Safety",
       priority: "Critical",
       status: "Resolved",
       assignee: "Safety Team",
       created: "1 day ago",
+      location: "Unit 3 - Chemical Processing",
+      reportedBy: "Ravi Teja",
+      estimatedResolution: "Completed"
     },
     {
       id: "INC-2024-004",
       title: "Air conditioning not working in Admin block",
+      description: "HVAC system in admin building is not functioning properly. Temperature control issues.",
       category: "Infrastructure",
       priority: "Medium",
       status: "Open",
       assignee: "Maintenance",
       created: "2 days ago",
+      location: "Admin Block - All Floors",
+      reportedBy: "Sunita Devi",
+      estimatedResolution: "This week"
     },
-  ];
+  ]);
+
+  const handleSubmitIssue = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (!newIssue.title || !newIssue.description || !newIssue.category || !newIssue.priority) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const issueId = `INC-2024-${String(recentIssues.length + 1).padStart(3, "0")}`;
+      const issue = {
+        id: issueId,
+        title: newIssue.title,
+        description: newIssue.description,
+        category: newIssue.category,
+        priority: newIssue.priority,
+        status: "Open",
+        assignee: "Unassigned",
+        created: "Just now",
+        location: newIssue.location || "Not specified",
+        reportedBy: user?.name || "Anonymous",
+        estimatedResolution: "Pending assessment"
+      };
+
+      setRecentIssues([issue, ...recentIssues]);
+      setSuccess(`Issue ${issueId} has been reported successfully!`);
+      setReportDialogOpen(false);
+      setNewIssue({
+        title: "",
+        description: "",
+        category: "",
+        priority: "",
+        location: "",
+        urgency: "medium",
+      });
+    } catch (error) {
+      setError("Failed to submit issue. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleViewIssue = (issue: any) => {
+    setSelectedIssue(issue);
+    setViewDialogOpen(true);
+  };
+
+  const filteredIssues = recentIssues.filter(issue => {
+    const matchesSearch = issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         issue.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = !statusFilter || issue.status.toLowerCase() === statusFilter.toLowerCase();
+    const matchesPriority = !priorityFilter || issue.priority.toLowerCase() === priorityFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
