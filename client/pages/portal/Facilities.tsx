@@ -672,18 +672,37 @@ export default function Facilities() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                                        <div className="flex items-center space-x-2">
                       <Badge className={getStatusColor(booking.status)}>
                         {booking.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setNewBookingForm({
+                            facility: booking.facility,
+                            date: booking.date,
+                            startTime: booking.time.split(" - ")[0],
+                            endTime: booking.time.split(" - ")[1],
+                            purpose: booking.purpose,
+                            attendees: "",
+                            specialRequests: "",
+                            recurring: false
+                          });
+                          setNewBookingOpen(true);
+                        }}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
                         Modify
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         className="text-nalco-red hover:text-nalco-red"
+                        onClick={() => handleCancelBooking(booking.id)}
                       >
+                        <Trash2 className="h-4 w-4 mr-2" />
                         Cancel
                       </Button>
                     </div>
