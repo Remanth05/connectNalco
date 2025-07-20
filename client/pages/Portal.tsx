@@ -7,6 +7,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   User,
   Calendar,
@@ -16,11 +26,68 @@ import {
   Settings,
   Clock,
   Building2,
+  CheckCircle,
+  AlertTriangle,
+  Eye,
+  ExternalLink,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Portal() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [tasksDialogOpen, setTasksDialogOpen] = useState(false);
+
+  const pendingTasks = [
+    {
+      id: "TASK-001",
+      title: "Complete Annual Performance Review",
+      description: "Submit your self-assessment for the annual performance review cycle",
+      priority: "High",
+      dueDate: "March 31, 2024",
+      type: "Performance",
+      action: "Submit Review",
+      link: "/portal/performance"
+    },
+    {
+      id: "TASK-002",
+      title: "Update Emergency Contact Information",
+      description: "HR requires updated emergency contact details in your profile",
+      priority: "Medium",
+      dueDate: "April 15, 2024",
+      type: "Profile",
+      action: "Update Profile",
+      link: "/portal/profile"
+    },
+    {
+      id: "TASK-003",
+      title: "Safety Training Completion",
+      description: "Complete mandatory safety training module for Q1 2024",
+      priority: "High",
+      dueDate: "April 5, 2024",
+      type: "Training",
+      action: "Start Training",
+      link: "/training/safety"
+    }
+  ];
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority.toLowerCase()) {
+      case "high":
+        return "bg-nalco-red text-white";
+      case "medium":
+        return "bg-yellow-500 text-white";
+      default:
+        return "bg-nalco-blue text-white";
+    }
+  };
+
+  const handleTaskAction = (task: any) => {
+    // Simulate completing the task
+    navigate(task.link);
+  };
 
   const services = [
     {
