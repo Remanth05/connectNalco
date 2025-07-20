@@ -46,6 +46,10 @@ import {
   Download,
   Filter,
   Search,
+  Eye,
+  Edit,
+  Trash2,
+  ExternalLink,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
