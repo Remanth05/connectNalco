@@ -18,6 +18,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   ArrowLeft,
   Building2,
@@ -28,11 +38,46 @@ import {
   Coffee,
   Car,
   Plus,
+  Loader2,
+  CheckCircle,
+  Eye,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Facilities() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [newBookingOpen, setNewBookingOpen] = useState(false);
+  const [quickBooking, setQuickBooking] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  // Form states
+  const [quickBookingForm, setQuickBookingForm] = useState({
+    facility: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    purpose: "",
+    attendees: ""
+  });
+
+  const [newBookingForm, setNewBookingForm] = useState({
+    facility: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    purpose: "",
+    attendees: "",
+    specialRequests: "",
+    recurring: false
+  });
 
   const facilities = [
     {
