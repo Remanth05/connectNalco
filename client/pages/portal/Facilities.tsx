@@ -296,7 +296,22 @@ export default function Facilities() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-8">
+        {/* Alerts */}
+        {success && (
+          <Alert className="mb-6 border-nalco-green bg-nalco-green/10">
+            <CheckCircle className="h-4 w-4" />
+            <AlertDescription className="text-nalco-green">
+              {success}
+            </AlertDescription>
+          </Alert>
+        )}
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center">
@@ -318,10 +333,128 @@ export default function Facilities() {
               </p>
             </div>
           </div>
-          <Button className="bg-nalco-red hover:bg-nalco-red/90">
-            <Plus className="h-4 w-4 mr-2" />
-            New Booking
-          </Button>
+          <Dialog open={newBookingOpen} onOpenChange={setNewBookingOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-nalco-red hover:bg-nalco-red/90">
+                <Plus className="h-4 w-4 mr-2" />
+                New Booking
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>New Facility Booking</DialogTitle>
+                <DialogDescription>
+                  Reserve a facility for your meeting or event
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleNewBooking} className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="newFacility">Facility *</Label>
+                    <Select
+                      value={newBookingForm.facility}
+                      onValueChange={(value) => setNewBookingForm({...newBookingForm, facility: value})}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select facility" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {facilities.filter(f => f.availability === "Available").map(facility => (
+                          <SelectItem key={facility.id} value={facility.name}>
+                            {facility.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="newDate">Date *</Label>
+                    <Input
+                      id="newDate"
+                      type="date"
+                      value={newBookingForm.date}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, date: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="newStartTime">Start Time *</Label>
+                    <Input
+                      id="newStartTime"
+                      type="time"
+                      value={newBookingForm.startTime}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, startTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="newEndTime">End Time *</Label>
+                    <Input
+                      id="newEndTime"
+                      type="time"
+                      value={newBookingForm.endTime}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, endTime: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="newAttendees">Number of Attendees</Label>
+                    <Input
+                      id="newAttendees"
+                      type="number"
+                      placeholder="0"
+                      value={newBookingForm.attendees}
+                      onChange={(e) => setNewBookingForm({...newBookingForm, attendees: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="newPurpose">Purpose</Label>
+                  <Textarea
+                    id="newPurpose"
+                    placeholder="Meeting purpose or description"
+                    rows={3}
+                    value={newBookingForm.purpose}
+                    onChange={(e) => setNewBookingForm({...newBookingForm, purpose: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="specialRequests">Special Requests</Label>
+                  <Textarea
+                    id="specialRequests"
+                    placeholder="Any special equipment or setup requirements"
+                    rows={2}
+                    value={newBookingForm.specialRequests}
+                    onChange={(e) => setNewBookingForm({...newBookingForm, specialRequests: e.target.value})}
+                  />
+                </div>
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setNewBookingOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-nalco-red hover:bg-nalco-red/90"
+                    disabled={submitting}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Booking...
+                      </>
+                    ) : (
+                      "Submit Booking"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
