@@ -496,9 +496,9 @@ export default function Issues() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder="All Status" />
             </SelectTrigger>
                         <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
