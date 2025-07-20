@@ -517,45 +517,167 @@ export default function AuthorityDashboard() {
             </div>
           </div>
         );
-      case "reports":
+            case "reports":
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Reports</h3>
-              <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
-                <Download className="h-4 w-4 mr-2" />
-                Generate Report
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
+                    <Download className="h-4 w-4 mr-2" />
+                    Generate Report
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Generate Department Report</DialogTitle>
+                    <DialogDescription>
+                      Create detailed reports for your department
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Report Type</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select report type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="attendance">Attendance Report</SelectItem>
+                          <SelectItem value="performance">Performance Report</SelectItem>
+                          <SelectItem value="leave">Leave Utilization Report</SelectItem>
+                          <SelectItem value="training">Training Report</SelectItem>
+                          <SelectItem value="comprehensive">Comprehensive Report</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <Label>From Date</Label>
+                        <Input type="date" />
+                      </div>
+                      <div>
+                        <Label>To Date</Label>
+                        <Input type="date" />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Include Employees</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select employees" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Department Employees</SelectItem>
+                          <SelectItem value="active">Active Employees Only</SelectItem>
+                          <SelectItem value="custom">Custom Selection</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Format</Label>
+                      <div className="flex gap-4 mt-2">
+                        <div className="flex items-center space-x-2">
+                          <input type="radio" id="pdf" name="format" value="pdf" defaultChecked />
+                          <Label htmlFor="pdf">PDF</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="radio" id="excel" name="format" value="excel" />
+                          <Label htmlFor="excel">Excel</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="radio" id="csv" name="format" value="csv" />
+                          <Label htmlFor="csv">CSV</Label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline">Cancel</Button>
+                    <Button
+                      className="bg-nalco-blue hover:bg-nalco-blue/90"
+                      onClick={() => {
+                        setSuccess("Report generation started! You'll receive an email when it's ready.");
+                        setModuleDialog({open: false, type: "", title: ""});
+                      }}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Generate Report
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <Card>
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <h4 className="font-medium mb-2">Attendance Report</h4>
                   <p className="text-2xl font-bold text-nalco-green">94%</p>
                   <p className="text-sm text-nalco-gray">Current month average</p>
+                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Details
+                  </Button>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <h4 className="font-medium mb-2">Leave Utilization</h4>
                   <p className="text-2xl font-bold text-nalco-blue">68%</p>
                   <p className="text-sm text-nalco-gray">Annual leave taken</p>
+                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Details
+                  </Button>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <h4 className="font-medium mb-2">Performance Score</h4>
                   <p className="text-2xl font-bold text-nalco-green">4.2/5</p>
                   <p className="text-sm text-nalco-gray">Department average</p>
+                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Details
+                  </Button>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <h4 className="font-medium mb-2">Training Hours</h4>
                   <p className="text-2xl font-bold text-nalco-red">156</p>
                   <p className="text-sm text-nalco-gray">Total this quarter</p>
+                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Details
+                  </Button>
                 </CardContent>
               </Card>
+            </div>
+            <div className="mt-6">
+              <h4 className="font-medium mb-3">Recent Reports</h4>
+              <div className="space-y-2">
+                {[
+                  { name: "March 2024 Attendance Report", date: "Generated on Apr 1, 2024", type: "PDF" },
+                  { name: "Q1 Performance Summary", date: "Generated on Mar 31, 2024", type: "Excel" },
+                  { name: "Training Completion Report", date: "Generated on Mar 28, 2024", type: "PDF" }
+                ].map((report, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">{report.name}</p>
+                      <p className="text-sm text-nalco-gray">{report.date}</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="outline">{report.type}</Badge>
+                      <Button size="sm" variant="outline">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         );
