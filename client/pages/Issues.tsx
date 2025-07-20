@@ -507,9 +507,9 @@ export default function Issues() {
               <SelectItem value="resolved">Resolved</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                    <Select value={priorityFilter} onValueChange={setPriorityFilter}>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Priority" />
+              <SelectValue placeholder="All Priority" />
             </SelectTrigger>
                         <SelectContent>
               <SelectItem value="all">All Priority</SelectItem>
