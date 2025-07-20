@@ -718,9 +718,17 @@ export default function AuthorityDashboard() {
                 <Calendar className="h-4 w-4 mr-2" />
                 Schedule Team Meeting
               </Button>
-              <Button variant="outline" className="w-full">
+                            <Button variant="outline" className="w-full">
                 <BarChart3 className="h-4 w-4 mr-2" />
                 View Analytics
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full text-nalco-red hover:text-nalco-red border-nalco-red"
+                onClick={() => navigate("/issues")}
+              >
+                <AlertTriangle className="h-4 w-4 mr-2" />
+                Report Issue
               </Button>
             </CardContent>
           </Card>
