@@ -49,10 +49,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState<string | null>(null);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Profile Settings State
   const [profileData, setProfileData] = useState({
