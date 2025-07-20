@@ -529,47 +529,67 @@ export default function Issues() {
               Latest issues reported across all departments
             </CardDescription>
           </CardHeader>
-          <CardContent>
+                    <CardContent>
             <div className="space-y-4">
-              {recentIssues.map((issue, index) => (
-                <div
-                  key={index}
-                  className="rounded-lg border p-4 transition-all hover:bg-nalco-gray/5"
-                >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center gap-2">
-                        <span className="font-mono text-sm text-nalco-blue">
-                          {issue.id}
-                        </span>
-                        <Badge
-                          variant="secondary"
-                          className={getPriorityColor(issue.priority)}
-                        >
-                          {issue.priority}
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className={getStatusColor(issue.status)}
-                        >
-                          {issue.status}
-                        </Badge>
+              {filteredIssues.length === 0 ? (
+                <div className="text-center py-8">
+                  <AlertTriangle className="h-12 w-12 text-nalco-gray mx-auto mb-4" />
+                  <p className="text-nalco-gray">No issues found matching your criteria</p>
+                </div>
+              ) : (
+                filteredIssues.map((issue, index) => (
+                  <div
+                    key={index}
+                    className="rounded-lg border p-4 transition-all hover:bg-nalco-gray/5"
+                  >
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex-1">
+                        <div className="mb-2 flex items-center gap-2">
+                          <span className="font-mono text-sm text-nalco-blue">
+                            {issue.id}
+                          </span>
+                          <Badge
+                            variant="secondary"
+                            className={getPriorityColor(issue.priority)}
+                          >
+                            {issue.priority}
+                          </Badge>
+                          <Badge
+                            variant="secondary"
+                            className={getStatusColor(issue.status)}
+                          >
+                            {issue.status}
+                          </Badge>
+                        </div>
+                        <h3 className="mb-1 font-semibold text-nalco-black">
+                          {issue.title}
+                        </h3>
+                        <div className="flex items-center gap-4 text-sm text-nalco-gray">
+                          <span>Category: {issue.category}</span>
+                          <span>Assignee: {issue.assignee}</span>
+                          <span>Created: {issue.created}</span>
+                        </div>
                       </div>
-                      <h3 className="mb-1 font-semibold text-nalco-black">
-                        {issue.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-sm text-nalco-gray">
-                        <span>Category: {issue.category}</span>
-                        <span>Assignee: {issue.assignee}</span>
-                        <span>Created: {issue.created}</span>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewIssue(issue)}
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </Button>
+                        {user?.role === "authority" || user?.role === "admin" ? (
+                          <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
+                            <Edit className="h-4 w-4 mr-2" />
+                            Assign
+                          </Button>
+                        ) : null}
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
