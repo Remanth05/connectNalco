@@ -7,6 +7,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   AlertTriangle,
   Plus,
@@ -19,11 +40,38 @@ import {
   Wrench,
   Shield,
   Building,
+  Loader2,
+  Upload,
+  Eye,
+  Edit,
+  User,
+  Calendar,
+  Tag,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Issues() {
+  const { user } = useAuth();
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [selectedIssue, setSelectedIssue] = useState<any>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("");
+
+  // Form state for new issue
+  const [newIssue, setNewIssue] = useState({
+    title: "",
+    description: "",
+    category: "",
+    priority: "",
+    location: "",
+    urgency: "medium",
+  });
   const issueStats = [
     {
       icon: AlertTriangle,
