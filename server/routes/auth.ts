@@ -258,7 +258,7 @@ export const loginUser: RequestHandler = async (req, res) => {
 export const getCurrentUser: RequestHandler = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
-    
+
     if (!token) {
       const response: ApiResponse<null> = {
         success: false,
@@ -268,6 +268,17 @@ export const getCurrentUser: RequestHandler = async (req, res) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET) as any;
+
+    // Check if MongoDB is connected
+    if (!isMongoConnected()) {
+      // Return mock user for development
+      const response: ApiResponse<typeof mockUser> = {
+        success: true,
+        data: mockUser
+      };
+      return res.json(response);
+    }
+
     const user = await User.findById(decoded.userId);
 
     if (!user) {
