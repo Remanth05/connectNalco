@@ -355,8 +355,8 @@ export default function Directory() {
                 <p className="text-sm text-nalco-gray mb-2">
                   Human Resources Support
                 </p>
-                <p className="text-sm text-nalco-black">+1 (555) 100-1000</p>
-                <p className="text-xs text-nalco-gray">hr@company.com</p>
+                <p className="text-sm text-nalco-black">+91-6752-242000</p>
+                <p className="text-xs text-nalco-gray">hr@nalco.com</p>
               </div>
               <div className="text-center p-4 border rounded-lg">
                 <Building2 className="h-8 w-8 text-nalco-blue mx-auto mb-2" />
@@ -364,17 +364,17 @@ export default function Directory() {
                 <p className="text-sm text-nalco-gray mb-2">
                   Technical Support
                 </p>
-                <p className="text-sm text-nalco-black">+1 (555) 200-2000</p>
-                <p className="text-xs text-nalco-gray">support@company.com</p>
+                <p className="text-sm text-nalco-black">+91-6752-242100</p>
+                <p className="text-xs text-nalco-gray">support@nalco.com</p>
               </div>
               <div className="text-center p-4 border rounded-lg">
                 <Building2 className="h-8 w-8 text-nalco-green mx-auto mb-2" />
-                <h4 className="font-medium text-nalco-black">Security</h4>
+                <h4 className="font-medium text-nalco-black">Plant Security</h4>
                 <p className="text-sm text-nalco-gray mb-2">
                   Emergency & Security
                 </p>
-                <p className="text-sm text-nalco-black">+1 (555) 911-0000</p>
-                <p className="text-xs text-nalco-gray">security@company.com</p>
+                <p className="text-sm text-nalco-black">+91-6752-242911</p>
+                <p className="text-xs text-nalco-gray">security@nalco.com</p>
               </div>
             </div>
           </CardContent>
