@@ -1066,6 +1066,111 @@ export default function Issues() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Department Issues Dialog */}
+        <Dialog open={departmentIssuesDialogOpen} onOpenChange={setDepartmentIssuesDialogOpen}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                {selectedCategory && (
+                  <>
+                    <selectedCategory.icon className="h-5 w-5" />
+                    <span>{selectedCategory.title} Department Issues</span>
+                  </>
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {selectedCategory && `View and manage all ${selectedCategory.title.toLowerCase()} related issues`}
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedCategory && (
+              <div className="space-y-6">
+                {/* Statistics */}
+                <div className="grid gap-4 md:grid-cols-4">
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-nalco-black">{selectedCategory.totalIssues}</div>
+                      <p className="text-sm text-nalco-gray">Total Issues</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-nalco-red">{selectedCategory.openIssues}</div>
+                      <p className="text-sm text-nalco-gray">Open</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-600">{selectedCategory.inProgressIssues}</div>
+                      <p className="text-sm text-nalco-gray">In Progress</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-nalco-green">{selectedCategory.resolvedIssues}</div>
+                      <p className="text-sm text-nalco-gray">Resolved</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Issues List */}
+                <div>
+                  <h4 className="font-medium mb-3">Recent Issues</h4>
+                  <div className="space-y-3">
+                    {selectedCategory.issues.map((issue: any, index: number) => (
+                      <div key={index} className="border rounded-lg p-4 hover:bg-nalco-gray/5 transition-colors cursor-pointer"
+                           onClick={() => {
+                             setSelectedIssue(issue);
+                             setDepartmentIssuesDialogOpen(false);
+                             setViewDialogOpen(true);
+                           }}>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center space-x-2 mb-1">
+                              <span className="font-mono text-sm text-nalco-blue">{issue.id}</span>
+                              <Badge className={getPriorityColor(issue.priority)}>
+                                {issue.priority}
+                              </Badge>
+                              <Badge className={getStatusColor(issue.status)}>
+                                {issue.status}
+                              </Badge>
+                            </div>
+                            <h5 className="font-medium text-nalco-black">{issue.title}</h5>
+                            <p className="text-sm text-nalco-gray">Click to view details</p>
+                          </div>
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setDepartmentIssuesDialogOpen(false)}
+              >
+                Close
+              </Button>
+              <Button
+                className="bg-nalco-red hover:bg-nalco-red/90"
+                onClick={() => {
+                  setDepartmentIssuesDialogOpen(false);
+                  setReportDialogOpen(true);
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Report New Issue
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
