@@ -16,13 +16,16 @@ import {
   CheckCircle,
   XCircle,
   Loader2,
+  Users,
+  Download,
+  Search,
+  Filter,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDataSync, syncAttendanceUpdate } from "@/hooks/useDataSync";
 
-export default function Attendance() {
+export default function AuthorityAttendance() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -36,7 +39,7 @@ export default function Attendance() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [attendanceData, setAttendanceData] = useState([]);
-  const [isWorkingDay, setIsWorkingDay] = useState(true);
+  const [teamAttendance, setTeamAttendance] = useState([]);
 
   // Load attendance data from localStorage on mount
   useEffect(() => {
@@ -60,47 +63,55 @@ export default function Attendance() {
       const defaultData = [
         {
           date: "2024-03-25",
-          checkIn: "09:15 AM",
-          checkOut: "06:30 PM",
-          hours: "8h 45m",
+          checkIn: "08:45 AM",
+          checkOut: "07:15 PM",
+          hours: "9h 30m",
           status: "Present",
-          overtime: "30m",
+          overtime: "1h 30m",
         },
         {
           date: "2024-03-24",
-          checkIn: "09:00 AM",
-          checkOut: "06:00 PM",
-          hours: "8h 30m",
-          status: "Present",
-          overtime: "0m",
-        },
-        {
-          date: "2024-03-23",
-          checkIn: "09:30 AM",
-          checkOut: "06:15 PM",
-          hours: "8h 15m",
-          status: "Present",
-          overtime: "0m",
-        },
-        {
-          date: "2024-03-22",
-          checkIn: "-",
-          checkOut: "-",
-          hours: "0h",
-          status: "Leave",
-          overtime: "0m",
-        },
-        {
-          date: "2024-03-21",
-          checkIn: "09:45 AM",
+          checkIn: "08:30 AM",
           checkOut: "06:45 PM",
-          hours: "8h 30m",
+          hours: "9h 15m",
           status: "Present",
-          overtime: "30m",
+          overtime: "1h 15m",
         },
       ];
       setAttendanceData(defaultData);
     }
+
+    // Load team attendance data
+    const teamData = [
+      {
+        name: "Rajesh Kumar Singh",
+        id: "EMP001",
+        checkIn: "09:15 AM",
+        checkOut: "06:30 PM",
+        status: "Present",
+        hours: "8h 45m",
+        overtime: "30m",
+      },
+      {
+        name: "Sunita Devi",
+        id: "EMP002",
+        checkIn: "09:00 AM",
+        checkOut: "-",
+        status: "Working",
+        hours: "6h 30m",
+        overtime: "0m",
+      },
+      {
+        name: "Mohammad Alam",
+        id: "EMP003",
+        checkIn: "-",
+        checkOut: "-",
+        status: "Leave",
+        hours: "0h",
+        overtime: "0m",
+      },
+    ];
+    setTeamAttendance(teamData);
   }, [user]);
 
   // Update current time every minute
@@ -124,7 +135,6 @@ export default function Attendance() {
           ? new Date(`${new Date().toDateString()} ${checkOutTime}`)
           : currentTime;
 
-      // Validate dates
       if (
         isNaN(checkInDateTime.getTime()) ||
         isNaN(currentOrCheckOut.getTime())
@@ -134,7 +144,6 @@ export default function Attendance() {
 
       const diffMs = currentOrCheckOut.getTime() - checkInDateTime.getTime();
 
-      // Ensure positive difference
       if (diffMs < 0) {
         return "0h 0m";
       }
@@ -143,7 +152,6 @@ export default function Attendance() {
       const hours = Math.floor(diffHours);
       const minutes = Math.floor((diffHours - hours) * 60);
 
-      // Validate calculated values
       if (isNaN(hours) || isNaN(minutes) || hours < 0 || minutes < 0) {
         return "0h 0m";
       }
@@ -167,14 +175,12 @@ export default function Attendance() {
         minute: "2-digit",
       });
 
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       setCheckedIn(true);
       setCheckInTime(checkInTimeString);
       setSuccess(`Successfully checked in at ${checkInTimeString}`);
 
-      // Save to localStorage
       const today = new Date().toDateString();
       const updatedData = [...attendanceData];
       const todayIndex = updatedData.findIndex(
@@ -201,11 +207,6 @@ export default function Attendance() {
         `attendance_${user?.employeeId}`,
         JSON.stringify(updatedData),
       );
-
-      // Sync attendance update across the system
-      if (user?.employeeId) {
-        syncAttendanceUpdate(todayRecord, user.employeeId);
-      }
     } catch (error) {
       setError("Failed to check in. Please try again.");
     } finally {
@@ -225,22 +226,17 @@ export default function Attendance() {
         minute: "2-digit",
       });
 
-      // Simulate API call to update attendance
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       setCheckedOut(true);
       setCheckOutTime(checkOutTimeString);
       setSuccess(`Successfully checked out at ${checkOutTimeString}`);
 
-      // Update localStorage
       const today = new Date().toDateString();
       const updatedData = [...attendanceData];
       const todayIndex = updatedData.findIndex(
         (record: any) => record.date === today,
       );
-
-      // Update check out time first to calculate correct working hours
-      setCheckOutTime(checkOutTimeString);
 
       // Calculate working hours with the new checkout time
       const checkInDateTime = checkInTime
@@ -300,11 +296,6 @@ export default function Attendance() {
         `attendance_${user?.employeeId}`,
         JSON.stringify(updatedData),
       );
-
-      // Sync attendance update across the system
-      if (user?.employeeId) {
-        syncAttendanceUpdate(todayRecord, user.employeeId);
-      }
     } catch (error) {
       setError("Failed to check out. Please try again.");
     } finally {
@@ -312,18 +303,16 @@ export default function Attendance() {
     }
   };
 
-  // attendanceData is now managed in state and loaded from localStorage
-
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "present":
         return "bg-nalco-green text-white";
-      case "leave":
+      case "working":
         return "bg-nalco-blue text-white";
+      case "leave":
+        return "bg-yellow-500 text-white";
       case "absent":
         return "bg-nalco-red text-white";
-      case "partial":
-        return "bg-yellow-500 text-white";
       default:
         return "bg-nalco-gray text-white";
     }
@@ -333,6 +322,8 @@ export default function Attendance() {
     switch (status.toLowerCase()) {
       case "present":
         return <CheckCircle className="h-4 w-4" />;
+      case "working":
+        return <Clock className="h-4 w-4" />;
       case "absent":
         return <XCircle className="h-4 w-4" />;
       default:
@@ -340,34 +331,63 @@ export default function Attendance() {
     }
   };
 
+  const handleExportAttendance = () => {
+    const csvContent = `Name,Employee ID,Check In,Check Out,Status,Hours,Overtime\n${teamAttendance
+      .map(
+        (emp) =>
+          `${emp.name},${emp.id},${emp.checkIn},${emp.checkOut},${emp.status},${emp.hours},${emp.overtime}`,
+      )
+      .join("\n")}`;
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `team_attendance_${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8 flex items-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/portal")}
-            className="mr-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Portal
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-nalco-black">Attendance</h1>
-            <p className="text-nalco-gray">
-              View your attendance and working hours
-            </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/authority/dashboard")}
+              className="mr-4"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Dashboard
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-nalco-black">
+                Attendance Management
+              </h1>
+              <p className="text-nalco-gray">
+                Manage your attendance and monitor team presence
+              </p>
+            </div>
+          </div>
+          <div className="flex space-x-2">
+            <Button variant="outline" onClick={handleExportAttendance}>
+              <Download className="h-4 w-4 mr-2" />
+              Export Team Data
+            </Button>
           </div>
         </div>
 
-        {/* Today's Status */}
+        {/* Personal Attendance */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center text-nalco-black">
               <Calendar className="h-5 w-5 mr-2" />
-              Today's Status -{" "}
+              My Attendance -{" "}
               {currentTime.toLocaleDateString("en-IN", {
                 weekday: "long",
                 year: "numeric",
@@ -421,34 +441,6 @@ export default function Attendance() {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <div
-                    className={`h-16 w-16 rounded-full ${checkedOut ? "bg-nalco-green/10" : "bg-nalco-red/10"} flex items-center justify-center`}
-                  >
-                    {checkedOut ? (
-                      <CheckCircle className="h-8 w-8 text-nalco-green" />
-                    ) : (
-                      <XCircle className="h-8 w-8 text-nalco-red" />
-                    )}
-                  </div>
-                </div>
-                <p className="text-sm text-nalco-gray">Check Out</p>
-                <p className="text-xl font-bold text-nalco-black">
-                  {checkedOut ? checkOutTime : "-"}
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <div className="h-16 w-16 rounded-full bg-nalco-blue/10 flex items-center justify-center">
-                    <Clock className="h-8 w-8 text-nalco-blue" />
-                  </div>
-                </div>
-                <p className="text-sm text-nalco-gray">Hours Today</p>
-                <p className="text-xl font-bold text-nalco-black">
-                  {calculateWorkingHours()}
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
                   {checkedOut ? (
                     <div className="h-16 w-16 rounded-full bg-nalco-red/10 flex items-center justify-center">
                       <CheckCircle className="h-8 w-8 text-nalco-red" />
@@ -483,6 +475,17 @@ export default function Attendance() {
                     <Clock className="h-8 w-8 text-nalco-blue" />
                   </div>
                 </div>
+                <p className="text-sm text-nalco-gray">Hours Today</p>
+                <p className="text-xl font-bold text-nalco-black">
+                  {calculateWorkingHours()}
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <div className="h-16 w-16 rounded-full bg-nalco-blue/10 flex items-center justify-center">
+                    <Clock className="h-8 w-8 text-nalco-blue" />
+                  </div>
+                </div>
                 <p className="text-sm text-nalco-gray">Current Status</p>
                 <Badge
                   className={
@@ -504,27 +507,69 @@ export default function Attendance() {
           </CardContent>
         </Card>
 
-        {/* Monthly Summary */}
+        {/* Team Attendance Overview */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center text-nalco-black">
+              <Users className="h-5 w-5 mr-2" />
+              Team Attendance Today
+            </CardTitle>
+            <CardDescription>
+              Current status of your team members
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {teamAttendance.map((employee, index) => (
+                <Card key={index} className="border">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium text-nalco-black">
+                        {employee.name}
+                      </h4>
+                      <Badge className={getStatusColor(employee.status)}>
+                        {employee.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-nalco-gray mb-1">
+                      ID: {employee.id}
+                    </p>
+                    <div className="text-xs text-nalco-gray space-y-1">
+                      <p>In: {employee.checkIn}</p>
+                      <p>Out: {employee.checkOut}</p>
+                      <p>Hours: {employee.hours}</p>
+                      {employee.overtime !== "0m" && (
+                        <p className="text-yellow-600">
+                          OT: {employee.overtime}
+                        </p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Team Statistics */}
         <div className="mb-6 grid gap-6 md:grid-cols-4">
           <Card>
             <CardContent className="flex items-center p-6">
-              <Calendar className="h-8 w-8 text-nalco-green" />
+              <Users className="h-8 w-8 text-nalco-blue" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-nalco-gray">
-                  Days Present
+                  Team Present
                 </p>
-                <p className="text-2xl font-bold text-nalco-black">20</p>
+                <p className="text-2xl font-bold text-nalco-black">2/3</p>
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="flex items-center p-6">
-              <Clock className="h-8 w-8 text-nalco-blue" />
+              <Clock className="h-8 w-8 text-nalco-green" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Total Hours
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">168h</p>
+                <p className="text-sm font-medium text-nalco-gray">Avg Hours</p>
+                <p className="text-2xl font-bold text-nalco-black">8.5h</p>
               </div>
             </CardContent>
           </Card>
@@ -532,29 +577,31 @@ export default function Attendance() {
             <CardContent className="flex items-center p-6">
               <Clock className="h-8 w-8 text-yellow-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Overtime</p>
-                <p className="text-2xl font-bold text-nalco-black">12h</p>
+                <p className="text-sm font-medium text-nalco-gray">
+                  Total Overtime
+                </p>
+                <p className="text-2xl font-bold text-nalco-black">1.5h</p>
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="flex items-center p-6">
-              <XCircle className="h-8 w-8 text-nalco-red" />
+              <CheckCircle className="h-8 w-8 text-nalco-green" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-nalco-gray">
-                  Days Absent
+                  Attendance Rate
                 </p>
-                <p className="text-2xl font-bold text-nalco-black">2</p>
+                <p className="text-2xl font-bold text-nalco-black">94%</p>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Recent Attendance */}
+        {/* Recent Attendance History */}
         <Card>
           <CardHeader>
             <CardTitle className="text-nalco-black">
-              Recent Attendance
+              Recent Attendance History
             </CardTitle>
             <CardDescription>
               Your attendance record for the past week
@@ -598,41 +645,6 @@ export default function Attendance() {
                   </div>
                 </div>
               ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Attendance Policies */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-nalco-black">
-              Attendance Guidelines
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <h4 className="font-medium text-nalco-black mb-2">
-                  Working Hours
-                </h4>
-                <ul className="text-sm text-nalco-gray space-y-1">
-                  <li>• Standard hours: 9:00 AM - 6:00 PM</li>
-                  <li>• Core hours: 10:00 AM - 4:00 PM</li>
-                  <li>• Lunch break: 1 hour (12:00 PM - 1:00 PM)</li>
-                  <li>• Minimum daily hours: 8 hours</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-medium text-nalco-black mb-2">
-                  Attendance Rules
-                </h4>
-                <ul className="text-sm text-nalco-gray space-y-1">
-                  <li>• Grace period: 15 minutes for check-in</li>
-                  <li>• Late arrival: Report to supervisor</li>
-                  <li>• Overtime: Requires pre-approval</li>
-                  <li>• Missing punch: Submit attendance correction</li>
-                </ul>
-              </div>
             </div>
           </CardContent>
         </Card>

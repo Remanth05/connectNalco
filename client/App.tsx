@@ -1,6 +1,4 @@
-import "./global.css";
 import React from "react";
-import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,6 +22,10 @@ import Directory from "./pages/portal/Directory";
 import Facilities from "./pages/portal/Facilities";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
+import AuthorityAttendance from "./pages/authority/Attendance";
+import AdminAttendance from "./pages/admin/Attendance";
+import Analytics from "./pages/Analytics";
+import Safety from "./pages/Safety";
 
 const queryClient = new QueryClient();
 
@@ -112,6 +114,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/authority/attendance"
+                element={
+                  <ProtectedRoute allowedRoles={["authority"]}>
+                    <AuthorityAttendance />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Admin Routes */}
               <Route
@@ -119,6 +129,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["admin"]}>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/attendance"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminAttendance />
                   </ProtectedRoute>
                 }
               />
@@ -149,6 +167,10 @@ function App() {
                 }
               />
 
+              {/* Analytics and Safety Routes */}
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/safety" element={<Safety />} />
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
@@ -161,4 +183,4 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+export default App;

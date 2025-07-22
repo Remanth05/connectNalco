@@ -55,6 +55,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LeaveApplication, Reimbursement, ApiResponse } from "@shared/api";
+import { useDataSync, syncEmployeeUpdate } from "@/hooks/useDataSync";
 
 export default function AuthorityDashboard() {
   const { user } = useAuth();
@@ -496,6 +497,9 @@ export default function AuthorityDashboard() {
                             "nalco_employees",
                             JSON.stringify(updatedEmployees),
                           );
+
+                          // Sync employee data across the system
+                          syncEmployeeUpdate(directoryEmployee);
 
                           setSuccess(
                             `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully and is now available in the directory!`,
