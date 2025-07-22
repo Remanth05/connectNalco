@@ -41,7 +41,8 @@ export default function NotificationBell() {
       {
         id: "notif-1",
         title: "Leave Application Approved",
-        message: "Your leave application for March 28-30 has been approved by Dr. Priya Sharma.",
+        message:
+          "Your leave application for March 28-30 has been approved by Dr. Priya Sharma.",
         type: "success",
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
         read: false,
@@ -50,7 +51,8 @@ export default function NotificationBell() {
       {
         id: "notif-2",
         title: "System Maintenance Scheduled",
-        message: "Scheduled maintenance on March 31 from 2:00 AM to 4:00 AM. System will be unavailable.",
+        message:
+          "Scheduled maintenance on March 31 from 2:00 AM to 4:00 AM. System will be unavailable.",
         type: "warning",
         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
         read: false,
@@ -72,7 +74,8 @@ export default function NotificationBell() {
         {
           id: "notif-auth-1",
           title: "Pending Leave Approvals",
-          message: "You have 3 pending leave applications awaiting your review.",
+          message:
+            "You have 3 pending leave applications awaiting your review.",
           type: "warning",
           timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
           read: false,
@@ -86,7 +89,7 @@ export default function NotificationBell() {
           timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
           read: false,
           actionUrl: "/authority/attendance",
-        }
+        },
       );
     }
 
@@ -111,16 +114,19 @@ export default function NotificationBell() {
         {
           id: "notif-admin-3",
           title: "Backup Completed",
-          message: "Scheduled database backup completed successfully at 2:00 AM.",
+          message:
+            "Scheduled database backup completed successfully at 2:00 AM.",
           type: "success",
           timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
           read: true,
-        }
+        },
       );
     }
 
     // Load notifications from localStorage
-    const savedNotifications = localStorage.getItem(`notifications_${user?.employeeId}`);
+    const savedNotifications = localStorage.getItem(
+      `notifications_${user?.employeeId}`,
+    );
     if (savedNotifications) {
       try {
         const parsed = JSON.parse(savedNotifications);
@@ -136,7 +142,8 @@ export default function NotificationBell() {
     // Set up periodic check for new notifications (simulated)
     const interval = setInterval(() => {
       // Randomly add a new notification occasionally
-      if (Math.random() < 0.1) { // 10% chance every 30 seconds
+      if (Math.random() < 0.1) {
+        // 10% chance every 30 seconds
         const newNotification: Notification = {
           id: `notif-${Date.now()}`,
           title: "New Activity",
@@ -145,10 +152,13 @@ export default function NotificationBell() {
           timestamp: new Date().toISOString(),
           read: false,
         };
-        
-        setNotifications(prev => {
+
+        setNotifications((prev) => {
           const updated = [newNotification, ...prev].slice(0, 20); // Keep only latest 20
-          localStorage.setItem(`notifications_${user?.employeeId}`, JSON.stringify(updated));
+          localStorage.setItem(
+            `notifications_${user?.employeeId}`,
+            JSON.stringify(updated),
+          );
           return updated;
         });
       }
@@ -157,7 +167,7 @@ export default function NotificationBell() {
     return () => clearInterval(interval);
   }, [user]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -186,27 +196,36 @@ export default function NotificationBell() {
   };
 
   const markAsRead = (notificationId: string) => {
-    setNotifications(prev => {
-      const updated = prev.map(n => 
-        n.id === notificationId ? { ...n, read: true } : n
+    setNotifications((prev) => {
+      const updated = prev.map((n) =>
+        n.id === notificationId ? { ...n, read: true } : n,
       );
-      localStorage.setItem(`notifications_${user?.employeeId}`, JSON.stringify(updated));
+      localStorage.setItem(
+        `notifications_${user?.employeeId}`,
+        JSON.stringify(updated),
+      );
       return updated;
     });
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev => {
-      const updated = prev.map(n => ({ ...n, read: true }));
-      localStorage.setItem(`notifications_${user?.employeeId}`, JSON.stringify(updated));
+    setNotifications((prev) => {
+      const updated = prev.map((n) => ({ ...n, read: true }));
+      localStorage.setItem(
+        `notifications_${user?.employeeId}`,
+        JSON.stringify(updated),
+      );
       return updated;
     });
   };
 
   const deleteNotification = (notificationId: string) => {
-    setNotifications(prev => {
-      const updated = prev.filter(n => n.id !== notificationId);
-      localStorage.setItem(`notifications_${user?.employeeId}`, JSON.stringify(updated));
+    setNotifications((prev) => {
+      const updated = prev.filter((n) => n.id !== notificationId);
+      localStorage.setItem(
+        `notifications_${user?.employeeId}`,
+        JSON.stringify(updated),
+      );
       return updated;
     });
   };
@@ -236,25 +255,16 @@ export default function NotificationBell() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="relative h-9 w-9 p-0"
-        >
+        <Button variant="ghost" size="sm" className="relative h-9 w-9 p-0">
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
-            <Badge
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-nalco-red text-white text-xs flex items-center justify-center p-0 min-w-0"
-            >
-              {unreadCount > 9 ? '9+' : unreadCount}
+            <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-nalco-red text-white text-xs flex items-center justify-center p-0 min-w-0">
+              {unreadCount > 9 ? "9+" : unreadCount}
             </Badge>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent 
-        className="w-80 p-0 mr-4"
-        align="end"
-      >
+      <PopoverContent className="w-80 p-0 mr-4" align="end">
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="font-semibold text-nalco-black">Notifications</h3>
           <div className="flex items-center space-x-2">
@@ -271,7 +281,7 @@ export default function NotificationBell() {
             <Badge variant="secondary">{notifications.length}</Badge>
           </div>
         </div>
-        
+
         <ScrollArea className="h-96">
           {notifications.length === 0 ? (
             <div className="p-8 text-center">
@@ -286,7 +296,7 @@ export default function NotificationBell() {
                   className={`
                     p-3 m-1 border-l-4 rounded-r cursor-pointer transition-all hover:bg-nalco-gray/5 
                     ${getNotificationColor(notification.type)}
-                    ${!notification.read ? 'bg-opacity-10' : 'opacity-70'}
+                    ${!notification.read ? "bg-opacity-10" : "opacity-70"}
                   `}
                   onClick={() => handleNotificationClick(notification)}
                 >
@@ -295,7 +305,9 @@ export default function NotificationBell() {
                       {getNotificationIcon(notification.type)}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <h4 className={`text-sm font-medium ${!notification.read ? 'text-nalco-black' : 'text-nalco-gray'}`}>
+                          <h4
+                            className={`text-sm font-medium ${!notification.read ? "text-nalco-black" : "text-nalco-gray"}`}
+                          >
                             {notification.title}
                           </h4>
                           {!notification.read && (
@@ -327,7 +339,7 @@ export default function NotificationBell() {
             </div>
           )}
         </ScrollArea>
-        
+
         {notifications.length > 0 && (
           <div className="p-2 border-t">
             <Button

@@ -243,11 +243,17 @@ export default function Attendance() {
       setCheckOutTime(checkOutTimeString);
 
       // Calculate working hours with the new checkout time
-      const checkInDateTime = checkInTime ? new Date(`${today} ${checkInTime}`) : null;
+      const checkInDateTime = checkInTime
+        ? new Date(`${today} ${checkInTime}`)
+        : null;
       const checkOutDateTime = new Date(`${today} ${checkOutTimeString}`);
 
       let calculatedHours = "0h 0m";
-      if (checkInDateTime && !isNaN(checkInDateTime.getTime()) && !isNaN(checkOutDateTime.getTime())) {
+      if (
+        checkInDateTime &&
+        !isNaN(checkInDateTime.getTime()) &&
+        !isNaN(checkOutDateTime.getTime())
+      ) {
         const diffMs = checkOutDateTime.getTime() - checkInDateTime.getTime();
         if (diffMs > 0) {
           const diffHours = diffMs / (1000 * 60 * 60);
@@ -258,12 +264,21 @@ export default function Attendance() {
       }
 
       // Calculate overtime (assuming standard 8 hours)
-      const totalMinutes = checkInDateTime && !isNaN(checkInDateTime.getTime()) && !isNaN(checkOutDateTime.getTime())
-        ? Math.max(0, (checkOutDateTime.getTime() - checkInDateTime.getTime()) / (1000 * 60) - 480) // 480 minutes = 8 hours
-        : 0;
+      const totalMinutes =
+        checkInDateTime &&
+        !isNaN(checkInDateTime.getTime()) &&
+        !isNaN(checkOutDateTime.getTime())
+          ? Math.max(
+              0,
+              (checkOutDateTime.getTime() - checkInDateTime.getTime()) /
+                (1000 * 60) -
+                480,
+            ) // 480 minutes = 8 hours
+          : 0;
       const overtimeHours = Math.floor(totalMinutes / 60);
       const overtimeMinutes = Math.floor(totalMinutes % 60);
-      const overtime = totalMinutes > 0 ? `${overtimeHours}h ${overtimeMinutes}m` : "0m";
+      const overtime =
+        totalMinutes > 0 ? `${overtimeHours}h ${overtimeMinutes}m` : "0m";
 
       const todayRecord = {
         date: today,

@@ -1,268 +1,300 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NALCO connectNALCO - Comprehensive Codebase Documentation</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        h1, h2, h3, h4 {
-            color: #2c3e50;
-        }
-        h1 {
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-        h2 {
-            border-bottom: 2px solid #e74c3c;
-            padding-bottom: 8px;
-            margin-top: 40px;
-            margin-bottom: 20px;
-        }
-        h3 {
-            border-left: 4px solid #f39c12;
-            padding-left: 15px;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-        .tech-badge {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin: 2px;
-        }
-        .feature-list {
-            background: #ecf0f1;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-        .feature-list ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .code-block {
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-        }
-        .architecture-diagram {
-            background: #34495e;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: center;
-            font-family: monospace;
-        }
-        .file-structure {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-family: monospace;
-            font-size: 14px;
-        }
-        .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-        .success {
-            background: #d4edda;
-            border-left: 4px solid #28a745;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-        .info {
-            background: #d1ecf1;
-            border-left: 4px solid #17a2b8;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background: #f8f9fa;
-            font-weight: bold;
-        }
-        .toc {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .toc ul {
-            list-style-type: none;
-            padding-left: 20px;
-        }
-        .toc a {
-            text-decoration: none;
-            color: #3498db;
-            padding: 5px 0;
-            display: block;
-        }
-        .toc a:hover {
-            text-decoration: underline;
-        }
-        .logo-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .logo-header h1 {
-            color: #e74c3c;
-            font-size: 2.5em;
-            margin: 0;
-            border: none;
-            padding: 0;
-        }
-        .logo-header .subtitle {
-            color: #3498db;
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f8f9fa;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: #2c3e50;
+      }
+      h1 {
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+      }
+      h2 {
+        border-bottom: 2px solid #e74c3c;
+        padding-bottom: 8px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+      }
+      h3 {
+        border-left: 4px solid #f39c12;
+        padding-left: 15px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+      }
+      .tech-badge {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        margin: 2px;
+      }
+      .feature-list {
+        background: #ecf0f1;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 15px 0;
+      }
+      .feature-list ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .code-block {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 15px 0;
+        font-family: "Courier New", monospace;
+      }
+      .architecture-diagram {
+        background: #34495e;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        text-align: center;
+        font-family: monospace;
+      }
+      .file-structure {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-family: monospace;
+        font-size: 14px;
+      }
+      .warning {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      .success {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      .info {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #f8f9fa;
+        font-weight: bold;
+      }
+      .toc {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
+      .toc ul {
+        list-style-type: none;
+        padding-left: 20px;
+      }
+      .toc a {
+        text-decoration: none;
+        color: #3498db;
+        padding: 5px 0;
+        display: block;
+      }
+      .toc a:hover {
+        text-decoration: underline;
+      }
+      .logo-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .logo-header h1 {
+        color: #e74c3c;
+        font-size: 2.5em;
+        margin: 0;
+        border: none;
+        padding: 0;
+      }
+      .logo-header .subtitle {
+        color: #3498db;
+        font-size: 1.2em;
+        margin-top: 10px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="logo-header">
-            <h1>connect<span style="color: #3498db;">NALCO</span></h1>
-            <div class="subtitle">Comprehensive Codebase Documentation & Architecture Guide</div>
-            <p><strong>Version:</strong> 2.1.0 | <strong>Generated:</strong> March 2024</p>
+      <div class="logo-header">
+        <h1>connect<span style="color: #3498db">NALCO</span></h1>
+        <div class="subtitle">
+          Comprehensive Codebase Documentation & Architecture Guide
+        </div>
+        <p>
+          <strong>Version:</strong> 2.1.0 | <strong>Generated:</strong> March
+          2024
+        </p>
+      </div>
+
+      <div class="toc">
+        <h3>📋 Table of Contents</h3>
+        <ul>
+          <li><a href="#overview">1. Project Overview</a></li>
+          <li><a href="#tech-stack">2. Technology Stack</a></li>
+          <li><a href="#architecture">3. System Architecture</a></li>
+          <li><a href="#project-structure">4. Project Structure</a></li>
+          <li><a href="#frontend">5. Frontend Architecture</a></li>
+          <li><a href="#backend">6. Backend Architecture</a></li>
+          <li><a href="#database">7. Database Design</a></li>
+          <li><a href="#authentication">8. Authentication System</a></li>
+          <li><a href="#features">9. Core Features</a></li>
+          <li><a href="#deployment">10. Deployment</a></li>
+          <li><a href="#development">11. Development Guide</a></li>
+          <li><a href="#typescript">12. Why TypeScript?</a></li>
+          <li><a href="#tools">13. Development Tools</a></li>
+          <li><a href="#best-practices">14. Best Practices</a></li>
+          <li><a href="#troubleshooting">15. Troubleshooting</a></li>
+          <li><a href="#future">16. Future Enhancements</a></li>
+        </ul>
+      </div>
+
+      <section id="overview">
+        <h2>1. 🎯 Project Overview</h2>
+
+        <p>
+          <strong>connectNALCO</strong> is a comprehensive digital workplace
+          portal designed specifically for NALCO (National Aluminium Company
+          Limited) operations. It serves as a unified platform for employee
+          management, issue tracking, attendance monitoring, and operational
+          excellence.
+        </p>
+
+        <div class="feature-list">
+          <h4>🎯 Primary Objectives:</h4>
+          <ul>
+            <li>
+              <strong>Digital Transformation:</strong> Modernize NALCO's
+              traditional paper-based processes
+            </li>
+            <li>
+              <strong>Employee Empowerment:</strong> Provide self-service
+              capabilities for common HR tasks
+            </li>
+            <li>
+              <strong>Operational Efficiency:</strong> Streamline workflows and
+              reduce manual intervention
+            </li>
+            <li>
+              <strong>Data-Driven Insights:</strong> Enable analytics and
+              reporting for better decision making
+            </li>
+            <li>
+              <strong>Role-Based Access:</strong> Secure, hierarchical access
+              control system
+            </li>
+          </ul>
         </div>
 
-        <div class="toc">
-            <h3>📋 Table of Contents</h3>
-            <ul>
-                <li><a href="#overview">1. Project Overview</a></li>
-                <li><a href="#tech-stack">2. Technology Stack</a></li>
-                <li><a href="#architecture">3. System Architecture</a></li>
-                <li><a href="#project-structure">4. Project Structure</a></li>
-                <li><a href="#frontend">5. Frontend Architecture</a></li>
-                <li><a href="#backend">6. Backend Architecture</a></li>
-                <li><a href="#database">7. Database Design</a></li>
-                <li><a href="#authentication">8. Authentication System</a></li>
-                <li><a href="#features">9. Core Features</a></li>
-                <li><a href="#deployment">10. Deployment</a></li>
-                <li><a href="#development">11. Development Guide</a></li>
-                <li><a href="#typescript">12. Why TypeScript?</a></li>
-                <li><a href="#tools">13. Development Tools</a></li>
-                <li><a href="#best-practices">14. Best Practices</a></li>
-                <li><a href="#troubleshooting">15. Troubleshooting</a></li>
-                <li><a href="#future">16. Future Enhancements</a></li>
-            </ul>
+        <div class="info">
+          <strong>Target Users:</strong> Employees (2,500+), Department
+          Authorities (50+), System Administrators (10+)
         </div>
+      </section>
 
-        <section id="overview">
-            <h2>1. 🎯 Project Overview</h2>
-            
-            <p><strong>connectNALCO</strong> is a comprehensive digital workplace portal designed specifically for NALCO (National Aluminium Company Limited) operations. It serves as a unified platform for employee management, issue tracking, attendance monitoring, and operational excellence.</p>
+      <section id="tech-stack">
+        <h2>2. 🛠️ Technology Stack</h2>
 
-            <div class="feature-list">
-                <h4>🎯 Primary Objectives:</h4>
-                <ul>
-                    <li><strong>Digital Transformation:</strong> Modernize NALCO's traditional paper-based processes</li>
-                    <li><strong>Employee Empowerment:</strong> Provide self-service capabilities for common HR tasks</li>
-                    <li><strong>Operational Efficiency:</strong> Streamline workflows and reduce manual intervention</li>
-                    <li><strong>Data-Driven Insights:</strong> Enable analytics and reporting for better decision making</li>
-                    <li><strong>Role-Based Access:</strong> Secure, hierarchical access control system</li>
-                </ul>
-            </div>
+        <h3>Frontend Technologies</h3>
+        <p>
+          <span class="tech-badge">React 18</span>
+          <span class="tech-badge">TypeScript</span>
+          <span class="tech-badge">Vite</span>
+          <span class="tech-badge">React Router 6</span>
+          <span class="tech-badge">TailwindCSS 3</span>
+          <span class="tech-badge">Radix UI</span>
+          <span class="tech-badge">Lucide React</span>
+          <span class="tech-badge">React Hook Form</span>
+          <span class="tech-badge">TanStack Query</span>
+          <span class="tech-badge">Framer Motion</span>
+        </p>
 
-            <div class="info">
-                <strong>Target Users:</strong> Employees (2,500+), Department Authorities (50+), System Administrators (10+)
-            </div>
-        </section>
+        <h3>Backend Technologies</h3>
+        <p>
+          <span class="tech-badge">Node.js 18+</span>
+          <span class="tech-badge">Express.js</span>
+          <span class="tech-badge">TypeScript</span>
+          <span class="tech-badge">MongoDB</span>
+          <span class="tech-badge">Mongoose</span>
+          <span class="tech-badge">JWT</span>
+          <span class="tech-badge">bcryptjs</span>
+          <span class="tech-badge">Zod</span>
+        </p>
 
-        <section id="tech-stack">
-            <h2>2. 🛠️ Technology Stack</h2>
+        <h3>Development Tools</h3>
+        <p>
+          <span class="tech-badge">Vitest</span>
+          <span class="tech-badge">ESLint</span>
+          <span class="tech-badge">Prettier</span>
+          <span class="tech-badge">Git</span>
+          <span class="tech-badge">Docker</span>
+          <span class="tech-badge">VS Code</span>
+        </p>
 
-            <h3>Frontend Technologies</h3>
-            <p>
-                <span class="tech-badge">React 18</span>
-                <span class="tech-badge">TypeScript</span>
-                <span class="tech-badge">Vite</span>
-                <span class="tech-badge">React Router 6</span>
-                <span class="tech-badge">TailwindCSS 3</span>
-                <span class="tech-badge">Radix UI</span>
-                <span class="tech-badge">Lucide React</span>
-                <span class="tech-badge">React Hook Form</span>
-                <span class="tech-badge">TanStack Query</span>
-                <span class="tech-badge">Framer Motion</span>
-            </p>
+        <h3>Deployment & Infrastructure</h3>
+        <p>
+          <span class="tech-badge">Netlify</span>
+          <span class="tech-badge">MongoDB Atlas</span>
+          <span class="tech-badge">GitHub Actions</span>
+          <span class="tech-badge">Serverless Functions</span>
+        </p>
+      </section>
 
-            <h3>Backend Technologies</h3>
-            <p>
-                <span class="tech-badge">Node.js 18+</span>
-                <span class="tech-badge">Express.js</span>
-                <span class="tech-badge">TypeScript</span>
-                <span class="tech-badge">MongoDB</span>
-                <span class="tech-badge">Mongoose</span>
-                <span class="tech-badge">JWT</span>
-                <span class="tech-badge">bcryptjs</span>
-                <span class="tech-badge">Zod</span>
-            </p>
+      <section id="architecture">
+        <h2>3. 🏗️ System Architecture</h2>
 
-            <h3>Development Tools</h3>
-            <p>
-                <span class="tech-badge">Vitest</span>
-                <span class="tech-badge">ESLint</span>
-                <span class="tech-badge">Prettier</span>
-                <span class="tech-badge">Git</span>
-                <span class="tech-badge">Docker</span>
-                <span class="tech-badge">VS Code</span>
-            </p>
-
-            <h3>Deployment & Infrastructure</h3>
-            <p>
-                <span class="tech-badge">Netlify</span>
-                <span class="tech-badge">MongoDB Atlas</span>
-                <span class="tech-badge">GitHub Actions</span>
-                <span class="tech-badge">Serverless Functions</span>
-            </p>
-        </section>
-
-        <section id="architecture">
-            <h2>3. 🏗️ System Architecture</h2>
-
-            <div class="architecture-diagram">
-                <h4>System Architecture Overview</h4>
-                <pre>
+        <div class="architecture-diagram">
+          <h4>System Architecture Overview</h4>
+          <pre>
 ┌─────────────────────────────────────────────────────────────┐
 │                    CLIENT TIER                              │
 ├─────────────────────────────────────────────────────────────┤
@@ -296,28 +328,49 @@
 │  │ Collection   │ │ Collection   │ │ Collection   │        │
 │  └──────────────┘ └──────────────┘ └──────────────┘        │
 └─────────────────────────────────────────────────────────────┘
-                </pre>
-            </div>
+                </pre
+          >
+        </div>
 
-            <h3>🔄 Data Flow Architecture</h3>
-            <div class="feature-list">
-                <ol>
-                    <li><strong>Client Request:</strong> User interaction triggers React component</li>
-                    <li><strong>State Management:</strong> React hooks and context manage application state</li>
-                    <li><strong>API Communication:</strong> Fetch API sends HTTP requests to Express server</li>
-                    <li><strong>Authentication:</strong> JWT tokens validate user permissions</li>
-                    <li><strong>Business Logic:</strong> Express middleware processes business rules</li>
-                    <li><strong>Data Persistence:</strong> Mongoose ODM interacts with MongoDB</li>
-                    <li><strong>Response:</strong> JSON data flows back through the stack</li>
-                </ol>
-            </div>
-        </section>
+        <h3>🔄 Data Flow Architecture</h3>
+        <div class="feature-list">
+          <ol>
+            <li>
+              <strong>Client Request:</strong> User interaction triggers React
+              component
+            </li>
+            <li>
+              <strong>State Management:</strong> React hooks and context manage
+              application state
+            </li>
+            <li>
+              <strong>API Communication:</strong> Fetch API sends HTTP requests
+              to Express server
+            </li>
+            <li>
+              <strong>Authentication:</strong> JWT tokens validate user
+              permissions
+            </li>
+            <li>
+              <strong>Business Logic:</strong> Express middleware processes
+              business rules
+            </li>
+            <li>
+              <strong>Data Persistence:</strong> Mongoose ODM interacts with
+              MongoDB
+            </li>
+            <li>
+              <strong>Response:</strong> JSON data flows back through the stack
+            </li>
+          </ol>
+        </div>
+      </section>
 
-        <section id="project-structure">
-            <h2>4. 📁 Project Structure</h2>
+      <section id="project-structure">
+        <h2>4. 📁 Project Structure</h2>
 
-            <div class="file-structure">
-<pre>
+        <div class="file-structure">
+          <pre>
 nalco-connect/
 ├── client/                          # Frontend React Application
 │   ├── components/                  # Reusable UI Components
@@ -401,1075 +454,1290 @@ nalco-connect/
 ├── MONGODB_SETUP.md               # Database Setup Guide
 ├── MONGODB_CUSTOM_SETUP.md        # Advanced Database Guide
 └── PROJECT_FEATURES.md            # Feature Documentation
-</pre>
-            </div>
+</pre
+          >
+        </div>
 
-            <div class="warning">
-                <strong>Note:</strong> This structure follows a monorepo pattern with clear separation between client, server, and shared code. Each directory has a specific purpose and follows established conventions.
-            </div>
-        </section>
+        <div class="warning">
+          <strong>Note:</strong> This structure follows a monorepo pattern with
+          clear separation between client, server, and shared code. Each
+          directory has a specific purpose and follows established conventions.
+        </div>
+      </section>
 
-        <section id="frontend">
-            <h2>5. ⚛️ Frontend Architecture</h2>
+      <section id="frontend">
+        <h2>5. ⚛️ Frontend Architecture</h2>
 
-            <h3>React Application Structure</h3>
-            <p>The frontend is built as a Single Page Application (SPA) using React 18 with modern hooks and functional components. The application follows a component-based architecture with clear separation of concerns.</p>
+        <h3>React Application Structure</h3>
+        <p>
+          The frontend is built as a Single Page Application (SPA) using React
+          18 with modern hooks and functional components. The application
+          follows a component-based architecture with clear separation of
+          concerns.
+        </p>
 
-            <h4>🎨 Design System</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>Radix UI:</strong> Headless UI components for accessibility and customization</li>
-                    <li><strong>TailwindCSS:</strong> Utility-first CSS framework for rapid styling</li>
-                    <li><strong>Design Tokens:</strong> Consistent colors, spacing, and typography</li>
-                    <li><strong>Responsive Design:</strong> Mobile-first approach with breakpoint system</li>
-                    <li><strong>Dark Mode Support:</strong> Theme switching capability</li>
-                </ul>
-            </div>
+        <h4>🎨 Design System</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>Radix UI:</strong> Headless UI components for
+              accessibility and customization
+            </li>
+            <li>
+              <strong>TailwindCSS:</strong> Utility-first CSS framework for
+              rapid styling
+            </li>
+            <li>
+              <strong>Design Tokens:</strong> Consistent colors, spacing, and
+              typography
+            </li>
+            <li>
+              <strong>Responsive Design:</strong> Mobile-first approach with
+              breakpoint system
+            </li>
+            <li>
+              <strong>Dark Mode Support:</strong> Theme switching capability
+            </li>
+          </ul>
+        </div>
 
-            <h4>🚦 Routing System</h4>
-            <div class="code-block">
-// App.tsx - Route Configuration
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+        <h4>🚦 Routing System</h4>
+        <div class="code-block">
+          // App.tsx - Route Configuration import { BrowserRouter, Routes, Route
+          } from "react-router-dom"; &lt;Routes&gt; &lt;Route path="/"
+          element={&lt;Index /&gt;} /&gt; &lt;Route path="/login"
+          element={&lt;Login /&gt;} /&gt; {/* Employee Routes */} &lt;Route
+          path="/portal" element={ &lt;ProtectedRoute
+          allowedRoles={["employee"]}&gt; &lt;Portal /&gt;
+          &lt;/ProtectedRoute&gt; } /&gt; {/* Authority Routes */} &lt;Route
+          path="/authority/dashboard" element={ &lt;ProtectedRoute
+          allowedRoles={["authority"]}&gt; &lt;AuthorityDashboard /&gt;
+          &lt;/ProtectedRoute&gt; } /&gt; {/* Admin Routes */} &lt;Route
+          path="/admin/dashboard" element={ &lt;ProtectedRoute
+          allowedRoles={["admin"]}&gt; &lt;AdminDashboard /&gt;
+          &lt;/ProtectedRoute&gt; } /&gt; &lt;/Routes&gt;
+        </div>
 
-&lt;Routes&gt;
-  &lt;Route path="/" element={&lt;Index /&gt;} /&gt;
-  &lt;Route path="/login" element={&lt;Login /&gt;} /&gt;
-  
-  {/* Employee Routes */}
-  &lt;Route path="/portal" element={
-    &lt;ProtectedRoute allowedRoles={["employee"]}&gt;
-      &lt;Portal /&gt;
-    &lt;/ProtectedRoute&gt;
-  } /&gt;
-  
-  {/* Authority Routes */}
-  &lt;Route path="/authority/dashboard" element={
-    &lt;ProtectedRoute allowedRoles={["authority"]}&gt;
-      &lt;AuthorityDashboard /&gt;
-    &lt;/ProtectedRoute&gt;
-  } /&gt;
-  
-  {/* Admin Routes */}
-  &lt;Route path="/admin/dashboard" element={
-    &lt;ProtectedRoute allowedRoles={["admin"]}&gt;
-      &lt;AdminDashboard /&gt;
-    &lt;/ProtectedRoute&gt;
-  } /&gt;
-&lt;/Routes&gt;
-            </div>
+        <h4>🔐 State Management</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>React Context:</strong> Authentication state and user data
+            </li>
+            <li>
+              <strong>Local State:</strong> Component-specific state with
+              useState
+            </li>
+            <li>
+              <strong>Custom Hooks:</strong> Reusable state logic (useDataSync,
+              useToast)
+            </li>
+            <li><strong>LocalStorage:</strong> Client-side data persistence</li>
+            <li>
+              <strong>TanStack Query:</strong> Server state management and
+              caching
+            </li>
+          </ul>
+        </div>
 
-            <h4>🔐 State Management</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>React Context:</strong> Authentication state and user data</li>
-                    <li><strong>Local State:</strong> Component-specific state with useState</li>
-                    <li><strong>Custom Hooks:</strong> Reusable state logic (useDataSync, useToast)</li>
-                    <li><strong>LocalStorage:</strong> Client-side data persistence</li>
-                    <li><strong>TanStack Query:</strong> Server state management and caching</li>
-                </ul>
-            </div>
+        <h4>📱 Component Architecture</h4>
+        <table>
+          <tr>
+            <th>Component Type</th>
+            <th>Purpose</th>
+            <th>Examples</th>
+            <th>Location</th>
+          </tr>
+          <tr>
+            <td>UI Components</td>
+            <td>Reusable design system elements</td>
+            <td>Button, Card, Dialog, Input</td>
+            <td>client/components/ui/</td>
+          </tr>
+          <tr>
+            <td>Layout Components</td>
+            <td>Page structure and navigation</td>
+            <td>Layout, Header, Sidebar</td>
+            <td>client/components/</td>
+          </tr>
+          <tr>
+            <td>Page Components</td>
+            <td>Route-specific containers</td>
+            <td>Dashboard, Profile, Settings</td>
+            <td>client/pages/</td>
+          </tr>
+          <tr>
+            <td>Feature Components</td>
+            <td>Business logic containers</td>
+            <td>AttendanceTracker, IssueForm</td>
+            <td>client/pages/portal/</td>
+          </tr>
+        </table>
+      </section>
 
-            <h4>📱 Component Architecture</h4>
-            <table>
-                <tr>
-                    <th>Component Type</th>
-                    <th>Purpose</th>
-                    <th>Examples</th>
-                    <th>Location</th>
-                </tr>
-                <tr>
-                    <td>UI Components</td>
-                    <td>Reusable design system elements</td>
-                    <td>Button, Card, Dialog, Input</td>
-                    <td>client/components/ui/</td>
-                </tr>
-                <tr>
-                    <td>Layout Components</td>
-                    <td>Page structure and navigation</td>
-                    <td>Layout, Header, Sidebar</td>
-                    <td>client/components/</td>
-                </tr>
-                <tr>
-                    <td>Page Components</td>
-                    <td>Route-specific containers</td>
-                    <td>Dashboard, Profile, Settings</td>
-                    <td>client/pages/</td>
-                </tr>
-                <tr>
-                    <td>Feature Components</td>
-                    <td>Business logic containers</td>
-                    <td>AttendanceTracker, IssueForm</td>
-                    <td>client/pages/portal/</td>
-                </tr>
-            </table>
-        </section>
+      <section id="backend">
+        <h2>6. 🖥️ Backend Architecture</h2>
 
-        <section id="backend">
-            <h2>6. 🖥️ Backend Architecture</h2>
+        <h3>Express.js Server Structure</h3>
+        <p>
+          The backend follows a layered architecture pattern with clear
+          separation between routes, business logic, and data access layers.
+        </p>
 
-            <h3>Express.js Server Structure</h3>
-            <p>The backend follows a layered architecture pattern with clear separation between routes, business logic, and data access layers.</p>
+        <h4>🛣️ API Architecture</h4>
+        <div class="code-block">
+          // server/index.ts - Server Configuration import express from
+          'express'; import cors from 'cors'; import { authRoutes } from
+          './routes/auth'; import { employeeRoutes } from './routes/employee';
+          const app = express(); // Middleware app.use(cors());
+          app.use(express.json()); // API Routes app.use('/api/auth',
+          authRoutes); app.use('/api/employee', employeeRoutes);
+          app.use('/api/attendance', attendanceRoutes); app.use('/api/leave',
+          leaveRoutes); app.use('/api/issues', issueRoutes); // Serve Static
+          Files app.use(express.static('dist/spa'));
+        </div>
 
-            <h4>🛣️ API Architecture</h4>
-            <div class="code-block">
-// server/index.ts - Server Configuration
-import express from 'express';
-import cors from 'cors';
-import { authRoutes } from './routes/auth';
-import { employeeRoutes } from './routes/employee';
+        <h4>📊 API Endpoints Overview</h4>
+        <table>
+          <tr>
+            <th>Endpoint</th>
+            <th>Method</th>
+            <th>Purpose</th>
+            <th>Auth Required</th>
+          </tr>
+          <tr>
+            <td>/api/auth/login</td>
+            <td>POST</td>
+            <td>User authentication</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>/api/auth/me</td>
+            <td>GET</td>
+            <td>Get current user profile</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>/api/employee/:id</td>
+            <td>GET</td>
+            <td>Get employee details</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>/api/attendance</td>
+            <td>POST</td>
+            <td>Record attendance</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>/api/leave</td>
+            <td>POST</td>
+            <td>Submit leave application</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>/api/issues</td>
+            <td>GET/POST</td>
+            <td>Issue tracking</td>
+            <td>Yes</td>
+          </tr>
+        </table>
 
-const app = express();
+        <h4>🔧 Middleware Stack</h4>
+        <div class="feature-list">
+          <ul>
+            <li><strong>CORS:</strong> Cross-origin request handling</li>
+            <li><strong>JSON Parser:</strong> Request body parsing</li>
+            <li><strong>JWT Authentication:</strong> Token validation</li>
+            <li><strong>Role Authorization:</strong> Permission checking</li>
+            <li>
+              <strong>Error Handling:</strong> Centralized error management
+            </li>
+            <li><strong>Request Logging:</strong> Development debugging</li>
+          </ul>
+        </div>
+      </section>
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+      <section id="database">
+        <h2>7. 🗄️ Database Design</h2>
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/employee', employeeRoutes);
-app.use('/api/attendance', attendanceRoutes);
-app.use('/api/leave', leaveRoutes);
-app.use('/api/issues', issueRoutes);
+        <h3>MongoDB Schema Architecture</h3>
+        <p>
+          The application uses MongoDB as the primary database with Mongoose as
+          the Object Document Mapper (ODM). The schema design follows MongoDB
+          best practices for document structure and indexing.
+        </p>
 
-// Serve Static Files
-app.use(express.static('dist/spa'));
-            </div>
+        <h4>👤 User Schema</h4>
+        <div class="code-block">
+          // server/models/User.ts interface IUser { employeeId: string; //
+          Unique employee identifier name: string; // Full name email: string;
+          // Email address (unique) password: string; // Hashed password phone:
+          string; // Contact number role: 'employee' | 'authority' | 'admin';
+          department: string; // Department name designation: string; // Job
+          title joinDate: Date; // Date of joining status: 'active' | 'inactive'
+          | 'suspended'; avatar: string; // Profile picture URL location:
+          string; // Office location team: string; // Team assignment createdAt:
+          Date; updatedAt: Date; }
+        </div>
 
-            <h4>📊 API Endpoints Overview</h4>
-            <table>
-                <tr>
-                    <th>Endpoint</th>
-                    <th>Method</th>
-                    <th>Purpose</th>
-                    <th>Auth Required</th>
-                </tr>
-                <tr>
-                    <td>/api/auth/login</td>
-                    <td>POST</td>
-                    <td>User authentication</td>
-                    <td>No</td>
-                </tr>
-                <tr>
-                    <td>/api/auth/me</td>
-                    <td>GET</td>
-                    <td>Get current user profile</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>/api/employee/:id</td>
-                    <td>GET</td>
-                    <td>Get employee details</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>/api/attendance</td>
-                    <td>POST</td>
-                    <td>Record attendance</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>/api/leave</td>
-                    <td>POST</td>
-                    <td>Submit leave application</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>/api/issues</td>
-                    <td>GET/POST</td>
-                    <td>Issue tracking</td>
-                    <td>Yes</td>
-                </tr>
-            </table>
+        <h4>📋 Collections Overview</h4>
+        <table>
+          <tr>
+            <th>Collection</th>
+            <th>Purpose</th>
+            <th>Key Fields</th>
+            <th>Indexes</th>
+          </tr>
+          <tr>
+            <td>users</td>
+            <td>Employee data and authentication</td>
+            <td>employeeId, email, role, department</td>
+            <td>email, employeeId</td>
+          </tr>
+          <tr>
+            <td>attendance</td>
+            <td>Daily attendance records</td>
+            <td>employeeId, date, checkIn, checkOut</td>
+            <td>employeeId, date</td>
+          </tr>
+          <tr>
+            <td>leaves</td>
+            <td>Leave applications and approvals</td>
+            <td>employeeId, startDate, endDate, status</td>
+            <td>employeeId, status</td>
+          </tr>
+          <tr>
+            <td>issues</td>
+            <td>Issue tracking and resolution</td>
+            <td>reporterId, assigneeId, status, priority</td>
+            <td>status, priority, createdAt</td>
+          </tr>
+          <tr>
+            <td>notifications</td>
+            <td>User notifications and alerts</td>
+            <td>userId, type, read, timestamp</td>
+            <td>userId, read</td>
+          </tr>
+        </table>
 
-            <h4>🔧 Middleware Stack</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>CORS:</strong> Cross-origin request handling</li>
-                    <li><strong>JSON Parser:</strong> Request body parsing</li>
-                    <li><strong>JWT Authentication:</strong> Token validation</li>
-                    <li><strong>Role Authorization:</strong> Permission checking</li>
-                    <li><strong>Error Handling:</strong> Centralized error management</li>
-                    <li><strong>Request Logging:</strong> Development debugging</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="database">
-            <h2>7. 🗄️ Database Design</h2>
-
-            <h3>MongoDB Schema Architecture</h3>
-            <p>The application uses MongoDB as the primary database with Mongoose as the Object Document Mapper (ODM). The schema design follows MongoDB best practices for document structure and indexing.</p>
-
-            <h4>👤 User Schema</h4>
-            <div class="code-block">
-// server/models/User.ts
-interface IUser {
-  employeeId: string;      // Unique employee identifier
-  name: string;            // Full name
-  email: string;           // Email address (unique)
-  password: string;        // Hashed password
-  phone: string;           // Contact number
-  role: 'employee' | 'authority' | 'admin';
-  department: string;      // Department name
-  designation: string;     // Job title
-  joinDate: Date;          // Date of joining
-  status: 'active' | 'inactive' | 'suspended';
-  avatar: string;          // Profile picture URL
-  location: string;        // Office location
-  team: string;           // Team assignment
-  createdAt: Date;
-  updatedAt: Date;
-}
-            </div>
-
-            <h4>📋 Collections Overview</h4>
-            <table>
-                <tr>
-                    <th>Collection</th>
-                    <th>Purpose</th>
-                    <th>Key Fields</th>
-                    <th>Indexes</th>
-                </tr>
-                <tr>
-                    <td>users</td>
-                    <td>Employee data and authentication</td>
-                    <td>employeeId, email, role, department</td>
-                    <td>email, employeeId</td>
-                </tr>
-                <tr>
-                    <td>attendance</td>
-                    <td>Daily attendance records</td>
-                    <td>employeeId, date, checkIn, checkOut</td>
-                    <td>employeeId, date</td>
-                </tr>
-                <tr>
-                    <td>leaves</td>
-                    <td>Leave applications and approvals</td>
-                    <td>employeeId, startDate, endDate, status</td>
-                    <td>employeeId, status</td>
-                </tr>
-                <tr>
-                    <td>issues</td>
-                    <td>Issue tracking and resolution</td>
-                    <td>reporterId, assigneeId, status, priority</td>
-                    <td>status, priority, createdAt</td>
-                </tr>
-                <tr>
-                    <td>notifications</td>
-                    <td>User notifications and alerts</td>
-                    <td>userId, type, read, timestamp</td>
-                    <td>userId, read</td>
-                </tr>
-            </table>
-
-            <h4>🔍 Data Relationships</h4>
-            <div class="architecture-diagram">
-                <pre>
+        <h4>🔍 Data Relationships</h4>
+        <div class="architecture-diagram">
+          <pre>
 Users (1) ←→ (Many) Attendance Records
 Users (1) ←→ (Many) Leave Applications  
 Users (1) ←→ (Many) Issues (as Reporter)
 Users (1) ←→ (Many) Issues (as Assignee)
 Users (1) ←→ (Many) Notifications
 Departments (1) ←→ (Many) Users
-                </pre>
-            </div>
-        </section>
-
-        <section id="authentication">
-            <h2>8. 🔐 Authentication System</h2>
-
-            <h3>JWT-Based Authentication</h3>
-            <p>The application implements a secure JWT (JSON Web Token) based authentication system with role-based access control.</p>
-
-            <h4>🔑 Authentication Flow</h4>
-            <div class="feature-list">
-                <ol>
-                    <li><strong>Login Request:</strong> User submits credentials via login form</li>
-                    <li><strong>Credential Validation:</strong> Server verifies email and password against database</li>
-                    <li><strong>Token Generation:</strong> JWT token created with user ID and role</li>
-                    <li><strong>Token Storage:</strong> Client stores token in localStorage with expiration</li>
-                    <li><strong>Request Authorization:</strong> Token included in API request headers</li>
-                    <li><strong>Token Validation:</strong> Server validates token and extracts user context</li>
-                    <li><strong>Session Management:</strong> Automatic logout on token expiration</li>
-                </ol>
-            </div>
-
-            <h4>👥 Role-Based Access Control</h4>
-            <table>
-                <tr>
-                    <th>Role</th>
-                    <th>Access Level</th>
-                    <th>Permissions</th>
-                    <th>Default Routes</th>
-                </tr>
-                <tr>
-                    <td><strong>Employee</strong></td>
-                    <td>Basic</td>
-                    <td>View own data, submit requests, track attendance</td>
-                    <td>/portal/*</td>
-                </tr>
-                <tr>
-                    <td><strong>Authority</strong></td>
-                    <td>Departmental</td>
-                    <td>Manage team, approve requests, view reports</td>
-                    <td>/authority/*</td>
-                </tr>
-                <tr>
-                    <td><strong>Admin</strong></td>
-                    <td>System-wide</td>
-                    <td>Full system access, user management, configurations</td>
-                    <td>/admin/*</td>
-                </tr>
-            </table>
-
-            <h4>🛡️ Security Features</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>Password Hashing:</strong> bcryptjs with 12 salt rounds</li>
-                    <li><strong>Token Expiration:</strong> 8-hour session timeout</li>
-                    <li><strong>Route Protection:</strong> ProtectedRoute component for access control</li>
-                    <li><strong>CORS Configuration:</strong> Controlled cross-origin access</li>
-                    <li><strong>Input Validation:</strong> Zod schema validation</li>
-                    <li><strong>SQL Injection Prevention:</strong> MongoDB parameterized queries</li>
-                    <li><strong>XSS Protection:</strong> React built-in sanitization</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="features">
-            <h2>9. 🚀 Core Features</h2>
-
-            <h3>Employee Portal Features</h3>
-            <div class="feature-list">
-                <h4>📊 Personal Dashboard</h4>
-                <ul>
-                    <li>Real-time attendance tracking with check-in/check-out</li>
-                    <li>Leave balance and application status</li>
-                    <li>Recent payslips and salary information</li>
-                    <li>Pending reimbursement claims</li>
-                    <li>Upcoming facility bookings</li>
-                    <li>Notification center with real-time updates</li>
-                </ul>
-
-                <h4>👤 Profile Management</h4>
-                <ul>
-                    <li>Personal information updates</li>
-                    <li>Contact details management</li>
-                    <li>Emergency contact information</li>
-                    <li>Skills and certifications tracking</li>
-                    <li>Profile picture upload</li>
-                </ul>
-
-                <h4>📅 Attendance System</h4>
-                <ul>
-                    <li>Web-based check-in/check-out</li>
-                    <li>Working hours calculation</li>
-                    <li>Overtime tracking</li>
-                    <li>Attendance history and reports</li>
-                    <li>Monthly attendance summary</li>
-                </ul>
-            </div>
-
-            <h3>Authority Dashboard Features</h3>
-            <div class="feature-list">
-                <h4>👥 Team Management</h4>
-                <ul>
-                    <li>Department employee overview</li>
-                    <li>Team attendance monitoring</li>
-                    <li>Performance metrics tracking</li>
-                    <li>Employee directory management</li>
-                </ul>
-
-                <h4>✅ Approval Workflows</h4>
-                <ul>
-                    <li>Leave application approvals</li>
-                    <li>Reimbursement claim processing</li>
-                    <li>Facility booking confirmations</li>
-                    <li>Issue assignment and tracking</li>
-                </ul>
-            </div>
-
-            <h3>Admin Dashboard Features</h3>
-            <div class="feature-list">
-                <h4>⚙️ System Administration</h4>
-                <ul>
-                    <li>User account management</li>
-                    <li>Department configuration</li>
-                    <li>System settings and preferences</li>
-                    <li>Database backup and maintenance</li>
-                </ul>
-
-                <h4>📈 Analytics and Reporting</h4>
-                <ul>
-                    <li>Organization-wide analytics</li>
-                    <li>Department performance reports</li>
-                    <li>System usage statistics</li>
-                    <li>Custom report generation</li>
-                </ul>
-            </div>
-
-            <h3>Cross-Platform Features</h3>
-            <div class="feature-list">
-                <h4>🔔 Notification System</h4>
-                <ul>
-                    <li>Real-time notification bell with red dot indicator</li>
-                    <li>Role-based notification targeting</li>
-                    <li>Notification history and management</li>
-                    <li>Auto-refresh notification feed</li>
-                </ul>
-
-                <h4>🎯 Issue Tracking</h4>
-                <ul>
-                    <li>Issue creation and categorization</li>
-                    <li>Priority-based assignment</li>
-                    <li>Status tracking and updates</li>
-                    <li>Comment and collaboration system</li>
-                </ul>
-
-                <h4>🛡️ Safety Management</h4>
-                <ul>
-                    <li>Incident reporting system</li>
-                    <li>Safety protocol tracking</li>
-                    <li>Emergency contact management</li>
-                    <li>Safety analytics and trends</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="deployment">
-            <h2>10. 🚀 Deployment</h2>
-
-            <h3>Production Architecture</h3>
-            <p>The application is designed for cloud deployment with multiple deployment options including traditional servers, containerized environments, and serverless platforms.</p>
-
-            <h4>☁️ Netlify Deployment (Recommended)</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>Static Site Hosting:</strong> React SPA served from CDN</li>
-                    <li><strong>Serverless Functions:</strong> API endpoints via Netlify Functions</li>
-                    <li><strong>Automatic Deployments:</strong> Git-based CI/CD pipeline</li>
-                    <li><strong>Environment Variables:</strong> Secure configuration management</li>
-                    <li><strong>SSL Certificates:</strong> Automatic HTTPS configuration</li>
-                </ul>
-            </div>
-
-            <h4>🐳 Docker Deployment</h4>
-            <div class="code-block">
-# Dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-
-COPY dist/ ./dist/
-COPY server/ ./server/
-
-EXPOSE 3000
-CMD ["node", "dist/server/node-build.mjs"]
-            </div>
-
-            <h4>📦 Build Process</h4>
-            <div class="feature-list">
-                <ol>
-                    <li><strong>Client Build:</strong> Vite builds React SPA to dist/spa/</li>
-                    <li><strong>Server Build:</strong> TypeScript compiles Express server to dist/server/</li>
-                    <li><strong>Asset Optimization:</strong> CSS/JS minification and bundling</li>
-                    <li><strong>Type Checking:</strong> Full TypeScript validation</li>
-                    <li><strong>Testing:</strong> Vitest runs component and integration tests</li>
-                </ol>
-            </div>
-
-            <h4>🔧 Environment Configuration</h4>
-            <table>
-                <tr>
-                    <th>Variable</th>
-                    <th>Purpose</th>
-                    <th>Example</th>
-                    <th>Required</th>
-                </tr>
-                <tr>
-                    <td>MONGODB_URI</td>
-                    <td>Database connection string</td>
-                    <td>mongodb://localhost:27017/nalco</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>JWT_SECRET</td>
-                    <td>JWT token signing key</td>
-                    <td>your-secret-key-here</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>NODE_ENV</td>
-                    <td>Environment mode</td>
-                    <td>production</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td>PORT</td>
-                    <td>Server port</td>
-                    <td>3000</td>
-                    <td>No</td>
-                </tr>
-            </table>
-        </section>
-
-        <section id="development">
-            <h2>11. 💻 Development Guide</h2>
-
-            <h3>Getting Started</h3>
-            <div class="code-block">
-# Clone the repository
-git clone https://github.com/your-org/nalco-connect.git
-cd nalco-connect
-
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your MongoDB connection string
-
-# Seed the database
-npm run seed-db
-
-# Start development server
-npm run dev
-            </div>
-
-            <h4>📜 Available Scripts</h4>
-            <table>
-                <tr>
-                    <th>Command</th>
-                    <th>Purpose</th>
-                    <th>Description</th>
-                </tr>
-                <tr>
-                    <td><code>npm run dev</code></td>
-                    <td>Development</td>
-                    <td>Starts Vite dev server with hot reload</td>
-                </tr>
-                <tr>
-                    <td><code>npm run build</code></td>
-                    <td>Production</td>
-                    <td>Builds both client and server for production</td>
-                </tr>
-                <tr>
-                    <td><code>npm test</code></td>
-                    <td>Testing</td>
-                    <td>Runs Vitest test suite</td>
-                </tr>
-                <tr>
-                    <td><code>npm run typecheck</code></td>
-                    <td>Validation</td>
-                    <td>TypeScript type checking</td>
-                </tr>
-                <tr>
-                    <td><code>npm run seed-db</code></td>
-                    <td>Database</td>
-                    <td>Seeds database with sample data</td>
-                </tr>
-                <tr>
-                    <td><code>npm start</code></td>
-                    <td>Production</td>
-                    <td>Starts production server</td>
-                </tr>
-            </table>
-
-            <h4>🔧 Development Tools Configuration</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>ESLint:</strong> Code linting with React and TypeScript rules</li>
-                    <li><strong>Prettier:</strong> Code formatting with consistent style</li>
-                    <li><strong>Vitest:</strong> Fast unit and integration testing</li>
-                    <li><strong>TypeScript:</strong> Static type checking and IntelliSense</li>
-                    <li><strong>Vite:</strong> Fast HMR and optimized builds</li>
-                </ul>
-            </div>
-
-            <h4>📚 Development Workflow</h4>
-            <div class="feature-list">
-                <ol>
-                    <li><strong>Feature Branch:</strong> Create feature branch from main</li>
-                    <li><strong>Development:</strong> Implement feature with tests</li>
-                    <li><strong>Type Check:</strong> Run TypeScript validation</li>
-                    <li><strong>Testing:</strong> Ensure all tests pass</li>
-                    <li><strong>Code Review:</strong> Create pull request for review</li>
-                    <li><strong>Deployment:</strong> Merge triggers automatic deployment</li>
-                </ol>
-            </div>
-        </section>
-
-        <section id="typescript">
-            <h2>12. 📘 Why TypeScript?</h2>
-
-            <h3>Benefits of TypeScript in connectNALCO</h3>
-            <div class="success">
-                <strong>TypeScript provides significant benefits for a large-scale enterprise application like connectNALCO.</strong>
-            </div>
-
-            <h4>🛡️ Type Safety & Error Prevention</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>Compile-time Error Detection:</strong> Catches bugs before runtime</li>
-                    <li><strong>API Contract Enforcement:</strong> Ensures data integrity between frontend and backend</li>
-                    <li><strong>Refactoring Safety:</strong> Prevents breaking changes during code updates</li>
-                    <li><strong>Null Safety:</strong> Eliminates common null/undefined errors</li>
-                </ul>
-            </div>
-
-            <h4>🚀 Developer Experience</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>IntelliSense:</strong> Auto-completion and intelligent code suggestions</li>
-                    <li><strong>Code Navigation:</strong> Jump to definitions and find references</li>
-                    <li><strong>Inline Documentation:</strong> Type definitions serve as documentation</li>
-                    <li><strong>Better Debugging:</strong> More informative error messages</li>
-                </ul>
-            </div>
-
-            <h4>📈 Enterprise Benefits</h4>
-            <div class="feature-list">
-                <ul>
-                    <li><strong>Scalability:</strong> Easier to maintain large codebases</li>
-                    <li><strong>Team Collaboration:</strong> Clear interfaces and contracts</li>
-                    <li><strong>Code Quality:</strong> Enforces best practices and standards</li>
-                    <li><strong>Future-Proofing:</strong> Easier migration to new versions</li>
-                </ul>
-            </div>
-
-            <h4>💼 Business Value</h4>
-            <div class="info">
-                <ul>
-                    <li><strong>Reduced Development Time:</strong> Fewer bugs mean less debugging time</li>
-                    <li><strong>Lower Maintenance Costs:</strong> Easier to modify and extend existing code</li>
-                    <li><strong>Improved Reliability:</strong> Type safety reduces production errors</li>
-                    <li><strong>Developer Productivity:</strong> Better tooling support increases efficiency</li>
-                </ul>
-            </div>
-
-            <h4>🔗 TypeScript in connectNALCO Architecture</h4>
-            <div class="code-block">
-// Shared type definitions ensure consistency
-// shared/api.ts
-export interface User {
-  employeeId: string;
-  name: string;
-  email: string;
-  role: 'employee' | 'authority' | 'admin';
-  department: string;
-}
-
-// Frontend components use typed props
-// client/components/UserCard.tsx
-interface UserCardProps {
-  user: User;
-  onEdit: (user: User) => void;
-}
-
-// Backend endpoints return typed responses
-// server/routes/auth.ts
-app.get('/api/users', (req, res): ApiResponse&lt;User[]&gt; => {
-  // Implementation with type safety
-});
-            </div>
-        </section>
-
-        <section id="tools">
-            <h2>13. 🛠️ Development Tools & Technologies</h2>
-
-            <h3>Frontend Development Stack</h3>
-            <table>
-                <tr>
-                    <th>Tool</th>
-                    <th>Version</th>
-                    <th>Purpose</th>
-                    <th>Why Chosen</th>
-                </tr>
-                <tr>
-                    <td><strong>React</strong></td>
-                    <td>18.3.1</td>
-                    <td>UI Framework</td>
-                    <td>Component-based architecture, large ecosystem, excellent TypeScript support</td>
-                </tr>
-                <tr>
-                    <td><strong>Vite</strong></td>
-                    <td>6.2.2</td>
-                    <td>Build Tool</td>
-                    <td>Fast HMR, optimized builds, excellent TypeScript support</td>
-                </tr>
-                <tr>
-                    <td><strong>TailwindCSS</strong></td>
-                    <td>3.4.11</td>
-                    <td>CSS Framework</td>
-                    <td>Utility-first approach, rapid development, consistent design</td>
-                </tr>
-                <tr>
-                    <td><strong>Radix UI</strong></td>
-                    <td>Latest</td>
-                    <td>UI Components</td>
-                    <td>Accessible, headless components, full customization control</td>
-                </tr>
-                <tr>
-                    <td><strong>React Router</strong></td>
-                    <td>6.26.2</td>
-                    <td>Routing</td>
-                    <td>Declarative routing, nested routes, code splitting support</td>
-                </tr>
-            </table>
-
-            <h3>Backend Development Stack</h3>
-            <table>
-                <tr>
-                    <th>Tool</th>
-                    <th>Version</th>
-                    <th>Purpose</th>
-                    <th>Why Chosen</th>
-                </tr>
-                <tr>
-                    <td><strong>Node.js</strong></td>
-                    <td>18+</td>
-                    <td>Runtime</td>
-                    <td>JavaScript ecosystem, excellent performance, large community</td>
-                </tr>
-                <tr>
-                    <td><strong>Express.js</strong></td>
-                    <td>4.18.2</td>
-                    <td>Web Framework</td>
-                    <td>Minimal, flexible, extensive middleware ecosystem</td>
-                </tr>
-                <tr>
-                    <td><strong>MongoDB</strong></td>
-                    <td>7.0</td>
-                    <td>Database</td>
-                    <td>Document-based, flexible schema, horizontal scaling</td>
-                </tr>
-                <tr>
-                    <td><strong>Mongoose</strong></td>
-                    <td>8.16.4</td>
-                    <td>ODM</td>
-                    <td>Schema validation, middleware, TypeScript support</td>
-                </tr>
-                <tr>
-                    <td><strong>JWT</strong></td>
-                    <td>9.0.2</td>
-                    <td>Authentication</td>
-                    <td>Stateless authentication, secure, scalable</td>
-                </tr>
-            </table>
-
-            <h3>Development & Testing Tools</h3>
-            <table>
-                <tr>
-                    <th>Tool</th>
-                    <th>Purpose</th>
-                    <th>Benefits</th>
-                </tr>
-                <tr>
-                    <td><strong>Vitest</strong></td>
-                    <td>Testing Framework</td>
-                    <td>Fast, Vite integration, Jest compatibility</td>
-                </tr>
-                <tr>
-                    <td><strong>ESLint</strong></td>
-                    <td>Code Linting</td>
-                    <td>Code quality, consistent style, error prevention</td>
-                </tr>
-                <tr>
-                    <td><strong>Prettier</strong></td>
-                    <td>Code Formatting</td>
-                    <td>Consistent formatting, team collaboration</td>
-                </tr>
-                <tr>
-                    <td><strong>TypeScript</strong></td>
-                    <td>Type Checking</td>
-                    <td>Type safety, better refactoring, enhanced IDE support</td>
-                </tr>
-            </table>
-
-            <h3>Why These Tools Were Selected</h3>
-            <div class="feature-list">
-                <h4>🎯 Selection Criteria</h4>
-                <ul>
-                    <li><strong>Enterprise Readiness:</strong> Proven in large-scale applications</li>
-                    <li><strong>Developer Experience:</strong> Excellent tooling and debugging support</li>
-                    <li><strong>Performance:</strong> Optimized for speed and scalability</li>
-                    <li><strong>Community Support:</strong> Large community and extensive documentation</li>
-                    <li><strong>Future-Proofing:</strong> Active development and long-term viability</li>
-                    <li><strong>Learning Curve:</strong> Reasonable learning curve for team adoption</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="best-practices">
-            <h2>14. ✨ Best Practices</h2>
-
-            <h3>Code Organization</h3>
-            <div class="feature-list">
-                <h4>📁 File Structure Best Practices</h4>
-                <ul>
-                    <li><strong>Feature-based Organization:</strong> Group related files by feature</li>
-                    <li><strong>Consistent Naming:</strong> Use PascalCase for components, camelCase for functions</li>
-                    <li><strong>Index Files:</strong> Use index.ts files for clean imports</li>
-                    <li><strong>Absolute Imports:</strong> Use path aliases (@/) for cleaner imports</li>
-                </ul>
-            </div>
-
-            <h3>Component Development</h3>
-            <div class="feature-list">
-                <h4>⚛️ React Best Practices</h4>
-                <ul>
-                    <li><strong>Functional Components:</strong> Use hooks instead of class components</li>
-                    <li><strong>Custom Hooks:</strong> Extract reusable logic into custom hooks</li>
-                    <li><strong>Props Typing:</strong> Always type component props with TypeScript</li>
-                    <li><strong>Error Boundaries:</strong> Implement error boundaries for robust UX</li>
-                    <li><strong>Performance:</strong> Use memo, useMemo, and useCallback when appropriate</li>
-                </ul>
-            </div>
-
-            <h3>State Management</h3>
-            <div class="feature-list">
-                <h4>🔄 State Best Practices</h4>
-                <ul>
-                    <li><strong>Local State First:</strong> Use useState for component-specific state</li>
-                    <li><strong>Context for Global State:</strong> Use React Context for app-wide state</li>
-                    <li><strong>Server State:</strong> Use TanStack Query for server state management</li>
-                    <li><strong>Immutable Updates:</strong> Always create new state objects</li>
-                </ul>
-            </div>
-
-            <h3>API Development</h3>
-            <div class="feature-list">
-                <h4>🛣️ API Best Practices</h4>
-                <ul>
-                    <li><strong>RESTful Design:</strong> Follow REST conventions for API endpoints</li>
-                    <li><strong>Error Handling:</strong> Consistent error response format</li>
-                    <li><strong>Validation:</strong> Use Zod for request/response validation</li>
-                    <li><strong>Security:</strong> Implement proper authentication and authorization</li>
-                    <li><strong>Documentation:</strong> Document API endpoints and schemas</li>
-                </ul>
-            </div>
-
-            <h3>Security Practices</h3>
-            <div class="warning">
-                <h4>🔒 Security Checklist</h4>
-                <ul>
-                    <li>✅ Password hashing with bcryptjs</li>
-                    <li>✅ JWT token expiration and rotation</li>
-                    <li>✅ Input validation and sanitization</li>
-                    <li>✅ CORS configuration</li>
-                    <li>✅ Environment variable protection</li>
-                    <li>✅ HTTPS in production</li>
-                    <li>✅ Rate limiting for API endpoints</li>
-                </ul>
-            </div>
-
-            <h3>Performance Optimization</h3>
-            <div class="feature-list">
-                <h4>⚡ Performance Best Practices</h4>
-                <ul>
-                    <li><strong>Code Splitting:</strong> Lazy load routes and components</li>
-                    <li><strong>Image Optimization:</strong> Use optimized image formats</li>
-                    <li><strong>Bundle Analysis:</strong> Monitor and optimize bundle size</li>
-                    <li><strong>Caching:</strong> Implement proper caching strategies</li>
-                    <li><strong>Database Indexing:</strong> Create appropriate database indexes</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="troubleshooting">
-            <h2>15. 🔧 Troubleshooting Guide</h2>
-
-            <h3>Common Development Issues</h3>
-            
-            <h4>🐛 Build Errors</h4>
-            <div class="feature-list">
-                <strong>TypeScript Compilation Errors:</strong>
-                <ul>
-                    <li>Run <code>npm run typecheck</code> to identify type errors</li>
-                    <li>Check import statements and file paths</li>
-                    <li>Ensure all dependencies are properly typed</li>
-                </ul>
-
-                <strong>Vite Build Failures:</strong>
-                <ul>
-                    <li>Clear node_modules and reinstall: <code>rm -rf node_modules && npm install</code></li>
-                    <li>Check for conflicting dependencies</li>
-                    <li>Verify environment variables are set</li>
-                </ul>
-            </div>
-
-            <h4>🗄️ Database Connection Issues</h4>
-            <div class="feature-list">
-                <strong>MongoDB Connection Errors:</strong>
-                <ul>
-                    <li>Verify MONGODB_URI in environment variables</li>
-                    <li>Check MongoDB service is running</li>
-                    <li>Verify network connectivity and firewall settings</li>
-                    <li>Check authentication credentials</li>
-                </ul>
-
-                <strong>Mongoose Schema Errors:</strong>
-                <ul>
-                    <li>Validate schema definitions match data structure</li>
-                    <li>Check for required fields in documents</li>
-                    <li>Verify data types match schema</li>
-                </ul>
-            </div>
-
-            <h4>🔐 Authentication Problems</h4>
-            <div class="feature-list">
-                <strong>JWT Token Issues:</strong>
-                <ul>
-                    <li>Verify JWT_SECRET is set correctly</li>
-                    <li>Check token expiration settings</li>
-                    <li>Clear localStorage and login again</li>
-                    <li>Verify token format in Authorization header</li>
-                </ul>
-
-                <strong>Role-Based Access Errors:</strong>
-                <ul>
-                    <li>Check user role in database</li>
-                    <li>Verify ProtectedRoute configuration</li>
-                    <li>Ensure role permissions are correctly implemented</li>
-                </ul>
-            </div>
-
-            <h3>Production Issues</h3>
-            
-            <h4>🚀 Deployment Problems</h4>
-            <div class="code-block">
-# Check application logs
-npm run start 2>&1 | tee app.log
-
-# Verify environment variables
-printenv | grep -E "(MONGODB|JWT|NODE_ENV)"
-
-# Test database connection
-mongosh "$MONGODB_URI" --eval "db.adminCommand('ping')"
-
-# Check application health
-curl -f http://localhost:3000/api/ping || echo "API not responding"
-            </div>
-
-            <h4>📊 Performance Issues</h4>
-            <div class="feature-list">
-                <strong>Slow Database Queries:</strong>
-                <ul>
-                    <li>Check database indexes are properly created</li>
-                    <li>Use MongoDB profiler to identify slow queries</li>
-                    <li>Optimize query patterns and projections</li>
-                </ul>
-
-                <strong>Frontend Performance:</strong>
-                <ul>
-                    <li>Use React DevTools Profiler to identify bottlenecks</li>
-                    <li>Implement proper memoization</li>
-                    <li>Optimize bundle size with code splitting</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="future">
-            <h2>16. 🚀 Future Enhancements</h2>
-
-            <h3>Planned Features</h3>
-            <div class="feature-list">
-                <h4>📱 Mobile Application</h4>
-                <ul>
-                    <li>React Native mobile app for iOS and Android</li>
-                    <li>Push notifications for real-time updates</li>
-                    <li>Offline support with local data synchronization</li>
-                    <li>Biometric authentication (fingerprint, face ID)</li>
-                </ul>
-
-                <h4>🤖 AI/ML Integration</h4>
-                <ul>
-                    <li>Predictive analytics for attendance patterns</li>
-                    <li>Intelligent issue categorization and routing</li>
-                    <li>Chatbot for common HR queries</li>
-                    <li>Automated report generation and insights</li>
-                </ul>
-
-                <h4>📊 Advanced Analytics</h4>
-                <ul>
-                    <li>Real-time dashboard with live metrics</li>
-                    <li>Custom report builder for managers</li>
-                    <li>Data visualization with charts and graphs</li>
-                    <li>Export capabilities (PDF, Excel, CSV)</li>
-                </ul>
-            </div>
-
-            <h3>Technical Improvements</h3>
-            <div class="feature-list">
-                <h4>🏗️ Architecture Enhancements</h4>
-                <ul>
-                    <li>Microservices architecture for better scalability</li>
-                    <li>GraphQL API for efficient data fetching</li>
-                    <li>Redis caching layer for improved performance</li>
-                    <li>Event-driven architecture with message queues</li>
-                </ul>
-
-                <h4>🔒 Security Enhancements</h4>
-                <ul>
-                    <li>Multi-factor authentication (MFA)</li>
-                    <li>Single Sign-On (SSO) integration</li>
-                    <li>Advanced audit logging and monitoring</li>
-                    <li>Regular security assessments and updates</li>
-                </ul>
-            </div>
-
-            <h3>Integration Opportunities</h3>
-            <div class="info">
-                <h4>🔗 External System Integration</h4>
-                <ul>
-                    <li><strong>ERP Systems:</strong> SAP, Oracle integration for payroll and finance</li>
-                    <li><strong>Active Directory:</strong> LDAP integration for user management</li>
-                    <li><strong>Email Systems:</strong> Outlook/Gmail integration for notifications</li>
-                    <li><strong>Calendar Systems:</strong> Calendar sync for meetings and leaves</li>
-                    <li><strong>Communication Tools:</strong> Slack/Teams integration for notifications</li>
-                </ul>
-            </div>
-
-            <h3>Scalability Roadmap</h3>
-            <div class="feature-list">
-                <h4>📈 Growth Planning</h4>
-                <ul>
-                    <li>Horizontal scaling with load balancers</li>
-                    <li>Database sharding for large datasets</li>
-                    <li>CDN integration for global content delivery</li>
-                    <li>Multi-region deployment for redundancy</li>
-                    <li>Auto-scaling based on traffic patterns</li>
-                </ul>
-            </div>
-        </section>
-
-        <div style="margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #3498db, #e74c3c); color: white; border-radius: 10px; text-align: center;">
-            <h2 style="margin: 0; color: white; border: none;">🎉 Project Summary</h2>
-            <p style="margin: 20px 0; font-size: 1.1em;">
-                <strong>connectNALCO</strong> represents a comprehensive digital transformation solution built with modern web technologies. 
-                The application successfully combines React's component-based architecture with Express.js backend services, 
-                creating a scalable, secure, and user-friendly platform for enterprise employee management.
-            </p>
-            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px;">
-                <div style="margin: 10px;">
-                    <strong>9</strong><br>Core Features
-                </div>
-                <div style="margin: 10px;">
-                    <strong>15+</strong><br>Technologies Used
-                </div>
-                <div style="margin: 10px;">
-                    <strong>2,500+</strong><br>Target Users
-                </div>
-                <div style="margin: 10px;">
-                    <strong>100%</strong><br>TypeScript Coverage
-                </div>
-            </div>
-            <p style="margin-top: 30px; font-style: italic;">
-                Built with ❤️ for NALCO's Digital Future
-            </p>
+                </pre
+          >
         </div>
+      </section>
+
+      <section id="authentication">
+        <h2>8. 🔐 Authentication System</h2>
+
+        <h3>JWT-Based Authentication</h3>
+        <p>
+          The application implements a secure JWT (JSON Web Token) based
+          authentication system with role-based access control.
+        </p>
+
+        <h4>🔑 Authentication Flow</h4>
+        <div class="feature-list">
+          <ol>
+            <li>
+              <strong>Login Request:</strong> User submits credentials via login
+              form
+            </li>
+            <li>
+              <strong>Credential Validation:</strong> Server verifies email and
+              password against database
+            </li>
+            <li>
+              <strong>Token Generation:</strong> JWT token created with user ID
+              and role
+            </li>
+            <li>
+              <strong>Token Storage:</strong> Client stores token in
+              localStorage with expiration
+            </li>
+            <li>
+              <strong>Request Authorization:</strong> Token included in API
+              request headers
+            </li>
+            <li>
+              <strong>Token Validation:</strong> Server validates token and
+              extracts user context
+            </li>
+            <li>
+              <strong>Session Management:</strong> Automatic logout on token
+              expiration
+            </li>
+          </ol>
+        </div>
+
+        <h4>👥 Role-Based Access Control</h4>
+        <table>
+          <tr>
+            <th>Role</th>
+            <th>Access Level</th>
+            <th>Permissions</th>
+            <th>Default Routes</th>
+          </tr>
+          <tr>
+            <td><strong>Employee</strong></td>
+            <td>Basic</td>
+            <td>View own data, submit requests, track attendance</td>
+            <td>/portal/*</td>
+          </tr>
+          <tr>
+            <td><strong>Authority</strong></td>
+            <td>Departmental</td>
+            <td>Manage team, approve requests, view reports</td>
+            <td>/authority/*</td>
+          </tr>
+          <tr>
+            <td><strong>Admin</strong></td>
+            <td>System-wide</td>
+            <td>Full system access, user management, configurations</td>
+            <td>/admin/*</td>
+          </tr>
+        </table>
+
+        <h4>🛡️ Security Features</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>Password Hashing:</strong> bcryptjs with 12 salt rounds
+            </li>
+            <li><strong>Token Expiration:</strong> 8-hour session timeout</li>
+            <li>
+              <strong>Route Protection:</strong> ProtectedRoute component for
+              access control
+            </li>
+            <li>
+              <strong>CORS Configuration:</strong> Controlled cross-origin
+              access
+            </li>
+            <li><strong>Input Validation:</strong> Zod schema validation</li>
+            <li>
+              <strong>SQL Injection Prevention:</strong> MongoDB parameterized
+              queries
+            </li>
+            <li>
+              <strong>XSS Protection:</strong> React built-in sanitization
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="features">
+        <h2>9. 🚀 Core Features</h2>
+
+        <h3>Employee Portal Features</h3>
+        <div class="feature-list">
+          <h4>📊 Personal Dashboard</h4>
+          <ul>
+            <li>Real-time attendance tracking with check-in/check-out</li>
+            <li>Leave balance and application status</li>
+            <li>Recent payslips and salary information</li>
+            <li>Pending reimbursement claims</li>
+            <li>Upcoming facility bookings</li>
+            <li>Notification center with real-time updates</li>
+          </ul>
+
+          <h4>👤 Profile Management</h4>
+          <ul>
+            <li>Personal information updates</li>
+            <li>Contact details management</li>
+            <li>Emergency contact information</li>
+            <li>Skills and certifications tracking</li>
+            <li>Profile picture upload</li>
+          </ul>
+
+          <h4>📅 Attendance System</h4>
+          <ul>
+            <li>Web-based check-in/check-out</li>
+            <li>Working hours calculation</li>
+            <li>Overtime tracking</li>
+            <li>Attendance history and reports</li>
+            <li>Monthly attendance summary</li>
+          </ul>
+        </div>
+
+        <h3>Authority Dashboard Features</h3>
+        <div class="feature-list">
+          <h4>👥 Team Management</h4>
+          <ul>
+            <li>Department employee overview</li>
+            <li>Team attendance monitoring</li>
+            <li>Performance metrics tracking</li>
+            <li>Employee directory management</li>
+          </ul>
+
+          <h4>✅ Approval Workflows</h4>
+          <ul>
+            <li>Leave application approvals</li>
+            <li>Reimbursement claim processing</li>
+            <li>Facility booking confirmations</li>
+            <li>Issue assignment and tracking</li>
+          </ul>
+        </div>
+
+        <h3>Admin Dashboard Features</h3>
+        <div class="feature-list">
+          <h4>⚙️ System Administration</h4>
+          <ul>
+            <li>User account management</li>
+            <li>Department configuration</li>
+            <li>System settings and preferences</li>
+            <li>Database backup and maintenance</li>
+          </ul>
+
+          <h4>📈 Analytics and Reporting</h4>
+          <ul>
+            <li>Organization-wide analytics</li>
+            <li>Department performance reports</li>
+            <li>System usage statistics</li>
+            <li>Custom report generation</li>
+          </ul>
+        </div>
+
+        <h3>Cross-Platform Features</h3>
+        <div class="feature-list">
+          <h4>🔔 Notification System</h4>
+          <ul>
+            <li>Real-time notification bell with red dot indicator</li>
+            <li>Role-based notification targeting</li>
+            <li>Notification history and management</li>
+            <li>Auto-refresh notification feed</li>
+          </ul>
+
+          <h4>🎯 Issue Tracking</h4>
+          <ul>
+            <li>Issue creation and categorization</li>
+            <li>Priority-based assignment</li>
+            <li>Status tracking and updates</li>
+            <li>Comment and collaboration system</li>
+          </ul>
+
+          <h4>🛡️ Safety Management</h4>
+          <ul>
+            <li>Incident reporting system</li>
+            <li>Safety protocol tracking</li>
+            <li>Emergency contact management</li>
+            <li>Safety analytics and trends</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="deployment">
+        <h2>10. 🚀 Deployment</h2>
+
+        <h3>Production Architecture</h3>
+        <p>
+          The application is designed for cloud deployment with multiple
+          deployment options including traditional servers, containerized
+          environments, and serverless platforms.
+        </p>
+
+        <h4>☁️ Netlify Deployment (Recommended)</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>Static Site Hosting:</strong> React SPA served from CDN
+            </li>
+            <li>
+              <strong>Serverless Functions:</strong> API endpoints via Netlify
+              Functions
+            </li>
+            <li>
+              <strong>Automatic Deployments:</strong> Git-based CI/CD pipeline
+            </li>
+            <li>
+              <strong>Environment Variables:</strong> Secure configuration
+              management
+            </li>
+            <li>
+              <strong>SSL Certificates:</strong> Automatic HTTPS configuration
+            </li>
+          </ul>
+        </div>
+
+        <h4>🐳 Docker Deployment</h4>
+        <div class="code-block">
+          # Dockerfile FROM node:18-alpine WORKDIR /app COPY package*.json ./
+          RUN npm ci --only=production COPY dist/ ./dist/ COPY server/ ./server/
+          EXPOSE 3000 CMD ["node", "dist/server/node-build.mjs"]
+        </div>
+
+        <h4>📦 Build Process</h4>
+        <div class="feature-list">
+          <ol>
+            <li>
+              <strong>Client Build:</strong> Vite builds React SPA to dist/spa/
+            </li>
+            <li>
+              <strong>Server Build:</strong> TypeScript compiles Express server
+              to dist/server/
+            </li>
+            <li>
+              <strong>Asset Optimization:</strong> CSS/JS minification and
+              bundling
+            </li>
+            <li><strong>Type Checking:</strong> Full TypeScript validation</li>
+            <li>
+              <strong>Testing:</strong> Vitest runs component and integration
+              tests
+            </li>
+          </ol>
+        </div>
+
+        <h4>🔧 Environment Configuration</h4>
+        <table>
+          <tr>
+            <th>Variable</th>
+            <th>Purpose</th>
+            <th>Example</th>
+            <th>Required</th>
+          </tr>
+          <tr>
+            <td>MONGODB_URI</td>
+            <td>Database connection string</td>
+            <td>mongodb://localhost:27017/nalco</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>JWT_SECRET</td>
+            <td>JWT token signing key</td>
+            <td>your-secret-key-here</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>NODE_ENV</td>
+            <td>Environment mode</td>
+            <td>production</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>PORT</td>
+            <td>Server port</td>
+            <td>3000</td>
+            <td>No</td>
+          </tr>
+        </table>
+      </section>
+
+      <section id="development">
+        <h2>11. 💻 Development Guide</h2>
+
+        <h3>Getting Started</h3>
+        <div class="code-block">
+          # Clone the repository git clone
+          https://github.com/your-org/nalco-connect.git cd nalco-connect #
+          Install dependencies npm install # Set up environment variables cp
+          .env.example .env # Edit .env with your MongoDB connection string #
+          Seed the database npm run seed-db # Start development server npm run
+          dev
+        </div>
+
+        <h4>📜 Available Scripts</h4>
+        <table>
+          <tr>
+            <th>Command</th>
+            <th>Purpose</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><code>npm run dev</code></td>
+            <td>Development</td>
+            <td>Starts Vite dev server with hot reload</td>
+          </tr>
+          <tr>
+            <td><code>npm run build</code></td>
+            <td>Production</td>
+            <td>Builds both client and server for production</td>
+          </tr>
+          <tr>
+            <td><code>npm test</code></td>
+            <td>Testing</td>
+            <td>Runs Vitest test suite</td>
+          </tr>
+          <tr>
+            <td><code>npm run typecheck</code></td>
+            <td>Validation</td>
+            <td>TypeScript type checking</td>
+          </tr>
+          <tr>
+            <td><code>npm run seed-db</code></td>
+            <td>Database</td>
+            <td>Seeds database with sample data</td>
+          </tr>
+          <tr>
+            <td><code>npm start</code></td>
+            <td>Production</td>
+            <td>Starts production server</td>
+          </tr>
+        </table>
+
+        <h4>🔧 Development Tools Configuration</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>ESLint:</strong> Code linting with React and TypeScript
+              rules
+            </li>
+            <li>
+              <strong>Prettier:</strong> Code formatting with consistent style
+            </li>
+            <li><strong>Vitest:</strong> Fast unit and integration testing</li>
+            <li>
+              <strong>TypeScript:</strong> Static type checking and IntelliSense
+            </li>
+            <li><strong>Vite:</strong> Fast HMR and optimized builds</li>
+          </ul>
+        </div>
+
+        <h4>📚 Development Workflow</h4>
+        <div class="feature-list">
+          <ol>
+            <li>
+              <strong>Feature Branch:</strong> Create feature branch from main
+            </li>
+            <li><strong>Development:</strong> Implement feature with tests</li>
+            <li><strong>Type Check:</strong> Run TypeScript validation</li>
+            <li><strong>Testing:</strong> Ensure all tests pass</li>
+            <li>
+              <strong>Code Review:</strong> Create pull request for review
+            </li>
+            <li>
+              <strong>Deployment:</strong> Merge triggers automatic deployment
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="typescript">
+        <h2>12. 📘 Why TypeScript?</h2>
+
+        <h3>Benefits of TypeScript in connectNALCO</h3>
+        <div class="success">
+          <strong
+            >TypeScript provides significant benefits for a large-scale
+            enterprise application like connectNALCO.</strong
+          >
+        </div>
+
+        <h4>🛡️ Type Safety & Error Prevention</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>Compile-time Error Detection:</strong> Catches bugs before
+              runtime
+            </li>
+            <li>
+              <strong>API Contract Enforcement:</strong> Ensures data integrity
+              between frontend and backend
+            </li>
+            <li>
+              <strong>Refactoring Safety:</strong> Prevents breaking changes
+              during code updates
+            </li>
+            <li>
+              <strong>Null Safety:</strong> Eliminates common null/undefined
+              errors
+            </li>
+          </ul>
+        </div>
+
+        <h4>🚀 Developer Experience</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>IntelliSense:</strong> Auto-completion and intelligent
+              code suggestions
+            </li>
+            <li>
+              <strong>Code Navigation:</strong> Jump to definitions and find
+              references
+            </li>
+            <li>
+              <strong>Inline Documentation:</strong> Type definitions serve as
+              documentation
+            </li>
+            <li>
+              <strong>Better Debugging:</strong> More informative error messages
+            </li>
+          </ul>
+        </div>
+
+        <h4>📈 Enterprise Benefits</h4>
+        <div class="feature-list">
+          <ul>
+            <li>
+              <strong>Scalability:</strong> Easier to maintain large codebases
+            </li>
+            <li>
+              <strong>Team Collaboration:</strong> Clear interfaces and
+              contracts
+            </li>
+            <li>
+              <strong>Code Quality:</strong> Enforces best practices and
+              standards
+            </li>
+            <li>
+              <strong>Future-Proofing:</strong> Easier migration to new versions
+            </li>
+          </ul>
+        </div>
+
+        <h4>💼 Business Value</h4>
+        <div class="info">
+          <ul>
+            <li>
+              <strong>Reduced Development Time:</strong> Fewer bugs mean less
+              debugging time
+            </li>
+            <li>
+              <strong>Lower Maintenance Costs:</strong> Easier to modify and
+              extend existing code
+            </li>
+            <li>
+              <strong>Improved Reliability:</strong> Type safety reduces
+              production errors
+            </li>
+            <li>
+              <strong>Developer Productivity:</strong> Better tooling support
+              increases efficiency
+            </li>
+          </ul>
+        </div>
+
+        <h4>🔗 TypeScript in connectNALCO Architecture</h4>
+        <div class="code-block">
+          // Shared type definitions ensure consistency // shared/api.ts export
+          interface User { employeeId: string; name: string; email: string;
+          role: 'employee' | 'authority' | 'admin'; department: string; } //
+          Frontend components use typed props // client/components/UserCard.tsx
+          interface UserCardProps { user: User; onEdit: (user: User) => void; }
+          // Backend endpoints return typed responses // server/routes/auth.ts
+          app.get('/api/users', (req, res): ApiResponse&lt;User[]&gt; => { //
+          Implementation with type safety });
+        </div>
+      </section>
+
+      <section id="tools">
+        <h2>13. 🛠️ Development Tools & Technologies</h2>
+
+        <h3>Frontend Development Stack</h3>
+        <table>
+          <tr>
+            <th>Tool</th>
+            <th>Version</th>
+            <th>Purpose</th>
+            <th>Why Chosen</th>
+          </tr>
+          <tr>
+            <td><strong>React</strong></td>
+            <td>18.3.1</td>
+            <td>UI Framework</td>
+            <td>
+              Component-based architecture, large ecosystem, excellent
+              TypeScript support
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Vite</strong></td>
+            <td>6.2.2</td>
+            <td>Build Tool</td>
+            <td>Fast HMR, optimized builds, excellent TypeScript support</td>
+          </tr>
+          <tr>
+            <td><strong>TailwindCSS</strong></td>
+            <td>3.4.11</td>
+            <td>CSS Framework</td>
+            <td>
+              Utility-first approach, rapid development, consistent design
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Radix UI</strong></td>
+            <td>Latest</td>
+            <td>UI Components</td>
+            <td>Accessible, headless components, full customization control</td>
+          </tr>
+          <tr>
+            <td><strong>React Router</strong></td>
+            <td>6.26.2</td>
+            <td>Routing</td>
+            <td>Declarative routing, nested routes, code splitting support</td>
+          </tr>
+        </table>
+
+        <h3>Backend Development Stack</h3>
+        <table>
+          <tr>
+            <th>Tool</th>
+            <th>Version</th>
+            <th>Purpose</th>
+            <th>Why Chosen</th>
+          </tr>
+          <tr>
+            <td><strong>Node.js</strong></td>
+            <td>18+</td>
+            <td>Runtime</td>
+            <td>
+              JavaScript ecosystem, excellent performance, large community
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Express.js</strong></td>
+            <td>4.18.2</td>
+            <td>Web Framework</td>
+            <td>Minimal, flexible, extensive middleware ecosystem</td>
+          </tr>
+          <tr>
+            <td><strong>MongoDB</strong></td>
+            <td>7.0</td>
+            <td>Database</td>
+            <td>Document-based, flexible schema, horizontal scaling</td>
+          </tr>
+          <tr>
+            <td><strong>Mongoose</strong></td>
+            <td>8.16.4</td>
+            <td>ODM</td>
+            <td>Schema validation, middleware, TypeScript support</td>
+          </tr>
+          <tr>
+            <td><strong>JWT</strong></td>
+            <td>9.0.2</td>
+            <td>Authentication</td>
+            <td>Stateless authentication, secure, scalable</td>
+          </tr>
+        </table>
+
+        <h3>Development & Testing Tools</h3>
+        <table>
+          <tr>
+            <th>Tool</th>
+            <th>Purpose</th>
+            <th>Benefits</th>
+          </tr>
+          <tr>
+            <td><strong>Vitest</strong></td>
+            <td>Testing Framework</td>
+            <td>Fast, Vite integration, Jest compatibility</td>
+          </tr>
+          <tr>
+            <td><strong>ESLint</strong></td>
+            <td>Code Linting</td>
+            <td>Code quality, consistent style, error prevention</td>
+          </tr>
+          <tr>
+            <td><strong>Prettier</strong></td>
+            <td>Code Formatting</td>
+            <td>Consistent formatting, team collaboration</td>
+          </tr>
+          <tr>
+            <td><strong>TypeScript</strong></td>
+            <td>Type Checking</td>
+            <td>Type safety, better refactoring, enhanced IDE support</td>
+          </tr>
+        </table>
+
+        <h3>Why These Tools Were Selected</h3>
+        <div class="feature-list">
+          <h4>🎯 Selection Criteria</h4>
+          <ul>
+            <li>
+              <strong>Enterprise Readiness:</strong> Proven in large-scale
+              applications
+            </li>
+            <li>
+              <strong>Developer Experience:</strong> Excellent tooling and
+              debugging support
+            </li>
+            <li>
+              <strong>Performance:</strong> Optimized for speed and scalability
+            </li>
+            <li>
+              <strong>Community Support:</strong> Large community and extensive
+              documentation
+            </li>
+            <li>
+              <strong>Future-Proofing:</strong> Active development and long-term
+              viability
+            </li>
+            <li>
+              <strong>Learning Curve:</strong> Reasonable learning curve for
+              team adoption
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="best-practices">
+        <h2>14. ✨ Best Practices</h2>
+
+        <h3>Code Organization</h3>
+        <div class="feature-list">
+          <h4>📁 File Structure Best Practices</h4>
+          <ul>
+            <li>
+              <strong>Feature-based Organization:</strong> Group related files
+              by feature
+            </li>
+            <li>
+              <strong>Consistent Naming:</strong> Use PascalCase for components,
+              camelCase for functions
+            </li>
+            <li>
+              <strong>Index Files:</strong> Use index.ts files for clean imports
+            </li>
+            <li>
+              <strong>Absolute Imports:</strong> Use path aliases (@/) for
+              cleaner imports
+            </li>
+          </ul>
+        </div>
+
+        <h3>Component Development</h3>
+        <div class="feature-list">
+          <h4>⚛️ React Best Practices</h4>
+          <ul>
+            <li>
+              <strong>Functional Components:</strong> Use hooks instead of class
+              components
+            </li>
+            <li>
+              <strong>Custom Hooks:</strong> Extract reusable logic into custom
+              hooks
+            </li>
+            <li>
+              <strong>Props Typing:</strong> Always type component props with
+              TypeScript
+            </li>
+            <li>
+              <strong>Error Boundaries:</strong> Implement error boundaries for
+              robust UX
+            </li>
+            <li>
+              <strong>Performance:</strong> Use memo, useMemo, and useCallback
+              when appropriate
+            </li>
+          </ul>
+        </div>
+
+        <h3>State Management</h3>
+        <div class="feature-list">
+          <h4>🔄 State Best Practices</h4>
+          <ul>
+            <li>
+              <strong>Local State First:</strong> Use useState for
+              component-specific state
+            </li>
+            <li>
+              <strong>Context for Global State:</strong> Use React Context for
+              app-wide state
+            </li>
+            <li>
+              <strong>Server State:</strong> Use TanStack Query for server state
+              management
+            </li>
+            <li>
+              <strong>Immutable Updates:</strong> Always create new state
+              objects
+            </li>
+          </ul>
+        </div>
+
+        <h3>API Development</h3>
+        <div class="feature-list">
+          <h4>🛣️ API Best Practices</h4>
+          <ul>
+            <li>
+              <strong>RESTful Design:</strong> Follow REST conventions for API
+              endpoints
+            </li>
+            <li>
+              <strong>Error Handling:</strong> Consistent error response format
+            </li>
+            <li>
+              <strong>Validation:</strong> Use Zod for request/response
+              validation
+            </li>
+            <li>
+              <strong>Security:</strong> Implement proper authentication and
+              authorization
+            </li>
+            <li>
+              <strong>Documentation:</strong> Document API endpoints and schemas
+            </li>
+          </ul>
+        </div>
+
+        <h3>Security Practices</h3>
+        <div class="warning">
+          <h4>🔒 Security Checklist</h4>
+          <ul>
+            <li>✅ Password hashing with bcryptjs</li>
+            <li>✅ JWT token expiration and rotation</li>
+            <li>✅ Input validation and sanitization</li>
+            <li>✅ CORS configuration</li>
+            <li>✅ Environment variable protection</li>
+            <li>✅ HTTPS in production</li>
+            <li>✅ Rate limiting for API endpoints</li>
+          </ul>
+        </div>
+
+        <h3>Performance Optimization</h3>
+        <div class="feature-list">
+          <h4>⚡ Performance Best Practices</h4>
+          <ul>
+            <li>
+              <strong>Code Splitting:</strong> Lazy load routes and components
+            </li>
+            <li>
+              <strong>Image Optimization:</strong> Use optimized image formats
+            </li>
+            <li>
+              <strong>Bundle Analysis:</strong> Monitor and optimize bundle size
+            </li>
+            <li>
+              <strong>Caching:</strong> Implement proper caching strategies
+            </li>
+            <li>
+              <strong>Database Indexing:</strong> Create appropriate database
+              indexes
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>15. 🔧 Troubleshooting Guide</h2>
+
+        <h3>Common Development Issues</h3>
+
+        <h4>🐛 Build Errors</h4>
+        <div class="feature-list">
+          <strong>TypeScript Compilation Errors:</strong>
+          <ul>
+            <li>Run <code>npm run typecheck</code> to identify type errors</li>
+            <li>Check import statements and file paths</li>
+            <li>Ensure all dependencies are properly typed</li>
+          </ul>
+
+          <strong>Vite Build Failures:</strong>
+          <ul>
+            <li>
+              Clear node_modules and reinstall:
+              <code>rm -rf node_modules && npm install</code>
+            </li>
+            <li>Check for conflicting dependencies</li>
+            <li>Verify environment variables are set</li>
+          </ul>
+        </div>
+
+        <h4>🗄️ Database Connection Issues</h4>
+        <div class="feature-list">
+          <strong>MongoDB Connection Errors:</strong>
+          <ul>
+            <li>Verify MONGODB_URI in environment variables</li>
+            <li>Check MongoDB service is running</li>
+            <li>Verify network connectivity and firewall settings</li>
+            <li>Check authentication credentials</li>
+          </ul>
+
+          <strong>Mongoose Schema Errors:</strong>
+          <ul>
+            <li>Validate schema definitions match data structure</li>
+            <li>Check for required fields in documents</li>
+            <li>Verify data types match schema</li>
+          </ul>
+        </div>
+
+        <h4>🔐 Authentication Problems</h4>
+        <div class="feature-list">
+          <strong>JWT Token Issues:</strong>
+          <ul>
+            <li>Verify JWT_SECRET is set correctly</li>
+            <li>Check token expiration settings</li>
+            <li>Clear localStorage and login again</li>
+            <li>Verify token format in Authorization header</li>
+          </ul>
+
+          <strong>Role-Based Access Errors:</strong>
+          <ul>
+            <li>Check user role in database</li>
+            <li>Verify ProtectedRoute configuration</li>
+            <li>Ensure role permissions are correctly implemented</li>
+          </ul>
+        </div>
+
+        <h3>Production Issues</h3>
+
+        <h4>🚀 Deployment Problems</h4>
+        <div class="code-block">
+          # Check application logs npm run start 2>&1 | tee app.log # Verify
+          environment variables printenv | grep -E "(MONGODB|JWT|NODE_ENV)" #
+          Test database connection mongosh "$MONGODB_URI" --eval
+          "db.adminCommand('ping')" # Check application health curl -f
+          http://localhost:3000/api/ping || echo "API not responding"
+        </div>
+
+        <h4>📊 Performance Issues</h4>
+        <div class="feature-list">
+          <strong>Slow Database Queries:</strong>
+          <ul>
+            <li>Check database indexes are properly created</li>
+            <li>Use MongoDB profiler to identify slow queries</li>
+            <li>Optimize query patterns and projections</li>
+          </ul>
+
+          <strong>Frontend Performance:</strong>
+          <ul>
+            <li>Use React DevTools Profiler to identify bottlenecks</li>
+            <li>Implement proper memoization</li>
+            <li>Optimize bundle size with code splitting</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="future">
+        <h2>16. 🚀 Future Enhancements</h2>
+
+        <h3>Planned Features</h3>
+        <div class="feature-list">
+          <h4>📱 Mobile Application</h4>
+          <ul>
+            <li>React Native mobile app for iOS and Android</li>
+            <li>Push notifications for real-time updates</li>
+            <li>Offline support with local data synchronization</li>
+            <li>Biometric authentication (fingerprint, face ID)</li>
+          </ul>
+
+          <h4>🤖 AI/ML Integration</h4>
+          <ul>
+            <li>Predictive analytics for attendance patterns</li>
+            <li>Intelligent issue categorization and routing</li>
+            <li>Chatbot for common HR queries</li>
+            <li>Automated report generation and insights</li>
+          </ul>
+
+          <h4>📊 Advanced Analytics</h4>
+          <ul>
+            <li>Real-time dashboard with live metrics</li>
+            <li>Custom report builder for managers</li>
+            <li>Data visualization with charts and graphs</li>
+            <li>Export capabilities (PDF, Excel, CSV)</li>
+          </ul>
+        </div>
+
+        <h3>Technical Improvements</h3>
+        <div class="feature-list">
+          <h4>🏗️ Architecture Enhancements</h4>
+          <ul>
+            <li>Microservices architecture for better scalability</li>
+            <li>GraphQL API for efficient data fetching</li>
+            <li>Redis caching layer for improved performance</li>
+            <li>Event-driven architecture with message queues</li>
+          </ul>
+
+          <h4>🔒 Security Enhancements</h4>
+          <ul>
+            <li>Multi-factor authentication (MFA)</li>
+            <li>Single Sign-On (SSO) integration</li>
+            <li>Advanced audit logging and monitoring</li>
+            <li>Regular security assessments and updates</li>
+          </ul>
+        </div>
+
+        <h3>Integration Opportunities</h3>
+        <div class="info">
+          <h4>🔗 External System Integration</h4>
+          <ul>
+            <li>
+              <strong>ERP Systems:</strong> SAP, Oracle integration for payroll
+              and finance
+            </li>
+            <li>
+              <strong>Active Directory:</strong> LDAP integration for user
+              management
+            </li>
+            <li>
+              <strong>Email Systems:</strong> Outlook/Gmail integration for
+              notifications
+            </li>
+            <li>
+              <strong>Calendar Systems:</strong> Calendar sync for meetings and
+              leaves
+            </li>
+            <li>
+              <strong>Communication Tools:</strong> Slack/Teams integration for
+              notifications
+            </li>
+          </ul>
+        </div>
+
+        <h3>Scalability Roadmap</h3>
+        <div class="feature-list">
+          <h4>📈 Growth Planning</h4>
+          <ul>
+            <li>Horizontal scaling with load balancers</li>
+            <li>Database sharding for large datasets</li>
+            <li>CDN integration for global content delivery</li>
+            <li>Multi-region deployment for redundancy</li>
+            <li>Auto-scaling based on traffic patterns</li>
+          </ul>
+        </div>
+      </section>
+
+      <div
+        style="
+          margin-top: 50px;
+          padding: 30px;
+          background: linear-gradient(135deg, #3498db, #e74c3c);
+          color: white;
+          border-radius: 10px;
+          text-align: center;
+        "
+      >
+        <h2 style="margin: 0; color: white; border: none">
+          🎉 Project Summary
+        </h2>
+        <p style="margin: 20px 0; font-size: 1.1em">
+          <strong>connectNALCO</strong> represents a comprehensive digital
+          transformation solution built with modern web technologies. The
+          application successfully combines React's component-based architecture
+          with Express.js backend services, creating a scalable, secure, and
+          user-friendly platform for enterprise employee management.
+        </p>
+        <div
+          style="
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+          "
+        >
+          <div style="margin: 10px"><strong>9</strong><br />Core Features</div>
+          <div style="margin: 10px">
+            <strong>15+</strong><br />Technologies Used
+          </div>
+          <div style="margin: 10px">
+            <strong>2,500+</strong><br />Target Users
+          </div>
+          <div style="margin: 10px">
+            <strong>100%</strong><br />TypeScript Coverage
+          </div>
+        </div>
+        <p style="margin-top: 30px; font-style: italic">
+          Built with ❤️ for NALCO's Digital Future
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

@@ -57,8 +57,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logout();
       } else if (sessionDuration >= warningTime) {
         // Session expiring soon
-        const timeLeft = Math.ceil((maxSessionTime - sessionDuration) / (60 * 1000));
-        if (confirm(`Your session will expire in ${timeLeft} minutes. Do you want to extend it?`)) {
+        const timeLeft = Math.ceil(
+          (maxSessionTime - sessionDuration) / (60 * 1000),
+        );
+        if (
+          confirm(
+            `Your session will expire in ${timeLeft} minutes. Do you want to extend it?`,
+          )
+        ) {
           // Extend session
           const extendedUserData = {
             ...user,

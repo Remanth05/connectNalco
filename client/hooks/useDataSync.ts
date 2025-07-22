@@ -2,8 +2,8 @@ import { useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface SyncData {
-  type: 'employee' | 'attendance' | 'leave' | 'notification' | 'issue';
-  action: 'create' | 'update' | 'delete';
+  type: "employee" | "attendance" | "leave" | "notification" | "issue";
+  action: "create" | "update" | "delete";
   data: any;
   userId?: string;
 }
@@ -33,29 +33,29 @@ class DataSyncManager {
   emit(event: string, data: any) {
     const callbacks = this.listeners.get(event);
     if (callbacks) {
-      callbacks.forEach(callback => callback(data));
+      callbacks.forEach((callback) => callback(data));
     }
   }
 
   // Trigger data sync across the application
   syncData(syncData: SyncData) {
-    console.log('Syncing data:', syncData);
-    
+    console.log("Syncing data:", syncData);
+
     // Update related data stores based on the sync type
     switch (syncData.type) {
-      case 'employee':
+      case "employee":
         this.syncEmployeeData(syncData);
         break;
-      case 'attendance':
+      case "attendance":
         this.syncAttendanceData(syncData);
         break;
-      case 'leave':
+      case "leave":
         this.syncLeaveData(syncData);
         break;
-      case 'notification':
+      case "notification":
         this.syncNotificationData(syncData);
         break;
-      case 'issue':
+      case "issue":
         this.syncIssueData(syncData);
         break;
     }
@@ -63,68 +63,80 @@ class DataSyncManager {
 
   private syncEmployeeData(syncData: SyncData) {
     // Update directory data
-    const directoryKey = 'nalco_employees';
-    const existingEmployees = JSON.parse(localStorage.getItem(directoryKey) || '[]');
-    
+    const directoryKey = "nalco_employees";
+    const existingEmployees = JSON.parse(
+      localStorage.getItem(directoryKey) || "[]",
+    );
+
     switch (syncData.action) {
-      case 'create':
+      case "create":
         existingEmployees.push(syncData.data);
         break;
-      case 'update':
-        const updateIndex = existingEmployees.findIndex((emp: any) => emp.employeeId === syncData.data.employeeId);
+      case "update":
+        const updateIndex = existingEmployees.findIndex(
+          (emp: any) => emp.employeeId === syncData.data.employeeId,
+        );
         if (updateIndex > -1) {
-          existingEmployees[updateIndex] = { ...existingEmployees[updateIndex], ...syncData.data };
+          existingEmployees[updateIndex] = {
+            ...existingEmployees[updateIndex],
+            ...syncData.data,
+          };
         }
         break;
-      case 'delete':
-        const deleteIndex = existingEmployees.findIndex((emp: any) => emp.employeeId === syncData.data.employeeId);
+      case "delete":
+        const deleteIndex = existingEmployees.findIndex(
+          (emp: any) => emp.employeeId === syncData.data.employeeId,
+        );
         if (deleteIndex > -1) {
           existingEmployees.splice(deleteIndex, 1);
         }
         break;
     }
-    
+
     localStorage.setItem(directoryKey, JSON.stringify(existingEmployees));
-    this.emit('employee-updated', syncData.data);
+    this.emit("employee-updated", syncData.data);
   }
 
   private syncAttendanceData(syncData: SyncData) {
     // Notify all attendance views to refresh
-    this.emit('attendance-updated', syncData.data);
-    
+    this.emit("attendance-updated", syncData.data);
+
     // Update team statistics if it's a team member
     if (syncData.userId) {
-      this.emit('team-stats-updated', { userId: syncData.userId, data: syncData.data });
+      this.emit("team-stats-updated", {
+        userId: syncData.userId,
+        data: syncData.data,
+      });
     }
   }
 
   private syncLeaveData(syncData: SyncData) {
     // Update team availability
-    this.emit('leave-updated', syncData.data);
-    
+    this.emit("leave-updated", syncData.data);
+
     // Trigger notification for relevant authorities
-    if (syncData.action === 'create') {
+    if (syncData.action === "create") {
       this.addNotification({
-        type: 'info',
-        title: 'New Leave Application',
+        type: "info",
+        title: "New Leave Application",
         message: `Leave application submitted by ${syncData.data.employeeName}`,
-        targetRoles: ['authority', 'admin'],
+        targetRoles: ["authority", "admin"],
       });
     }
   }
 
   private syncNotificationData(syncData: SyncData) {
-    this.emit('notification-added', syncData.data);
+    this.emit("notification-added", syncData.data);
   }
 
   private syncIssueData(syncData: SyncData) {
-    this.emit('issue-updated', syncData.data);
-    
+    this.emit("issue-updated", syncData.data);
+
     // Trigger notification for assigned user
-    if (syncData.action === 'create' || syncData.action === 'update') {
+    if (syncData.action === "create" || syncData.action === "update") {
       this.addNotification({
-        type: 'warning',
-        title: 'Issue Update',
+        type: "warning",
+        title: "Issue Update",
         message: `Issue ${syncData.data.id} has been ${syncData.action}d`,
         targetUsers: [syncData.data.assigneeId],
       });
@@ -140,18 +152,20 @@ class DataSyncManager {
     targetUsers?: string[];
   }) {
     // Get all users from localStorage to determine who should receive the notification
-    const employees = JSON.parse(localStorage.getItem('nalco_employees') || '[]');
-    
+    const employees = JSON.parse(
+      localStorage.getItem("nalco_employees") || "[]",
+    );
+
     employees.forEach((employee: any) => {
-      const shouldReceive = 
+      const shouldReceive =
         notification.targetRoles?.includes(employee.role) ||
         notification.targetUsers?.includes(employee.employeeId);
-        
+
       if (shouldReceive) {
         const userNotifications = JSON.parse(
-          localStorage.getItem(`notifications_${employee.employeeId}`) || '[]'
+          localStorage.getItem(`notifications_${employee.employeeId}`) || "[]",
         );
-        
+
         const newNotification = {
           id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           title: notification.title,
@@ -160,19 +174,19 @@ class DataSyncManager {
           timestamp: new Date().toISOString(),
           read: false,
         };
-        
+
         userNotifications.unshift(newNotification);
         // Keep only latest 20 notifications
         userNotifications.splice(20);
-        
+
         localStorage.setItem(
           `notifications_${employee.employeeId}`,
-          JSON.stringify(userNotifications)
+          JSON.stringify(userNotifications),
         );
       }
     });
-    
-    this.emit('notifications-updated', notification);
+
+    this.emit("notifications-updated", notification);
   }
 }
 
@@ -183,12 +197,15 @@ export const dataSyncManager = new DataSyncManager();
 export const useDataSync = () => {
   const { user } = useAuth();
 
-  const syncData = useCallback((syncData: SyncData) => {
-    dataSyncManager.syncData({
-      ...syncData,
-      userId: user?.employeeId,
-    });
-  }, [user]);
+  const syncData = useCallback(
+    (syncData: SyncData) => {
+      dataSyncManager.syncData({
+        ...syncData,
+        userId: user?.employeeId,
+      });
+    },
+    [user],
+  );
 
   const subscribe = useCallback((event: string, callback: Function) => {
     return dataSyncManager.subscribe(event, callback);
@@ -203,17 +220,20 @@ export const useDataSync = () => {
     if (user?.employeeId) {
       // Track user activity for session management
       const handleActivity = () => {
-        localStorage.setItem(`last_activity_${user.employeeId}`, Date.now().toString());
+        localStorage.setItem(
+          `last_activity_${user.employeeId}`,
+          Date.now().toString(),
+        );
       };
 
-      window.addEventListener('click', handleActivity);
-      window.addEventListener('keypress', handleActivity);
-      window.addEventListener('scroll', handleActivity);
+      window.addEventListener("click", handleActivity);
+      window.addEventListener("keypress", handleActivity);
+      window.addEventListener("scroll", handleActivity);
 
       return () => {
-        window.removeEventListener('click', handleActivity);
-        window.removeEventListener('keypress', handleActivity);
-        window.removeEventListener('scroll', handleActivity);
+        window.removeEventListener("click", handleActivity);
+        window.removeEventListener("keypress", handleActivity);
+        window.removeEventListener("scroll", handleActivity);
       };
     }
   }, [user]);
@@ -229,16 +249,16 @@ export const useDataSync = () => {
 // Utility functions for common sync operations
 export const syncEmployeeUpdate = (employeeData: any) => {
   dataSyncManager.syncData({
-    type: 'employee',
-    action: 'update',
+    type: "employee",
+    action: "update",
     data: employeeData,
   });
 };
 
 export const syncAttendanceUpdate = (attendanceData: any, userId: string) => {
   dataSyncManager.syncData({
-    type: 'attendance',
-    action: 'update',
+    type: "attendance",
+    action: "update",
     data: attendanceData,
     userId,
   });
@@ -246,16 +266,16 @@ export const syncAttendanceUpdate = (attendanceData: any, userId: string) => {
 
 export const syncLeaveApplication = (leaveData: any) => {
   dataSyncManager.syncData({
-    type: 'leave',
-    action: 'create',
+    type: "leave",
+    action: "create",
     data: leaveData,
   });
 };
 
 export const syncIssueUpdate = (issueData: any) => {
   dataSyncManager.syncData({
-    type: 'issue',
-    action: 'update',
+    type: "issue",
+    action: "update",
     data: issueData,
   });
 };

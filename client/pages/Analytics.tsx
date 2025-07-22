@@ -154,7 +154,7 @@ RECOMMENDATIONS:
       status: "excellent",
     },
     {
-      name: "Engineering", 
+      name: "Engineering",
       employees: 89,
       efficiency: 91,
       budget: "₹35 Cr",
@@ -229,10 +229,15 @@ RECOMMENDATIONS:
               onClick={handleRefresh}
               disabled={refreshing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+              />
               {refreshing ? "Refreshing..." : "Refresh Data"}
             </Button>
-            <Button onClick={handleExport} className="bg-nalco-blue hover:bg-nalco-blue/90">
+            <Button
+              onClick={handleExport}
+              className="bg-nalco-blue hover:bg-nalco-blue/90"
+            >
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
@@ -296,8 +301,8 @@ RECOMMENDATIONS:
                           item.current >= item.target
                             ? "bg-nalco-green"
                             : item.current >= item.target * 0.9
-                            ? "bg-nalco-blue"
-                            : "bg-yellow-500"
+                              ? "bg-nalco-blue"
+                              : "bg-yellow-500"
                         }`}
                         style={{ width: `${Math.min(item.current, 100)}%` }}
                       ></div>
@@ -305,7 +310,9 @@ RECOMMENDATIONS:
                     <div className="flex justify-between text-xs text-nalco-gray">
                       <span>Target: {item.target}%</span>
                       <span>
-                        {item.current >= item.target ? "✓ Target met" : "◯ Below target"}
+                        {item.current >= item.target
+                          ? "✓ Target met"
+                          : "◯ Below target"}
                       </span>
                     </div>
                   </div>
@@ -361,7 +368,9 @@ RECOMMENDATIONS:
           {/* Trends */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-nalco-black">Trends & Insights</CardTitle>
+              <CardTitle className="text-nalco-black">
+                Trends & Insights
+              </CardTitle>
               <CardDescription>
                 Key trends and actionable insights for the last 6 months
               </CardDescription>
@@ -369,19 +378,27 @@ RECOMMENDATIONS:
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-3">
-                  <h4 className="font-medium text-nalco-black">Positive Trends</h4>
+                  <h4 className="font-medium text-nalco-black">
+                    Positive Trends
+                  </h4>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between p-2 bg-nalco-green/10 rounded">
                       <span className="text-sm">Employee Engagement</span>
-                      <span className="text-sm font-medium text-nalco-green">+15%</span>
+                      <span className="text-sm font-medium text-nalco-green">
+                        +15%
+                      </span>
                     </div>
                     <div className="flex items-center justify-between p-2 bg-nalco-green/10 rounded">
                       <span className="text-sm">System Usage</span>
-                      <span className="text-sm font-medium text-nalco-green">+23%</span>
+                      <span className="text-sm font-medium text-nalco-green">
+                        +23%
+                      </span>
                     </div>
                     <div className="flex items-center justify-between p-2 bg-nalco-green/10 rounded">
                       <span className="text-sm">Safety Score</span>
-                      <span className="text-sm font-medium text-nalco-green">+8%</span>
+                      <span className="text-sm font-medium text-nalco-green">
+                        +8%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -390,15 +407,21 @@ RECOMMENDATIONS:
                   <div className="space-y-2">
                     <div className="flex items-center justify-between p-2 bg-nalco-blue/10 rounded">
                       <span className="text-sm">Issue Resolution Time</span>
-                      <span className="text-sm font-medium text-nalco-blue">-18%</span>
+                      <span className="text-sm font-medium text-nalco-blue">
+                        -18%
+                      </span>
                     </div>
                     <div className="flex items-center justify-between p-2 bg-nalco-blue/10 rounded">
                       <span className="text-sm">Safety Incidents</span>
-                      <span className="text-sm font-medium text-nalco-blue">-42%</span>
+                      <span className="text-sm font-medium text-nalco-blue">
+                        -42%
+                      </span>
                     </div>
                     <div className="flex items-center justify-between p-2 bg-nalco-blue/10 rounded">
                       <span className="text-sm">Operating Costs</span>
-                      <span className="text-sm font-medium text-nalco-blue">-12%</span>
+                      <span className="text-sm font-medium text-nalco-blue">
+                        -12%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -425,7 +448,8 @@ RECOMMENDATIONS:
                       Continue Safety Focus
                     </h4>
                     <p className="text-sm text-nalco-gray">
-                      Safety initiatives are showing excellent results. Expand safety training programs.
+                      Safety initiatives are showing excellent results. Expand
+                      safety training programs.
                     </p>
                   </div>
                 </div>
@@ -436,7 +460,8 @@ RECOMMENDATIONS:
                       Digital Transformation
                     </h4>
                     <p className="text-sm text-nalco-gray">
-                      Accelerate digital initiatives to maintain competitive advantage.
+                      Accelerate digital initiatives to maintain competitive
+                      advantage.
                     </p>
                   </div>
                 </div>
@@ -449,7 +474,8 @@ RECOMMENDATIONS:
                       Cross-Departmental Collaboration
                     </h4>
                     <p className="text-sm text-nalco-gray">
-                      Increase collaboration between departments to improve overall efficiency.
+                      Increase collaboration between departments to improve
+                      overall efficiency.
                     </p>
                   </div>
                 </div>
@@ -460,7 +486,8 @@ RECOMMENDATIONS:
                       Predictive Maintenance
                     </h4>
                     <p className="text-sm text-nalco-gray">
-                      Implement predictive maintenance systems to reduce downtime.
+                      Implement predictive maintenance systems to reduce
+                      downtime.
                     </p>
                   </div>
                 </div>

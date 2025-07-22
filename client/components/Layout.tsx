@@ -196,7 +196,9 @@ export default function Layout({ children }: LayoutProps) {
                     </div>
                     <div className="px-3 py-2">
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm text-nalco-gray">Notifications</span>
+                        <span className="text-sm text-nalco-gray">
+                          Notifications
+                        </span>
                         <NotificationBell />
                       </div>
                     </div>

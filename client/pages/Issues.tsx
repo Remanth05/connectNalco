@@ -803,11 +803,11 @@ export default function Issues() {
                             onClick={() => {
                               alert(
                                 `Assigning issue ${issue.id} - ${issue.title}\n\n` +
-                                `Current Assignee: ${issue.assignee}\n` +
-                                `Issue Status: ${issue.status}\n` +
-                                `Priority: ${issue.priority}\n\n` +
-                                `You can now reassign this issue to a different team member or department. ` +
-                                `The assignee will be notified via email and the issue status will be updated.`
+                                  `Current Assignee: ${issue.assignee}\n` +
+                                  `Issue Status: ${issue.status}\n` +
+                                  `Priority: ${issue.priority}\n\n` +
+                                  `You can now reassign this issue to a different team member or department. ` +
+                                  `The assignee will be notified via email and the issue status will be updated.`,
                               );
                             }}
                           >

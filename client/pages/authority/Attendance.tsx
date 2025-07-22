@@ -239,11 +239,17 @@ export default function AuthorityAttendance() {
       );
 
       // Calculate working hours with the new checkout time
-      const checkInDateTime = checkInTime ? new Date(`${today} ${checkInTime}`) : null;
+      const checkInDateTime = checkInTime
+        ? new Date(`${today} ${checkInTime}`)
+        : null;
       const checkOutDateTime = new Date(`${today} ${checkOutTimeString}`);
-      
+
       let calculatedHours = "0h 0m";
-      if (checkInDateTime && !isNaN(checkInDateTime.getTime()) && !isNaN(checkOutDateTime.getTime())) {
+      if (
+        checkInDateTime &&
+        !isNaN(checkInDateTime.getTime()) &&
+        !isNaN(checkOutDateTime.getTime())
+      ) {
         const diffMs = checkOutDateTime.getTime() - checkInDateTime.getTime();
         if (diffMs > 0) {
           const diffHours = diffMs / (1000 * 60 * 60);
@@ -252,14 +258,23 @@ export default function AuthorityAttendance() {
           calculatedHours = `${hours}h ${minutes}m`;
         }
       }
-      
+
       // Calculate overtime (assuming standard 8 hours)
-      const totalMinutes = checkInDateTime && !isNaN(checkInDateTime.getTime()) && !isNaN(checkOutDateTime.getTime()) 
-        ? Math.max(0, (checkOutDateTime.getTime() - checkInDateTime.getTime()) / (1000 * 60) - 480) // 480 minutes = 8 hours
-        : 0;
+      const totalMinutes =
+        checkInDateTime &&
+        !isNaN(checkInDateTime.getTime()) &&
+        !isNaN(checkOutDateTime.getTime())
+          ? Math.max(
+              0,
+              (checkOutDateTime.getTime() - checkInDateTime.getTime()) /
+                (1000 * 60) -
+                480,
+            ) // 480 minutes = 8 hours
+          : 0;
       const overtimeHours = Math.floor(totalMinutes / 60);
       const overtimeMinutes = Math.floor(totalMinutes % 60);
-      const overtime = totalMinutes > 0 ? `${overtimeHours}h ${overtimeMinutes}m` : "0m";
+      const overtime =
+        totalMinutes > 0 ? `${overtimeHours}h ${overtimeMinutes}m` : "0m";
 
       const todayRecord = {
         date: today,
@@ -499,7 +514,9 @@ export default function AuthorityAttendance() {
               <Users className="h-5 w-5 mr-2" />
               Team Attendance Today
             </CardTitle>
-            <CardDescription>Current status of your team members</CardDescription>
+            <CardDescription>
+              Current status of your team members
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -522,7 +539,9 @@ export default function AuthorityAttendance() {
                       <p>Out: {employee.checkOut}</p>
                       <p>Hours: {employee.hours}</p>
                       {employee.overtime !== "0m" && (
-                        <p className="text-yellow-600">OT: {employee.overtime}</p>
+                        <p className="text-yellow-600">
+                          OT: {employee.overtime}
+                        </p>
                       )}
                     </div>
                   </CardContent>
@@ -549,9 +568,7 @@ export default function AuthorityAttendance() {
             <CardContent className="flex items-center p-6">
               <Clock className="h-8 w-8 text-nalco-green" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Avg Hours
-                </p>
+                <p className="text-sm font-medium text-nalco-gray">Avg Hours</p>
                 <p className="text-2xl font-bold text-nalco-black">8.5h</p>
               </div>
             </CardContent>

@@ -51,7 +51,11 @@ export default function Safety() {
   const [newIncidentDialog, setNewIncidentDialog] = useState(false);
 
   const handleReportIncident = () => {
-    alert("Safety incident reported successfully!\n\nIncident ID: INC" + Date.now() + "\nStatus: Under Investigation\nAssigned to: Safety Officer\n\nYou will receive updates via email and notifications.");
+    alert(
+      "Safety incident reported successfully!\n\nIncident ID: INC" +
+        Date.now() +
+        "\nStatus: Under Investigation\nAssigned to: Safety Officer\n\nYou will receive updates via email and notifications.",
+    );
     setNewIncidentDialog(false);
   };
 
@@ -284,7 +288,10 @@ REPORT STATUS: Current and Accurate
             </div>
           </div>
           <div className="flex space-x-2">
-            <Dialog open={newIncidentDialog} onOpenChange={setNewIncidentDialog}>
+            <Dialog
+              open={newIncidentDialog}
+              onOpenChange={setNewIncidentDialog}
+            >
               <DialogTrigger asChild>
                 <Button className="bg-nalco-red hover:bg-nalco-red/90">
                   <Plus className="h-4 w-4 mr-2" />
@@ -295,7 +302,8 @@ REPORT STATUS: Current and Accurate
                 <DialogHeader>
                   <DialogTitle>Report Safety Incident</DialogTitle>
                   <DialogDescription>
-                    Report any safety incident, near miss, or concern immediately
+                    Report any safety incident, near miss, or concern
+                    immediately
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -308,10 +316,16 @@ REPORT STATUS: Current and Accurate
                       <SelectContent>
                         <SelectItem value="injury">Personal Injury</SelectItem>
                         <SelectItem value="near-miss">Near Miss</SelectItem>
-                        <SelectItem value="equipment">Equipment Related</SelectItem>
-                        <SelectItem value="environmental">Environmental</SelectItem>
+                        <SelectItem value="equipment">
+                          Equipment Related
+                        </SelectItem>
+                        <SelectItem value="environmental">
+                          Environmental
+                        </SelectItem>
                         <SelectItem value="fire">Fire/Explosion</SelectItem>
-                        <SelectItem value="chemical">Chemical Exposure</SelectItem>
+                        <SelectItem value="chemical">
+                          Chemical Exposure
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -322,10 +336,18 @@ REPORT STATUS: Current and Accurate
                         <SelectValue placeholder="Select severity" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="low">Low - Minor injury/no treatment</SelectItem>
-                        <SelectItem value="medium">Medium - First aid required</SelectItem>
-                        <SelectItem value="high">High - Medical attention required</SelectItem>
-                        <SelectItem value="critical">Critical - Emergency response</SelectItem>
+                        <SelectItem value="low">
+                          Low - Minor injury/no treatment
+                        </SelectItem>
+                        <SelectItem value="medium">
+                          Medium - First aid required
+                        </SelectItem>
+                        <SelectItem value="high">
+                          High - Medical attention required
+                        </SelectItem>
+                        <SelectItem value="critical">
+                          Critical - Emergency response
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -344,23 +366,26 @@ REPORT STATUS: Current and Accurate
                 </div>
                 <div>
                   <Label>Incident Description</Label>
-                  <Textarea 
+                  <Textarea
                     placeholder="Provide detailed description of what happened, including immediate actions taken"
                     rows={4}
                   />
                 </div>
                 <div>
                   <Label>Immediate Actions Taken</Label>
-                  <Textarea 
+                  <Textarea
                     placeholder="Describe any immediate corrective actions or first aid provided"
                     rows={3}
                   />
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setNewIncidentDialog(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setNewIncidentDialog(false)}
+                  >
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     className="bg-nalco-red hover:bg-nalco-red/90"
                     onClick={handleReportIncident}
                   >
@@ -407,7 +432,9 @@ REPORT STATUS: Current and Accurate
           {/* Recent Incidents */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-nalco-black">Recent Incidents</CardTitle>
+              <CardTitle className="text-nalco-black">
+                Recent Incidents
+              </CardTitle>
               <CardDescription>
                 Latest safety incidents and their current status
               </CardDescription>
@@ -436,7 +463,9 @@ REPORT STATUS: Current and Accurate
                       </div>
                     </div>
                     <div className="flex flex-col items-end space-y-1">
-                      <Badge className={getIncidentStatusColor(incident.status)}>
+                      <Badge
+                        className={getIncidentStatusColor(incident.status)}
+                      >
                         {incident.status}
                       </Badge>
                       <Badge className={getSeverityColor(incident.severity)}>
@@ -451,7 +480,9 @@ REPORT STATUS: Current and Accurate
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl">
                           <DialogHeader>
-                            <DialogTitle>Incident Details - {incident.id}</DialogTitle>
+                            <DialogTitle>
+                              Incident Details - {incident.id}
+                            </DialogTitle>
                             <DialogDescription>
                               Complete information about this safety incident
                             </DialogDescription>
@@ -485,11 +516,15 @@ REPORT STATUS: Current and Accurate
                             </div>
                             <div>
                               <Label>Description</Label>
-                              <Textarea value={incident.description} disabled rows={3} />
+                              <Textarea
+                                value={incident.description}
+                                disabled
+                                rows={3}
+                              />
                             </div>
                             <div>
                               <Label>Investigation Notes</Label>
-                              <Textarea 
+                              <Textarea
                                 value="Initial investigation completed. Root cause identified as inadequate floor marking. Corrective action: Floor has been properly marked and anti-slip mats installed."
                                 disabled
                                 rows={3}
@@ -497,7 +532,7 @@ REPORT STATUS: Current and Accurate
                             </div>
                             <div>
                               <Label>Corrective Actions</Label>
-                              <Textarea 
+                              <Textarea
                                 value="1. Floor re-marked with safety tape\n2. Anti-slip mats installed\n3. Additional signage placed\n4. Staff briefed on area hazards"
                                 disabled
                                 rows={4}
@@ -519,7 +554,9 @@ REPORT STATUS: Current and Accurate
           {/* Safety Protocols */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-nalco-black">Safety Protocols</CardTitle>
+              <CardTitle className="text-nalco-black">
+                Safety Protocols
+              </CardTitle>
               <CardDescription>
                 Current status of safety protocols and compliance
               </CardDescription>
@@ -532,10 +569,10 @@ REPORT STATUS: Current and Accurate
                       <h4 className="font-medium text-nalco-black text-sm">
                         {protocol.title}
                       </h4>
-                      <Badge 
+                      <Badge
                         className={
-                          protocol.status === "current" 
-                            ? "bg-nalco-green text-white" 
+                          protocol.status === "current"
+                            ? "bg-nalco-green text-white"
                             : "bg-yellow-500 text-white"
                         }
                       >
@@ -548,8 +585,8 @@ REPORT STATUS: Current and Accurate
                           protocol.compliance >= 98
                             ? "bg-nalco-green"
                             : protocol.compliance >= 95
-                            ? "bg-nalco-blue"
-                            : "bg-yellow-500"
+                              ? "bg-nalco-blue"
+                              : "bg-yellow-500"
                         }`}
                         style={{ width: `${protocol.compliance}%` }}
                       ></div>
@@ -557,7 +594,9 @@ REPORT STATUS: Current and Accurate
                     <div className="flex justify-between text-xs text-nalco-gray">
                       <span>Updated: {protocol.lastUpdate}</span>
                       <span>
-                        {protocol.status === "current" ? "✓ Current" : "⚠ Needs Update"}
+                        {protocol.status === "current"
+                          ? "✓ Current"
+                          : "⚠ Needs Update"}
                       </span>
                     </div>
                   </div>
@@ -570,7 +609,9 @@ REPORT STATUS: Current and Accurate
         {/* Safety Statistics */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle className="text-nalco-black">Safety Statistics</CardTitle>
+            <CardTitle className="text-nalco-black">
+              Safety Statistics
+            </CardTitle>
             <CardDescription>
               Key safety metrics and performance indicators
             </CardDescription>
@@ -578,18 +619,30 @@ REPORT STATUS: Current and Accurate
           <CardContent>
             <div className="grid gap-6 md:grid-cols-3">
               <div className="text-center">
-                <div className="text-3xl font-bold text-nalco-green mb-2">0.12</div>
-                <div className="text-sm text-nalco-gray">Lost Time Injury Rate</div>
+                <div className="text-3xl font-bold text-nalco-green mb-2">
+                  0.12
+                </div>
+                <div className="text-sm text-nalco-gray">
+                  Lost Time Injury Rate
+                </div>
                 <div className="text-xs text-nalco-gray">per 200,000 hours</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-nalco-blue mb-2">0.85</div>
-                <div className="text-sm text-nalco-gray">Total Recordable Rate</div>
+                <div className="text-3xl font-bold text-nalco-blue mb-2">
+                  0.85
+                </div>
+                <div className="text-sm text-nalco-gray">
+                  Total Recordable Rate
+                </div>
                 <div className="text-xs text-nalco-gray">per 200,000 hours</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-nalco-green mb-2">96.8%</div>
-                <div className="text-sm text-nalco-gray">Training Completion</div>
+                <div className="text-3xl font-bold text-nalco-green mb-2">
+                  96.8%
+                </div>
+                <div className="text-sm text-nalco-gray">
+                  Training Completion
+                </div>
                 <div className="text-xs text-nalco-gray">all employees</div>
               </div>
             </div>
@@ -599,7 +652,9 @@ REPORT STATUS: Current and Accurate
         {/* Emergency Contacts */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle className="text-nalco-black">Emergency Contacts</CardTitle>
+            <CardTitle className="text-nalco-black">
+              Emergency Contacts
+            </CardTitle>
             <CardDescription>
               Important contact information for emergency situations
             </CardDescription>
@@ -620,17 +675,25 @@ REPORT STATUS: Current and Accurate
                   <Users className="h-4 w-4 inline mr-2" />
                   Safety Team
                 </h4>
-                <p className="text-sm text-nalco-gray">Safety Officer: Dr. Anita Sharma</p>
+                <p className="text-sm text-nalco-gray">
+                  Safety Officer: Dr. Anita Sharma
+                </p>
                 <p className="text-sm text-nalco-gray">Phone: +91-9876543201</p>
-                <p className="text-sm text-nalco-gray">Email: safety@nalco.com</p>
+                <p className="text-sm text-nalco-gray">
+                  Email: safety@nalco.com
+                </p>
               </div>
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium text-nalco-black mb-2">
                   <FileText className="h-4 w-4 inline mr-2" />
                   Medical Support
                 </h4>
-                <p className="text-sm text-nalco-gray">Plant Medical Center: 2350</p>
-                <p className="text-sm text-nalco-gray">First Aid Stations: 4 locations</p>
+                <p className="text-sm text-nalco-gray">
+                  Plant Medical Center: 2350
+                </p>
+                <p className="text-sm text-nalco-gray">
+                  First Aid Stations: 4 locations
+                </p>
                 <p className="text-sm text-nalco-gray">Nearest Hospital: 5km</p>
               </div>
             </div>

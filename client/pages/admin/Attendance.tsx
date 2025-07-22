@@ -313,11 +313,17 @@ export default function AdminAttendance() {
       );
 
       // Calculate working hours with the new checkout time
-      const checkInDateTime = checkInTime ? new Date(`${today} ${checkInTime}`) : null;
+      const checkInDateTime = checkInTime
+        ? new Date(`${today} ${checkInTime}`)
+        : null;
       const checkOutDateTime = new Date(`${today} ${checkOutTimeString}`);
-      
+
       let calculatedHours = "0h 0m";
-      if (checkInDateTime && !isNaN(checkInDateTime.getTime()) && !isNaN(checkOutDateTime.getTime())) {
+      if (
+        checkInDateTime &&
+        !isNaN(checkInDateTime.getTime()) &&
+        !isNaN(checkOutDateTime.getTime())
+      ) {
         const diffMs = checkOutDateTime.getTime() - checkInDateTime.getTime();
         if (diffMs > 0) {
           const diffHours = diffMs / (1000 * 60 * 60);
@@ -326,14 +332,23 @@ export default function AdminAttendance() {
           calculatedHours = `${hours}h ${minutes}m`;
         }
       }
-      
+
       // Calculate overtime (assuming standard 8 hours)
-      const totalMinutes = checkInDateTime && !isNaN(checkInDateTime.getTime()) && !isNaN(checkOutDateTime.getTime()) 
-        ? Math.max(0, (checkOutDateTime.getTime() - checkInDateTime.getTime()) / (1000 * 60) - 480) // 480 minutes = 8 hours
-        : 0;
+      const totalMinutes =
+        checkInDateTime &&
+        !isNaN(checkInDateTime.getTime()) &&
+        !isNaN(checkOutDateTime.getTime())
+          ? Math.max(
+              0,
+              (checkOutDateTime.getTime() - checkInDateTime.getTime()) /
+                (1000 * 60) -
+                480,
+            ) // 480 minutes = 8 hours
+          : 0;
       const overtimeHours = Math.floor(totalMinutes / 60);
       const overtimeMinutes = Math.floor(totalMinutes % 60);
-      const overtime = totalMinutes > 0 ? `${overtimeHours}h ${overtimeMinutes}m` : "0m";
+      const overtime =
+        totalMinutes > 0 ? `${overtimeHours}h ${overtimeMinutes}m` : "0m";
 
       const todayRecord = {
         date: today,
@@ -408,10 +423,13 @@ export default function AdminAttendance() {
   };
 
   const handleExportAttendance = () => {
-    const filteredData = allEmployeesAttendance.filter(emp => {
-      const matchesDepartment = selectedDepartment === "all" || emp.department.toLowerCase() === selectedDepartment;
-      const matchesSearch = emp.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           emp.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const filteredData = allEmployeesAttendance.filter((emp) => {
+      const matchesDepartment =
+        selectedDepartment === "all" ||
+        emp.department.toLowerCase() === selectedDepartment;
+      const matchesSearch =
+        emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        emp.id.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesDepartment && matchesSearch;
     });
 
@@ -433,15 +451,20 @@ export default function AdminAttendance() {
     URL.revokeObjectURL(url);
   };
 
-  const filteredEmployees = allEmployeesAttendance.filter(emp => {
-    const matchesDepartment = selectedDepartment === "all" || emp.department.toLowerCase() === selectedDepartment;
-    const matchesSearch = emp.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         emp.id.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredEmployees = allEmployeesAttendance.filter((emp) => {
+    const matchesDepartment =
+      selectedDepartment === "all" ||
+      emp.department.toLowerCase() === selectedDepartment;
+    const matchesSearch =
+      emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      emp.id.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesDepartment && matchesSearch;
   });
 
   // Calculate organization statistics
-  const presentEmployees = allEmployeesAttendance.filter(emp => emp.status === "Present").length;
+  const presentEmployees = allEmployeesAttendance.filter(
+    (emp) => emp.status === "Present",
+  ).length;
   const totalEmployees = allEmployeesAttendance.length;
   const attendanceRate = Math.round((presentEmployees / totalEmployees) * 100);
 
@@ -486,7 +509,9 @@ export default function AdminAttendance() {
                 <p className="text-sm font-medium text-nalco-gray">
                   Total Employees
                 </p>
-                <p className="text-2xl font-bold text-nalco-black">{totalEmployees}</p>
+                <p className="text-2xl font-bold text-nalco-black">
+                  {totalEmployees}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -497,7 +522,9 @@ export default function AdminAttendance() {
                 <p className="text-sm font-medium text-nalco-gray">
                   Present Today
                 </p>
-                <p className="text-2xl font-bold text-nalco-black">{presentEmployees}</p>
+                <p className="text-2xl font-bold text-nalco-black">
+                  {presentEmployees}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -508,7 +535,9 @@ export default function AdminAttendance() {
                 <p className="text-sm font-medium text-nalco-gray">
                   Attendance Rate
                 </p>
-                <p className="text-2xl font-bold text-nalco-black">{attendanceRate}%</p>
+                <p className="text-2xl font-bold text-nalco-black">
+                  {attendanceRate}%
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -516,9 +545,7 @@ export default function AdminAttendance() {
             <CardContent className="flex items-center p-6">
               <Clock className="h-8 w-8 text-yellow-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Avg Hours
-                </p>
+                <p className="text-sm font-medium text-nalco-gray">Avg Hours</p>
                 <p className="text-2xl font-bold text-nalco-black">8.7h</p>
               </div>
             </CardContent>
@@ -678,7 +705,10 @@ export default function AdminAttendance() {
               </div>
               <div>
                 <Label>Department</Label>
-                <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                <Select
+                  value={selectedDepartment}
+                  onValueChange={setSelectedDepartment}
+                >
                   <SelectTrigger className="w-40">
                     <SelectValue />
                   </SelectTrigger>
@@ -707,10 +737,10 @@ export default function AdminAttendance() {
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm text-nalco-gray">
-                        {employee.id}
-                      </p>
-                      <Badge className={getDepartmentColor(employee.department)}>
+                      <p className="text-sm text-nalco-gray">{employee.id}</p>
+                      <Badge
+                        className={getDepartmentColor(employee.department)}
+                      >
                         {employee.department}
                       </Badge>
                     </div>
@@ -722,7 +752,9 @@ export default function AdminAttendance() {
                       <p>Out: {employee.checkOut}</p>
                       <p>Hours: {employee.hours}</p>
                       {employee.overtime !== "0m" && (
-                        <p className="text-yellow-600">OT: {employee.overtime}</p>
+                        <p className="text-yellow-600">
+                          OT: {employee.overtime}
+                        </p>
                       )}
                     </div>
                   </CardContent>
@@ -732,7 +764,9 @@ export default function AdminAttendance() {
 
             {filteredEmployees.length === 0 && (
               <div className="text-center py-8">
-                <p className="text-nalco-gray">No employees found matching your criteria.</p>
+                <p className="text-nalco-gray">
+                  No employees found matching your criteria.
+                </p>
               </div>
             )}
           </CardContent>

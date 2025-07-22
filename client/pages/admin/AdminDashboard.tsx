@@ -810,14 +810,16 @@ export default function AdminDashboard() {
 
                       setSuccess(
                         `Database backup completed successfully!\n\n` +
-                        `Backup ID: ${backupId}\n` +
-                        `Backup Size: ${backupSize.toFixed(2)} GB\n` +
-                        `Completion Time: ${new Date().toLocaleString()}\n` +
-                        `Storage Location: /backups/${backupId}.sql\n\n` +
-                        `The backup has been stored securely and can be used for restore operations.`
+                          `Backup ID: ${backupId}\n` +
+                          `Backup Size: ${backupSize.toFixed(2)} GB\n` +
+                          `Completion Time: ${new Date().toLocaleString()}\n` +
+                          `Storage Location: /backups/${backupId}.sql\n\n` +
+                          `The backup has been stored securely and can be used for restore operations.`,
                       );
                     } catch (error) {
-                      setError("Database backup failed. Please check system logs and try again.");
+                      setError(
+                        "Database backup failed. Please check system logs and try again.",
+                      );
                     } finally {
                       setProcessing(null);
                     }

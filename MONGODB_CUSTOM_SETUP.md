@@ -30,6 +30,7 @@ Before starting, ensure you have:
 #### 1. Install MongoDB
 
 **Windows:**
+
 ```powershell
 # Download and install from https://www.mongodb.com/try/download/community
 # Or use Chocolatey
@@ -37,6 +38,7 @@ choco install mongodb
 ```
 
 **macOS:**
+
 ```bash
 # Using Homebrew
 brew tap mongodb/brew
@@ -47,6 +49,7 @@ brew services start mongodb-community@7.0
 ```
 
 **Ubuntu/Debian:**
+
 ```bash
 # Import MongoDB public GPG key
 wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
@@ -66,6 +69,7 @@ sudo systemctl enable mongod
 ```
 
 **RHEL/CentOS:**
+
 ```bash
 # Create repository file
 sudo vim /etc/yum.repos.d/mongodb-org-7.0.repo
@@ -89,11 +93,13 @@ sudo systemctl enable mongod
 #### 2. Create Custom Database and Users
 
 **Access MongoDB Shell:**
+
 ```bash
 mongosh
 ```
 
 **Create your custom database:**
+
 ```javascript
 // Switch to your custom database
 use nalco_production
@@ -111,7 +117,7 @@ db.createUser({
 // Create an application user (recommended for security)
 db.createUser({
   user: "nalco_app",
-  pwd: "your_app_password_here", 
+  pwd: "your_app_password_here",
   roles: [
     { role: "readWrite", db: "nalco_production" }
   ]
@@ -138,7 +144,7 @@ db.createUser({
 # Network interfaces
 net:
   port: 27017
-  bindIp: 127.0.0.1  # Change to 0.0.0.0 for remote connections
+  bindIp: 127.0.0.1 # Change to 0.0.0.0 for remote connections
 
 # Security
 security:
@@ -146,16 +152,17 @@ security:
 
 # Storage
 storage:
-  dbPath: /var/lib/mongodb  # Windows: C:\data\db
+  dbPath: /var/lib/mongodb # Windows: C:\data\db
 
 # Logging
 systemLog:
   destination: file
   logAppend: true
-  path: /var/log/mongodb/mongod.log  # Windows: C:\data\log\mongod.log
+  path: /var/log/mongodb/mongod.log # Windows: C:\data\log\mongod.log
 ```
 
 **Restart MongoDB:**
+
 ```bash
 # Linux/macOS
 sudo systemctl restart mongod
@@ -188,6 +195,7 @@ net start MongoDB
 3. Create users with appropriate roles:
 
 **Application User:**
+
 ```
 Username: nalco_app_user
 Password: [Generate secure password]
@@ -195,8 +203,9 @@ Roles: Read and write to any database
 ```
 
 **Admin User:**
+
 ```
-Username: nalco_admin_user  
+Username: nalco_admin_user
 Password: [Generate secure password]
 Roles: Atlas admin
 ```
@@ -209,6 +218,7 @@ Roles: Atlas admin
 4. Copy the connection string
 
 Example connection string:
+
 ```
 mongodb+srv://nalco_app_user:<password>@cluster0.abc123.mongodb.net/nalco_production?retryWrites=true&w=majority
 ```
@@ -236,7 +246,7 @@ Create a file `custom-users.json` with your organization's data:
       "team": "Leadership"
     },
     {
-      "employeeId": "NALCO002", 
+      "employeeId": "NALCO002",
       "name": "Your HR Manager",
       "email": "hr@yourcompany.com",
       "password": "SecurePassword123!",
@@ -251,7 +261,7 @@ Create a file `custom-users.json` with your organization's data:
     {
       "employeeId": "NALCO003",
       "name": "Sample Employee",
-      "email": "employee@yourcompany.com", 
+      "email": "employee@yourcompany.com",
       "password": "SecurePassword123!",
       "phone": "+91-9876543212",
       "role": "employee",
@@ -270,37 +280,32 @@ Create a file `custom-users.json` with your organization's data:
 Create `scripts/seed-custom-db.js`:
 
 ```javascript
-import mongoose from 'mongoose';
-import bcryptjs from 'bcryptjs';
-import { User } from '../server/models/User.js';
-import fs from 'fs';
-import path from 'path';
+import mongoose from "mongoose";
+import bcryptjs from "bcryptjs";
+import { User } from "../server/models/User.js";
+import fs from "fs";
+import path from "path";
 
 // Load custom users
-const customUsers = JSON.parse(
-  fs.readFileSync('./custom-users.json', 'utf8')
-);
+const customUsers = JSON.parse(fs.readFileSync("./custom-users.json", "utf8"));
 
 async function seedCustomDatabase() {
   try {
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
 
     // Clear existing users (optional)
-    const clearExisting = process.argv.includes('--clear');
+    const clearExisting = process.argv.includes("--clear");
     if (clearExisting) {
       await User.deleteMany({});
-      console.log('Cleared existing users');
+      console.log("Cleared existing users");
     }
 
     // Create users
     for (const userData of customUsers.users) {
-      const existingUser = await User.findOne({ 
-        $or: [
-          { email: userData.email },
-          { employeeId: userData.employeeId }
-        ]
+      const existingUser = await User.findOne({
+        $or: [{ email: userData.email }, { employeeId: userData.employeeId }],
       });
 
       if (existingUser) {
@@ -315,20 +320,23 @@ async function seedCustomDatabase() {
       const user = new User({
         ...userData,
         password: hashedPassword,
-        status: 'active',
-        avatar: userData.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+        status: "active",
+        avatar: userData.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase(),
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
 
       await user.save();
       console.log(`Created user: ${userData.name} (${userData.email})`);
     }
 
-    console.log('Custom database seeding completed!');
-    
+    console.log("Custom database seeding completed!");
   } catch (error) {
-    console.error('Error seeding database:', error);
+    console.error("Error seeding database:", error);
   } finally {
     await mongoose.disconnect();
   }
@@ -338,6 +346,7 @@ seedCustomDatabase();
 ```
 
 Add to `package.json`:
+
 ```json
 {
   "scripts": {
@@ -359,7 +368,7 @@ MONGODB_URI=mongodb://nalco_app:your_app_password_here@localhost:27017/nalco_pro
 # For Atlas:
 # MONGODB_URI=mongodb+srv://nalco_app_user:your_password@cluster0.abc123.mongodb.net/nalco_production?retryWrites=true&w=majority
 
-# JWT Configuration  
+# JWT Configuration
 JWT_SECRET=your_super_long_jwt_secret_key_minimum_32_characters_for_security
 JWT_EXPIRES_IN=8h
 
@@ -395,7 +404,7 @@ BACKUP_SCHEDULE=0 2 * * *
 Update `server/config/database.ts`:
 
 ```typescript
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
@@ -405,32 +414,31 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
       bufferMaxEntries: 0,
-      
+
       // Security options
-      authSource: 'admin',
-      ssl: process.env.NODE_ENV === 'production',
-      sslValidate: process.env.NODE_ENV === 'production',
-      
+      authSource: "admin",
+      ssl: process.env.NODE_ENV === "production",
+      sslValidate: process.env.NODE_ENV === "production",
+
       // Additional options for Atlas
       retryWrites: true,
-      w: 'majority'
+      w: "majority",
     };
 
     const conn = await mongoose.connect(process.env.MONGODB_URI!, options);
-    
+
     console.log(`MongoDB Connected: ${conn.connection.host}`);
-    
+
     // Handle connection errors
-    mongoose.connection.on('error', (err) => {
-      console.error('MongoDB connection error:', err);
+    mongoose.connection.on("error", (err) => {
+      console.error("MongoDB connection error:", err);
     });
-    
-    mongoose.connection.on('disconnected', () => {
-      console.log('MongoDB disconnected');
+
+    mongoose.connection.on("disconnected", () => {
+      console.log("MongoDB disconnected");
     });
-    
   } catch (error) {
-    console.error('Database connection failed:', error);
+    console.error("Database connection failed:", error);
     process.exit(1);
   }
 };
@@ -479,7 +487,7 @@ db.users.getIndexes()
 Create `docker-compose.prod.yml`:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   mongodb:
     image: mongo:7.0
@@ -524,17 +532,17 @@ networks:
 Create `init-mongo.js`:
 
 ```javascript
-db = db.getSiblingDB('nalco_production');
+db = db.getSiblingDB("nalco_production");
 
 db.createUser({
-  user: 'nalco_app',
-  pwd: 'your_app_password',
+  user: "nalco_app",
+  pwd: "your_app_password",
   roles: [
     {
-      role: 'readWrite',
-      db: 'nalco_production'
-    }
-  ]
+      role: "readWrite",
+      db: "nalco_production",
+    },
+  ],
 });
 ```
 
@@ -568,6 +576,7 @@ echo "Backup completed: backup_$DATE.tar.gz"
 ```
 
 Add to crontab for automated backups:
+
 ```bash
 # Edit crontab
 crontab -e
@@ -581,36 +590,41 @@ crontab -e
 Create `scripts/monitor-db.js`:
 
 ```javascript
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 async function monitorDatabase() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    
+
     const db = mongoose.connection.db;
     const stats = await db.stats();
-    
-    console.log('Database Statistics:');
+
+    console.log("Database Statistics:");
     console.log(`- Database: ${stats.db}`);
     console.log(`- Collections: ${stats.collections}`);
     console.log(`- Data Size: ${(stats.dataSize / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`- Storage Size: ${(stats.storageSize / 1024 / 1024).toFixed(2)} MB`);
+    console.log(
+      `- Storage Size: ${(stats.storageSize / 1024 / 1024).toFixed(2)} MB`,
+    );
     console.log(`- Indexes: ${stats.indexes}`);
-    console.log(`- Index Size: ${(stats.indexSize / 1024 / 1024).toFixed(2)} MB`);
-    
+    console.log(
+      `- Index Size: ${(stats.indexSize / 1024 / 1024).toFixed(2)} MB`,
+    );
+
     // Check recent activity
-    const recentUsers = await db.collection('users').find()
+    const recentUsers = await db
+      .collection("users")
+      .find()
       .sort({ createdAt: -1 })
       .limit(5)
       .toArray();
-    
-    console.log('\nRecent Users:');
-    recentUsers.forEach(user => {
+
+    console.log("\nRecent Users:");
+    recentUsers.forEach((user) => {
       console.log(`- ${user.name} (${user.employeeId}) - ${user.createdAt}`);
     });
-    
   } catch (error) {
-    console.error('Monitoring error:', error);
+    console.error("Monitoring error:", error);
   } finally {
     await mongoose.disconnect();
   }
@@ -705,6 +719,7 @@ db.runCommand({connPoolStats: 1})
 ## 📞 Support and Resources
 
 ### Documentation Links
+
 - [MongoDB Official Documentation](https://docs.mongodb.com/)
 - [Mongoose Documentation](https://mongoosejs.com/docs/)
 - [MongoDB Atlas Documentation](https://docs.atlas.mongodb.com/)
@@ -747,6 +762,6 @@ Your NALCO connectNALCO application is now configured with a robust MongoDB setu
 ✅ **Secure authentication** with proper password hashing  
 ✅ **Role-based access control** for different user types  
 ✅ **Production-ready configuration** with monitoring and backups  
-✅ **Scalable architecture** ready for growth  
+✅ **Scalable architecture** ready for growth
 
 For additional support or custom configurations, please contact your system administrator or refer to the troubleshooting section above.
