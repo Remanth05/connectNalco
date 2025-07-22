@@ -969,7 +969,16 @@ export default function AuthorityDashboard() {
                   <h4 className="font-medium mb-2">Performance Score</h4>
                   <p className="text-2xl font-bold text-nalco-green">4.2/5</p>
                   <p className="text-sm text-nalco-gray">Department average</p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess('Performance report details loaded successfully!');
+                      setSelectedItem({ type: 'performance', title: 'Performance Score Report', data: { score: '4.2/5', details: 'Department performance analysis' } });
+                      setModuleDialog({ open: true, type: 'report-detail', title: 'Performance Score Report' });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
