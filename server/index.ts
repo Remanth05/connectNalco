@@ -72,6 +72,9 @@ import {
 export function createServer() {
   const app = express();
 
+  // Connect to MongoDB
+  connectDB().catch(console.error);
+
   // Middleware
   app.use(cors());
   app.use(express.json());
