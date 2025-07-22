@@ -64,8 +64,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("auth", JSON.stringify(userData));
+    const enhancedUserData = {
+      ...userData,
+      loginTime: Date.now(),
+      sessionTimeout: 8 * 60 * 60 * 1000, // 8 hours in milliseconds
+    };
+    setUser(enhancedUserData);
+    localStorage.setItem("auth", JSON.stringify(enhancedUserData));
   };
 
   const logout = () => {
