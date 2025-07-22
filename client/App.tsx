@@ -116,6 +116,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/authority/attendance"
+                element={
+                  <ProtectedRoute allowedRoles={["authority"]}>
+                    <AuthorityAttendance />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Admin Routes */}
               <Route
@@ -123,6 +131,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["admin"]}>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/attendance"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminAttendance />
                   </ProtectedRoute>
                 }
               />
