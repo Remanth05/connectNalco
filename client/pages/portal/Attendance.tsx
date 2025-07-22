@@ -20,6 +20,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDataSync, syncAttendanceUpdate } from "@/hooks/useDataSync";
 
 export default function Attendance() {
   const navigate = useNavigate();
