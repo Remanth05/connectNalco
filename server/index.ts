@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { connectDB } from "./config/database";
 import { handleDemo } from "./routes/demo";
 
 // Import route handlers
