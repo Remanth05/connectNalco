@@ -329,38 +329,63 @@ export default function AuthorityDashboard() {
                   </DialogHeader>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <Label>Full Name</Label>
-                      <Input placeholder="Enter employee name" />
+                      <Label>Full Name *</Label>
+                      <Input
+                        placeholder="Enter employee name"
+                        value={newEmployeeData.fullName}
+                        onChange={(e) => setNewEmployeeData({...newEmployeeData, fullName: e.target.value})}
+                      />
                     </div>
                     <div>
-                      <Label>Employee ID</Label>
-                      <Input placeholder="EMP###" />
+                      <Label>Employee ID *</Label>
+                      <Input
+                        placeholder="EMP###"
+                        value={newEmployeeData.employeeId}
+                        onChange={(e) => setNewEmployeeData({...newEmployeeData, employeeId: e.target.value})}
+                      />
                     </div>
                     <div>
-                      <Label>Email</Label>
-                      <Input placeholder="employee@nalco.com" type="email" />
+                      <Label>Email *</Label>
+                      <Input
+                        placeholder="employee@nalco.com"
+                        type="email"
+                        value={newEmployeeData.email}
+                        onChange={(e) => setNewEmployeeData({...newEmployeeData, email: e.target.value})}
+                      />
                     </div>
                     <div>
-                      <Label>Designation</Label>
-                      <Select>
+                      <Label>Designation *</Label>
+                      <Select
+                        value={newEmployeeData.designation}
+                        onValueChange={(value) => setNewEmployeeData({...newEmployeeData, designation: value})}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select designation" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="executive">Executive</SelectItem>
-                          <SelectItem value="assistant">Assistant</SelectItem>
-                          <SelectItem value="trainee">Trainee</SelectItem>
-                          <SelectItem value="manager">Manager</SelectItem>
+                          <SelectItem value="HR Executive">HR Executive</SelectItem>
+                          <SelectItem value="HR Assistant">HR Assistant</SelectItem>
+                          <SelectItem value="Trainee">Trainee</SelectItem>
+                          <SelectItem value="Manager">Manager</SelectItem>
+                          <SelectItem value="Senior Executive">Senior Executive</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <Label>Join Date</Label>
-                      <Input type="date" />
+                      <Label>Join Date *</Label>
+                      <Input
+                        type="date"
+                        value={newEmployeeData.joinDate}
+                        onChange={(e) => setNewEmployeeData({...newEmployeeData, joinDate: e.target.value})}
+                      />
                     </div>
                     <div>
-                      <Label>Phone</Label>
-                      <Input placeholder="+91-9876543210" />
+                      <Label>Phone *</Label>
+                      <Input
+                        placeholder="+91-9876543210"
+                        value={newEmployeeData.phone}
+                        onChange={(e) => setNewEmployeeData({...newEmployeeData, phone: e.target.value})}
+                      />
                     </div>
                   </div>
                   <DialogFooter>
