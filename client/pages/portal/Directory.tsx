@@ -248,80 +248,92 @@ export default function Directory() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {employees.map((employee) => (
-                <Card
-                  key={employee.id}
-                  className="hover:shadow-md transition-shadow"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="bg-nalco-red/10 text-nalco-red font-medium">
-                          {employee.avatar}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-medium text-nalco-black truncate">
-                            {employee.name}
-                          </h3>
-                          <Badge className={getStatusColor(employee.status)}>
-                            {employee.status}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-nalco-gray mb-1">
-                          {employee.position}
-                        </p>
-                        <p className="text-xs text-nalco-gray mb-3">
-                          {employee.department} • {employee.team}
-                        </p>
+            {filteredEmployees.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 text-nalco-gray mx-auto mb-4" />
+                <p className="text-nalco-gray">
+                  {searchTerm ? "No employees found matching your search." : "No employees found."}
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {filteredEmployees.map((employee) => (
+                  <Card
+                    key={employee.id}
+                    className="hover:shadow-md transition-shadow"
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start space-x-4">
+                        <Avatar className="h-12 w-12">
+                          <AvatarFallback className="bg-nalco-red/10 text-nalco-red font-medium">
+                            {employee.avatar}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-medium text-nalco-black truncate">
+                              {employee.name}
+                            </h3>
+                            <Badge className={getStatusColor(employee.status)}>
+                              {employee.status}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-nalco-gray mb-1">
+                            {employee.position}
+                          </p>
+                          <p className="text-xs text-nalco-gray mb-1">
+                            {employee.department} • {employee.team}
+                          </p>
+                          <p className="text-xs text-nalco-blue mb-3">
+                            ID: {employee.employeeId}
+                          </p>
 
-                        <div className="space-y-2">
-                          <div className="flex items-center text-xs text-nalco-gray">
-                            <Mail className="h-3 w-3 mr-2" />
-                            <span className="truncate">{employee.email}</span>
+                          <div className="space-y-2">
+                            <div className="flex items-center text-xs text-nalco-gray">
+                              <Mail className="h-3 w-3 mr-2" />
+                              <span className="truncate">{employee.email}</span>
+                            </div>
+                            <div className="flex items-center text-xs text-nalco-gray">
+                              <Phone className="h-3 w-3 mr-2" />
+                              <span>{employee.phone}</span>
+                            </div>
+                            <div className="flex items-center text-xs text-nalco-gray">
+                              <MapPin className="h-3 w-3 mr-2" />
+                              <span>{employee.location}</span>
+                            </div>
                           </div>
-                          <div className="flex items-center text-xs text-nalco-gray">
-                            <Phone className="h-3 w-3 mr-2" />
-                            <span>{employee.phone}</span>
-                          </div>
-                          <div className="flex items-center text-xs text-nalco-gray">
-                            <MapPin className="h-3 w-3 mr-2" />
-                            <span>{employee.location}</span>
-                          </div>
-                        </div>
 
-                        <div className="flex space-x-2 mt-4">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1"
-                            onClick={() =>
-                              (window.location.href = `mailto:${employee.email}`)
-                            }
-                          >
-                            <Mail className="h-3 w-3 mr-1" />
-                            Email
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1"
-                            onClick={() =>
-                              (window.location.href = `tel:${employee.phone}`)
-                            }
-                          >
-                            <Phone className="h-3 w-3 mr-1" />
-                            Call
-                          </Button>
+                          <div className="flex space-x-2 mt-4">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1"
+                              onClick={() =>
+                                (window.location.href = `mailto:${employee.email}`)
+                              }
+                            >
+                              <Mail className="h-3 w-3 mr-1" />
+                              Email
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1"
+                              onClick={() =>
+                                (window.location.href = `tel:${employee.phone}`)
+                              }
+                            >
+                              <Phone className="h-3 w-3 mr-1" />
+                              Call
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
