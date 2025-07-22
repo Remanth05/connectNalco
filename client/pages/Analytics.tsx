@@ -20,7 +20,7 @@ import {
   Clock,
   Calendar,
   Download,
-  Refresh,
+  RefreshCw,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
