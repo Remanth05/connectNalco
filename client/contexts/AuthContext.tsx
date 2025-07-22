@@ -32,13 +32,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Check if user is already logged in (from localStorage)
+    // Check if user is already logged in (from localStorage) with session validation
     const savedAuth = localStorage.getItem("auth");
     if (savedAuth) {
       try {
         const userData = JSON.parse(savedAuth);
-        if (userData.isAuthenticated) {
-          setUser(userData);
+        if (userData.isAuthenticated && userData.loginTime) {
+          const now = Date.now();
+          const sessionDuration = now - userData.loginTime;
+          const maxSessionTime = userData.sessionTimeout || 8 * 60 * 60 * 1000; // Default 8 hours
+
+          // Check if session is still valid
+          if (sessionDuration < maxSessionTime) {
+            setUser(userData);
+          } else {
+            // Session expired, clear auth data
+            console.log("Session expired, logging out user");
+            localStorage.removeItem("auth");
+            localStorage.removeItem(`notifications_${userData.employeeId}`);
+            localStorage.removeItem(`attendance_${userData.employeeId}`);
+          }
+        } else {
+          // Invalid auth data, clear it
+          localStorage.removeItem("auth");
         }
       } catch (error) {
         console.error("Error parsing saved auth data:", error);
