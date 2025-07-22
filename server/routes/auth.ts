@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
 import { ApiResponse } from '@shared/api';
+import mongoose from 'mongoose';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
