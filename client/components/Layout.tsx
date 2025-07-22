@@ -183,7 +183,7 @@ export default function Layout({ children }: LayoutProps) {
                   );
                 })}
 
-                {/* Mobile User Info and Logout */}
+                {/* Mobile User Info, Notifications and Logout */}
                 {isAuthenticated && user && (
                   <div className="border-t pt-4 mt-4">
                     <div className="px-3 py-2 text-sm">
@@ -192,6 +192,12 @@ export default function Layout({ children }: LayoutProps) {
                       </div>
                       <div className="text-xs text-nalco-gray capitalize">
                         {user.role}
+                      </div>
+                    </div>
+                    <div className="px-3 py-2">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-nalco-gray">Notifications</span>
+                        <NotificationBell />
                       </div>
                     </div>
                     <button
