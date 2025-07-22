@@ -1144,6 +1144,66 @@ export default function AuthorityDashboard() {
             </div>
           </div>
         );
+      case "report-detail":
+        return (
+          <div className="space-y-4">
+            {selectedItem && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h3 className="text-2xl font-semibold">{selectedItem.title}</h3>
+                  <p className="text-sm text-nalco-gray mt-2">{selectedItem.data?.details}</p>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-3">
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-3xl font-bold text-nalco-blue mb-2">
+                        {selectedItem.data?.percentage || selectedItem.data?.score || selectedItem.data?.hours}
+                      </div>
+                      <p className="text-sm text-nalco-gray">Current Value</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-3xl font-bold text-nalco-green mb-2">+5%</div>
+                      <p className="text-sm text-nalco-gray">vs Last Month</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-3xl font-bold text-nalco-red mb-2">Target</div>
+                      <p className="text-sm text-nalco-gray">95%</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div>
+                  <h4 className="font-medium mb-3">Detailed Analysis</h4>
+                  <div className="bg-nalco-gray/5 p-4 rounded-lg">
+                    <p className="text-sm text-nalco-gray">
+                      This report provides comprehensive insights into {selectedItem.type} metrics for the current period.
+                      The data shows positive trends and areas for improvement.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex space-x-4">
+                  <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Full Report
+                  </Button>
+                  <Button variant="outline">
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Historical Data
+                  </Button>
+                  <Button variant="outline">
+                    Share Report
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
       case "issue-detail":
         return (
           <div className="space-y-4">
