@@ -222,48 +222,7 @@ export default function Attendance() {
     }
   };
 
-  const attendanceData = [
-    {
-      date: "2024-03-25",
-      checkIn: "09:15 AM",
-      checkOut: "06:30 PM",
-      hours: "8h 45m",
-      status: "Present",
-      overtime: "30m",
-    },
-    {
-      date: "2024-03-24",
-      checkIn: "09:00 AM",
-      checkOut: "06:00 PM",
-      hours: "8h 30m",
-      status: "Present",
-      overtime: "0m",
-    },
-    {
-      date: "2024-03-23",
-      checkIn: "09:30 AM",
-      checkOut: "06:15 PM",
-      hours: "8h 15m",
-      status: "Present",
-      overtime: "0m",
-    },
-    {
-      date: "2024-03-22",
-      checkIn: "-",
-      checkOut: "-",
-      hours: "0h",
-      status: "Leave",
-      overtime: "0m",
-    },
-    {
-      date: "2024-03-21",
-      checkIn: "09:45 AM",
-      checkOut: "06:45 PM",
-      hours: "8h 30m",
-      status: "Present",
-      overtime: "30m",
-    },
-  ];
+  // attendanceData is now managed in state and loaded from localStorage
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -344,12 +303,31 @@ export default function Attendance() {
             <div className="grid gap-6 md:grid-cols-4">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <div className="h-16 w-16 rounded-full bg-nalco-green/10 flex items-center justify-center">
-                    <CheckCircle className="h-8 w-8 text-nalco-green" />
-                  </div>
+                  {!checkedIn ? (
+                    <Button
+                      className="bg-nalco-green hover:bg-nalco-green/90 h-16 w-32"
+                      onClick={handleCheckIn}
+                      disabled={processing}
+                    >
+                      {processing ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Checking In...
+                        </>
+                      ) : (
+                        "Check In"
+                      )}
+                    </Button>
+                  ) : (
+                    <div className="h-16 w-16 rounded-full bg-nalco-green/10 flex items-center justify-center">
+                      <CheckCircle className="h-8 w-8 text-nalco-green" />
+                    </div>
+                  )}
                 </div>
                 <p className="text-sm text-nalco-gray">Check In</p>
-                <p className="text-xl font-bold text-nalco-black">09:15 AM</p>
+                <p className="text-xl font-bold text-nalco-black">
+                  {checkInTime || "-"}
+                </p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
@@ -384,7 +362,7 @@ export default function Attendance() {
                   <Button
                     className="bg-nalco-red hover:bg-nalco-red/90"
                     onClick={handleCheckOut}
-                    disabled={checkedOut || processing}
+                    disabled={!checkedIn || checkedOut || processing}
                   >
                     {processing ? (
                       <>
@@ -393,6 +371,8 @@ export default function Attendance() {
                       </>
                     ) : checkedOut ? (
                       "Checked Out"
+                    ) : !checkedIn ? (
+                      "Check In First"
                     ) : (
                       "Check Out"
                     )}
@@ -403,10 +383,12 @@ export default function Attendance() {
                   className={
                     checkedOut
                       ? "bg-nalco-red text-white"
-                      : "bg-nalco-green text-white"
+                      : checkedIn
+                        ? "bg-nalco-green text-white"
+                        : "bg-nalco-gray text-white"
                   }
                 >
-                  {checkedOut ? "Checked Out" : "Working"}
+                  {checkedOut ? "Checked Out" : checkedIn ? "Working" : "Not Checked In"}
                 </Badge>
               </div>
             </div>
@@ -538,7 +520,7 @@ export default function Attendance() {
                 <ul className="text-sm text-nalco-gray space-y-1">
                   <li>• Grace period: 15 minutes for check-in</li>
                   <li>• Late arrival: Report to supervisor</li>
-                  <li>��� Overtime: Requires pre-approval</li>
+                  <li>• Overtime: Requires pre-approval</li>
                   <li>• Missing punch: Submit attendance correction</li>
                 </ul>
               </div>
