@@ -854,6 +854,168 @@ export default function Issues() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Action Dialog for Assign/Status/Comment/Notify */}
+        <Dialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>
+                {actionType === 'assign' && 'Assign Issue to Team'}
+                {actionType === 'status' && 'Update Issue Status'}
+                {actionType === 'comment' && 'Add Comment to Issue'}
+                {actionType === 'notify' && 'Notify Team Members'}
+              </DialogTitle>
+              <DialogDescription>
+                {actionType === 'assign' && 'Assign this issue to a team member for resolution'}
+                {actionType === 'status' && 'Update the current status of this issue'}
+                {actionType === 'comment' && 'Add a comment or update to this issue'}
+                {actionType === 'notify' && 'Notify relevant team members about this issue'}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              {actionType === 'assign' && (
+                <div>
+                  <Label htmlFor="assignee">Assign to</Label>
+                  <Select value={assigneeValue} onValueChange={setAssigneeValue}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select team member" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rajesh.kumar">Rajesh Kumar (Maintenance)</SelectItem>
+                      <SelectItem value="sunita.devi">Sunita Devi (Safety)</SelectItem>
+                      <SelectItem value="mohammad.alam">Mohammad Alam (IT)</SelectItem>
+                      <SelectItem value="kavitha.reddy">Kavitha Reddy (Engineering)</SelectItem>
+                      <SelectItem value="maintenance.team">Maintenance Team</SelectItem>
+                      <SelectItem value="safety.team">Safety Team</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {actionType === 'status' && (
+                <div>
+                  <Label htmlFor="status">New Status</Label>
+                  <Select value={statusValue} onValueChange={setStatusValue}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select new status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="open">Open</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="on-hold">On Hold</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                      <SelectItem value="closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {(actionType === 'comment' || actionType === 'assign' || actionType === 'status') && (
+                <div>
+                  <Label htmlFor="comment">Comment {actionType === 'comment' ? '*' : '(Optional)'}</Label>
+                  <Textarea
+                    id="comment"
+                    placeholder="Add your comment or notes..."
+                    value={commentValue}
+                    onChange={(e) => setCommentValue(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+              )}
+
+              {actionType === 'notify' && (
+                <div>
+                  <Label>Notify Team Members</Label>
+                  <div className="space-y-2 mt-2">
+                    {[
+                      { id: 'rajesh.kumar', name: 'Rajesh Kumar', dept: 'Maintenance' },
+                      { id: 'sunita.devi', name: 'Sunita Devi', dept: 'Safety' },
+                      { id: 'mohammad.alam', name: 'Mohammad Alam', dept: 'IT' },
+                      { id: 'kavitha.reddy', name: 'Kavitha Reddy', dept: 'Engineering' },
+                      { id: 'department.head', name: 'Department Head', dept: 'Management' },
+                    ].map((member) => (
+                      <div key={member.id} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={member.id}
+                          checked={notifyMembers.includes(member.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNotifyMembers([...notifyMembers, member.id]);
+                            } else {
+                              setNotifyMembers(notifyMembers.filter(id => id !== member.id));
+                            }
+                          }}
+                        />
+                        <Label htmlFor={member.id} className="text-sm">
+                          {member.name} ({member.dept})
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setActionDialogOpen(false);
+                  setAssigneeValue('');
+                  setStatusValue('');
+                  setCommentValue('');
+                  setNotifyMembers([]);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-nalco-blue hover:bg-nalco-blue/90"
+                onClick={async () => {
+                  // Simulate API call
+                  setSubmitting(true);
+                  await new Promise(resolve => setTimeout(resolve, 1000));
+
+                  let message = '';
+                  if (actionType === 'assign') {
+                    message = `Issue assigned to ${assigneeValue} successfully!`;
+                  } else if (actionType === 'status') {
+                    message = `Issue status updated to ${statusValue} successfully!`;
+                  } else if (actionType === 'comment') {
+                    message = 'Comment added successfully!';
+                  } else if (actionType === 'notify') {
+                    message = `${notifyMembers.length} team member(s) notified successfully!`;
+                  }
+
+                  setSuccess(message);
+                  setActionDialogOpen(false);
+                  setAssigneeValue('');
+                  setStatusValue('');
+                  setCommentValue('');
+                  setNotifyMembers([]);
+                  setSubmitting(false);
+                }}
+                disabled={submitting || (
+                  (actionType === 'assign' && !assigneeValue) ||
+                  (actionType === 'status' && !statusValue) ||
+                  (actionType === 'comment' && !commentValue) ||
+                  (actionType === 'notify' && notifyMembers.length === 0)
+                )}
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Confirm'
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
