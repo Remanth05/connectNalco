@@ -31,6 +31,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  // Session timeout monitoring
+  useEffect(() => {
+    if (!user?.loginTime) return;
+
+    const checkSession = () => {
+      const now = Date.now();
+      const sessionDuration = now - (user.loginTime || 0);
+      const maxSessionTime = user.sessionTimeout || 8 * 60 * 60 * 1000;
+      const warningTime = maxSessionTime - 30 * 60 * 1000; // 30 minutes before expiry
+
+      if (sessionDuration >= maxSessionTime) {
+        // Session expired
+        alert("Your session has expired. Please log in again.");
+        logout();
+      } else if (sessionDuration >= warningTime) {
+        // Session expiring soon
+        const timeLeft = Math.ceil((maxSessionTime - sessionDuration) / (60 * 1000));
+        if (confirm(`Your session will expire in ${timeLeft} minutes. Do you want to extend it?`)) {
+          // Extend session
+          const extendedUserData = {
+            ...user,
+            loginTime: Date.now(),
+          };
+          setUser(extendedUserData);
+          localStorage.setItem("auth", JSON.stringify(extendedUserData));
+        }
+      }
+    };
+
+    const interval = setInterval(checkSession, 5 * 60 * 1000); // Check every 5 minutes
+    return () => clearInterval(interval);
+  }, [user]);
+
   useEffect(() => {
     // Check if user is already logged in (from localStorage) with session validation
     const savedAuth = localStorage.getItem("auth");
