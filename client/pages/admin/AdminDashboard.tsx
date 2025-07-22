@@ -1043,14 +1043,47 @@ export default function AdminDashboard() {
                 {recentActivities.map((activity, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between border-b pb-4 last:border-b-0"
+                    className="flex items-center justify-between border-b pb-4 last:border-b-0 hover:bg-nalco-gray/5 rounded-lg p-2 transition-colors cursor-pointer"
+                    onClick={() => {
+                      // Navigate based on activity type
+                      if (activity.action.includes("user")) {
+                        setModuleDialog({
+                          open: true,
+                          type: "users",
+                          title: "User Management"
+                        });
+                      } else if (activity.action.includes("department")) {
+                        setModuleDialog({
+                          open: true,
+                          type: "departments",
+                          title: "Department Setup"
+                        });
+                      } else if (activity.action.includes("backup") || activity.action.includes("maintenance")) {
+                        setModuleDialog({
+                          open: true,
+                          type: "database",
+                          title: "Database Management"
+                        });
+                      } else if (activity.action.includes("login")) {
+                        setModuleDialog({
+                          open: true,
+                          type: "security",
+                          title: "Security Center"
+                        });
+                      } else {
+                        // Generic issue navigation
+                        navigate("/issues");
+                      }
+
+                      alert(`Navigating to ${activity.action} details...\nActivity ID: ACT${Date.now()}\nUser: ${activity.user}\nTime: ${activity.time}`);
+                    }}
                   >
                     <div className="flex items-center space-x-4">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-nalco-gray/10">
                         <Clock className="h-5 w-5 text-nalco-gray" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-nalco-black">
+                        <h4 className="font-medium text-nalco-black hover:text-nalco-blue transition-colors">
                           {activity.action}
                         </h4>
                         <p className="text-sm text-nalco-gray">
@@ -1058,9 +1091,14 @@ export default function AdminDashboard() {
                         </p>
                       </div>
                     </div>
-                    <Badge className={getStatusColor(activity.status)}>
-                      {activity.status}
-                    </Badge>
+                    <div className="flex items-center space-x-2">
+                      <Badge className={getStatusColor(activity.status)}>
+                        {activity.status}
+                      </Badge>
+                      <div className="text-nalco-gray hover:text-nalco-blue transition-colors">
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
