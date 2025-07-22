@@ -48,6 +48,15 @@ export const registerUser: RequestHandler = async (req, res) => {
       team
     } = req.body;
 
+    // Check if MongoDB is connected
+    if (!isMongoConnected()) {
+      const response: ApiResponse<null> = {
+        success: false,
+        error: 'User registration requires MongoDB. Please set up MongoDB to enable user registration.'
+      };
+      return res.status(503).json(response);
+    }
+
     // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email }, { employeeId }]
