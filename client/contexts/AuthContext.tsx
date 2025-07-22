@@ -31,6 +31,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  const logout = () => {
+    // Clean up all user-related data from localStorage
+    if (user?.employeeId) {
+      localStorage.removeItem(`notifications_${user.employeeId}`);
+      localStorage.removeItem(`attendance_${user.employeeId}`);
+    }
+    setUser(null);
+    localStorage.removeItem("auth");
+  };
+
   // Session timeout monitoring
   useEffect(() => {
     if (!user?.loginTime) return;
