@@ -74,6 +74,43 @@ export default function AuthorityDashboard() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [newEmployeeData, setNewEmployeeData] = useState({
+    fullName: "",
+    employeeId: "",
+    email: "",
+    designation: "",
+    joinDate: "",
+    phone: "",
+  });
+  const [employeeList, setEmployeeList] = useState([
+    {
+      name: "Rajesh Kumar Singh",
+      designation: "HR Executive",
+      status: "Active",
+      id: "EMP001",
+      email: "rajesh.singh@nalco.com",
+      phone: "+91-9876543210",
+      joinDate: "2022-03-15",
+    },
+    {
+      name: "Sunita Devi",
+      designation: "HR Assistant",
+      status: "Active",
+      id: "EMP002",
+      email: "sunita.devi@nalco.com",
+      phone: "+91-9876543213",
+      joinDate: "2021-07-20",
+    },
+    {
+      name: "Mohammad Alam",
+      designation: "Trainee",
+      status: "On Leave",
+      id: "EMP003",
+      email: "mohammad.alam@nalco.com",
+      phone: "+91-9876543214",
+      joinDate: "2023-11-05",
+    },
+  ]);
 
   // Module action states
   const [moduleDialog, setModuleDialog] = useState<{
