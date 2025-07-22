@@ -579,13 +579,21 @@ export default function AuthorityDashboard() {
                     <Button
                       size="sm"
                       className="bg-nalco-green hover:bg-nalco-green/90"
+                      onClick={() => handleApproval(leave.id, 'leave', 'approve')}
+                      disabled={processing === leave.id}
                     >
-                      Approve
+                      {processing === leave.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        'Approve'
+                      )}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       className="text-nalco-red"
+                      onClick={() => openRejectionDialog(leave, 'leave')}
+                      disabled={processing === leave.id}
                     >
                       Reject
                     </Button>
