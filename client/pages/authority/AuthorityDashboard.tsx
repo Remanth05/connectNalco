@@ -2020,7 +2020,7 @@ export default function AuthorityDashboard() {
           </Card>
 
           {/* Pending Approvals */}
-          <Card className="lg:col-span-3">
+          <Card className="lg:col-span-3" data-testid="pending-approvals">
             <CardHeader>
               <CardTitle className="text-nalco-black">
                 Pending Approvals
