@@ -463,8 +463,30 @@ export default function AuthorityDashboard() {
                           };
 
                           setEmployeeList([...employeeList, newEmployee]);
+
+                          // Also add to directory
+                          const directoryEmployee = {
+                            id: Date.now(),
+                            name: newEmployeeData.fullName,
+                            position: newEmployeeData.designation,
+                            department: "Human Resources", // Default to HR for new employees
+                            team: "New Employees",
+                            email: newEmployeeData.email,
+                            phone: newEmployeeData.phone,
+                            location: "Damanjodi Plant",
+                            avatar: newEmployeeData.fullName.split(' ').map(n => n[0]).join('').toUpperCase(),
+                            status: "Available",
+                            employeeId: newEmployeeData.employeeId,
+                            joinDate: newEmployeeData.joinDate
+                          };
+
+                          // Update directory data in localStorage
+                          const existingEmployees = JSON.parse(localStorage.getItem("nalco_employees") || "[]");
+                          const updatedEmployees = [...existingEmployees, directoryEmployee];
+                          localStorage.setItem("nalco_employees", JSON.stringify(updatedEmployees));
+
                           setSuccess(
-                            `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully!`,
+                            `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully and is now available in the directory!`,
                           );
 
                           // Reset form
