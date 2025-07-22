@@ -62,6 +62,12 @@ export default function Issues() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
+  const [actionDialogOpen, setActionDialogOpen] = useState(false);
+  const [actionType, setActionType] = useState<string>("");
+  const [assigneeValue, setAssigneeValue] = useState("");
+  const [statusValue, setStatusValue] = useState("");
+  const [commentValue, setCommentValue] = useState("");
+  const [notifyMembers, setNotifyMembers] = useState<string[]>([]);
 
   // Form state for new issue
   const [newIssue, setNewIssue] = useState({
@@ -797,11 +803,42 @@ export default function Issues() {
                 {/* Actions for authorities/admins */}
                 {(user?.role === "authority" || user?.role === "admin") && (
                   <div className="flex space-x-4 pt-4 border-t">
-                    <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                    <Button
+                      className="bg-nalco-blue hover:bg-nalco-blue/90"
+                      onClick={() => {
+                        setActionType('assign');
+                        setActionDialogOpen(true);
+                      }}
+                    >
                       Assign to Team
                     </Button>
-                    <Button variant="outline">Update Status</Button>
-                    <Button variant="outline">Add Comment</Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActionType('status');
+                        setActionDialogOpen(true);
+                      }}
+                    >
+                      Update Status
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActionType('comment');
+                        setActionDialogOpen(true);
+                      }}
+                    >
+                      Add Comment
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActionType('notify');
+                        setActionDialogOpen(true);
+                      }}
+                    >
+                      Notify Team
+                    </Button>
                   </div>
                 )}
               </div>
