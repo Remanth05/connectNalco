@@ -454,35 +454,7 @@ export default function AuthorityDashboard() {
               </Dialog>
             </div>
             <div className="space-y-2">
-              {[
-                {
-                  name: "Rajesh Kumar Singh",
-                  designation: "HR Executive",
-                  status: "Active",
-                  id: "EMP001",
-                  email: "rajesh.singh@nalco.com",
-                  phone: "+91-9876543210",
-                  joinDate: "2022-03-15",
-                },
-                {
-                  name: "Sunita Devi",
-                  designation: "HR Assistant",
-                  status: "Active",
-                  id: "EMP002",
-                  email: "sunita.devi@nalco.com",
-                  phone: "+91-9876543213",
-                  joinDate: "2021-07-20",
-                },
-                {
-                  name: "Mohammad Alam",
-                  designation: "Trainee",
-                  status: "On Leave",
-                  id: "EMP003",
-                  email: "mohammad.alam@nalco.com",
-                  phone: "+91-9876543214",
-                  joinDate: "2023-11-05",
-                },
-              ].map((emp, index) => (
+              {employeeList.map((emp, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-3 border rounded-lg hover:bg-nalco-gray/5"
