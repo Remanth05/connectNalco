@@ -116,16 +116,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("auth", JSON.stringify(enhancedUserData));
   };
 
-  const logout = () => {
-    // Clean up all user-related data from localStorage
-    if (user?.employeeId) {
-      localStorage.removeItem(`notifications_${user.employeeId}`);
-      localStorage.removeItem(`attendance_${user.employeeId}`);
-    }
-    setUser(null);
-    localStorage.removeItem("auth");
-  };
-
   const value = {
     user,
     login,
