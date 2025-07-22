@@ -20,84 +20,124 @@ import {
   Building2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function Directory() {
   const navigate = useNavigate();
+  const [employees, setEmployees] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const employees = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      position: "Senior Software Engineer",
-      department: "Engineering",
-      team: "Frontend Development",
-      email: "sarah.johnson@company.com",
-      phone: "+1 (555) 123-4567",
-      location: "New York Office",
-      avatar: "SJ",
-      status: "Available",
-    },
-    {
-      id: 2,
-      name: "Michael Chen",
-      position: "Product Manager",
-      department: "Product",
-      team: "Core Platform",
-      email: "michael.chen@company.com",
-      phone: "+1 (555) 234-5678",
-      location: "San Francisco Office",
-      avatar: "MC",
-      status: "In Meeting",
-    },
-    {
-      id: 3,
-      name: "Emily Rodriguez",
-      position: "UX Designer",
-      department: "Design",
-      team: "User Experience",
-      email: "emily.rodriguez@company.com",
-      phone: "+1 (555) 345-6789",
-      location: "Remote",
-      avatar: "ER",
-      status: "Available",
-    },
-    {
-      id: 4,
-      name: "David Thompson",
-      position: "DevOps Engineer",
-      department: "Engineering",
-      team: "Infrastructure",
-      email: "david.thompson@company.com",
-      phone: "+1 (555) 456-7890",
-      location: "Austin Office",
-      avatar: "DT",
-      status: "Away",
-    },
-    {
-      id: 5,
-      name: "Lisa Wang",
-      position: "Marketing Director",
-      department: "Marketing",
-      team: "Growth Marketing",
-      email: "lisa.wang@company.com",
-      phone: "+1 (555) 567-8901",
-      location: "New York Office",
-      avatar: "LW",
-      status: "Available",
-    },
-    {
-      id: 6,
-      name: "James Miller",
-      position: "Sales Representative",
-      department: "Sales",
-      team: "Enterprise Sales",
-      email: "james.miller@company.com",
-      phone: "+1 (555) 678-9012",
-      location: "Chicago Office",
-      avatar: "JM",
-      status: "On Call",
-    },
-  ];
+  // Load employee data from localStorage or use default NALCO employees
+  useEffect(() => {
+    const savedEmployees = localStorage.getItem("nalco_employees");
+    if (savedEmployees) {
+      setEmployees(JSON.parse(savedEmployees));
+    } else {
+      // Default NALCO employees
+      const defaultEmployees = [
+        {
+          id: 1,
+          name: "Rajesh Kumar Singh",
+          position: "HR Executive",
+          department: "Human Resources",
+          team: "Employee Relations",
+          email: "rajesh.singh@nalco.com",
+          phone: "+91-9876543210",
+          location: "Damanjodi Plant",
+          avatar: "RK",
+          status: "Available",
+          employeeId: "EMP001",
+          joinDate: "2022-03-15"
+        },
+        {
+          id: 2,
+          name: "Dr. Priya Sharma",
+          position: "Department Head",
+          department: "Human Resources",
+          team: "Management",
+          email: "priya.sharma@nalco.com",
+          phone: "+91-9876543211",
+          location: "Damanjodi Plant",
+          avatar: "PS",
+          status: "In Meeting",
+          employeeId: "AUTH001",
+          joinDate: "2018-06-20"
+        },
+        {
+          id: 3,
+          name: "Sunita Devi",
+          position: "HR Assistant",
+          department: "Human Resources",
+          team: "Administration",
+          email: "sunita.devi@nalco.com",
+          phone: "+91-9876543213",
+          location: "Damanjodi Plant",
+          avatar: "SD",
+          status: "Available",
+          employeeId: "EMP002",
+          joinDate: "2021-07-20"
+        },
+        {
+          id: 4,
+          name: "Mohammad Alam",
+          position: "Trainee",
+          department: "Human Resources",
+          team: "Training Program",
+          email: "mohammad.alam@nalco.com",
+          phone: "+91-9876543214",
+          location: "Damanjodi Plant",
+          avatar: "MA",
+          status: "On Leave",
+          employeeId: "EMP003",
+          joinDate: "2023-11-05"
+        },
+        {
+          id: 5,
+          name: "Anita Das",
+          position: "Engineering Manager",
+          department: "Engineering",
+          team: "Plant Operations",
+          email: "anita.das@nalco.com",
+          phone: "+91-9876543215",
+          location: "Plant Area 1",
+          avatar: "AD",
+          status: "Available",
+          employeeId: "ENG001",
+          joinDate: "2019-01-10"
+        },
+        {
+          id: 6,
+          name: "Suresh Babu",
+          position: "Finance Manager",
+          department: "Finance",
+          team: "Accounts",
+          email: "suresh.babu@nalco.com",
+          phone: "+91-9876543216",
+          location: "Admin Block B",
+          avatar: "SB",
+          status: "Available",
+          employeeId: "FIN001",
+          joinDate: "2020-04-15"
+        },
+      ];
+      setEmployees(defaultEmployees);
+      localStorage.setItem("nalco_employees", JSON.stringify(defaultEmployees));
+    }
+  }, []);
+
+  // Filter employees based on search term
+  const filteredEmployees = employees.filter(employee =>
+    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.team.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.position.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Get department counts
+  const departmentCounts = employees.reduce((acc, emp) => {
+    acc[emp.department] = (acc[emp.department] || 0) + 1;
+    return acc;
+  }, {});
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
