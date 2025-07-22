@@ -87,6 +87,13 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  // Authentication Routes
+  app.post("/api/auth/register", registerUser);
+  app.post("/api/auth/login", loginUser);
+  app.get("/api/auth/me", getCurrentUser);
+  app.get("/api/auth/users", getAllUsers);
+  app.put("/api/auth/users/:id", updateUser);
+
   // Leave Management Routes
   app.get("/api/leave/employee/:employeeId", getLeaveApplications);
   app.get("/api/leave/all", getAllLeaveApplications);
