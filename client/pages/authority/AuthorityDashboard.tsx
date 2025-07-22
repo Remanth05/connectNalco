@@ -55,6 +55,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LeaveApplication, Reimbursement, ApiResponse } from "@shared/api";
+import { useDataSync, syncEmployeeUpdate } from "@/hooks/useDataSync";
 
 export default function AuthorityDashboard() {
   const { user } = useAuth();
