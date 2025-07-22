@@ -273,16 +273,37 @@ export default function Payslips() {
                     <Badge className="bg-nalco-green text-white">
                       {payslip.status}
                     </Badge>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewPayslip(payslip);
+                      }}
+                    >
                       <Eye className="h-4 w-4 mr-2" />
                       View
                     </Button>
                     <Button
                       size="sm"
                       className="bg-nalco-blue hover:bg-nalco-blue/90"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDownloadPayslip(payslip);
+                      }}
+                      disabled={downloading === payslip.id}
                     >
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
+                      {downloading === payslip.id ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Downloading...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="h-4 w-4 mr-2" />
+                          Download
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>
