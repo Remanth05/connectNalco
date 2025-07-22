@@ -949,7 +949,16 @@ export default function AuthorityDashboard() {
                   <h4 className="font-medium mb-2">Leave Utilization</h4>
                   <p className="text-2xl font-bold text-nalco-blue">68%</p>
                   <p className="text-sm text-nalco-gray">Annual leave taken</p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess('Leave utilization report details loaded successfully!');
+                      setSelectedItem({ type: 'leave', title: 'Leave Utilization Report', data: { percentage: '68%', details: 'Annual leave utilization analysis' } });
+                      setModuleDialog({ open: true, type: 'report-detail', title: 'Leave Utilization Report' });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
