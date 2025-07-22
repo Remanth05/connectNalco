@@ -498,6 +498,9 @@ export default function AuthorityDashboard() {
                             JSON.stringify(updatedEmployees),
                           );
 
+                          // Sync employee data across the system
+                          syncEmployeeUpdate(directoryEmployee);
+
                           setSuccess(
                             `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully and is now available in the directory!`,
                           );
