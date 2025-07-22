@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { connectDB } from "./config/database";
 import { handleDemo } from "./routes/demo";
 
 // Import route handlers
@@ -60,8 +61,22 @@ import {
   getDepartmentAttendance,
 } from "./routes/attendance";
 
+import {
+  registerUser,
+  loginUser,
+  getCurrentUser,
+  getAllUsers,
+  updateUser,
+} from "./routes/auth";
+
 export function createServer() {
   const app = express();
+
+  // Connect to MongoDB (optional for development)
+  connectDB().catch(() => {
+    // MongoDB connection failed, continue without it
+    console.log("🔧 Continuing in development mode...");
+  });
 
   // Middleware
   app.use(cors());
@@ -74,6 +89,13 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Authentication Routes
+  app.post("/api/auth/register", registerUser);
+  app.post("/api/auth/login", loginUser);
+  app.get("/api/auth/me", getCurrentUser);
+  app.get("/api/auth/users", getAllUsers);
+  app.put("/api/auth/users/:id", updateUser);
 
   // Leave Management Routes
   app.get("/api/leave/employee/:employeeId", getLeaveApplications);

@@ -255,8 +255,8 @@ export default function Index() {
               <Button
                 asChild
                 size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-nalco-red"
+                variant="secondary"
+                className="bg-white text-nalco-red hover:bg-white/90 hover:text-nalco-red border-2 border-white"
               >
                 <Link to="/login">Report Your First Issue</Link>
               </Button>

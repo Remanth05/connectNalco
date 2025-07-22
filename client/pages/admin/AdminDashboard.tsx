@@ -44,6 +44,7 @@ import {
   Download,
   Upload,
   Loader2,
+  ArrowRight,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -53,25 +54,32 @@ export default function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-    const [moduleDialog, setModuleDialog] = useState<{open: boolean, type: string, title: string}>({
+  const [moduleDialog, setModuleDialog] = useState<{
+    open: boolean;
+    type: string;
+    title: string;
+  }>({
     open: false,
     type: "",
-    title: ""
+    title: "",
   });
   const [moduleLoading, setModuleLoading] = useState<string | null>(null);
 
-  const handleModuleAccess = async (modulePath: string, moduleTitle: string) => {
-    const moduleType = modulePath.split('/').pop() || "";
+  const handleModuleAccess = async (
+    modulePath: string,
+    moduleTitle: string,
+  ) => {
+    const moduleType = modulePath.split("/").pop() || "";
     setModuleLoading(moduleType);
 
     try {
       // Simulate module loading
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setModuleDialog({
         open: true,
         type: moduleType,
-        title: moduleTitle
+        title: moduleTitle,
       });
     } catch (error) {
       alert(`Failed to access ${moduleTitle} module. Please try again.`);
@@ -80,13 +88,13 @@ export default function AdminDashboard() {
     }
   };
 
-      const handleQuickAction = (action: string) => {
+  const handleQuickAction = (action: string) => {
     switch (action) {
       case "create-user":
         setModuleDialog({
           open: true,
           type: "create-user",
-          title: "Create New User"
+          title: "Create New User",
         });
         break;
       case "backup":
@@ -124,30 +132,154 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">User Management</h3>
-              <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
+              <Button
+                size="sm"
+                className="bg-nalco-blue hover:bg-nalco-blue/90"
+                onClick={() =>
+                  setModuleDialog({
+                    open: true,
+                    type: "create-user",
+                    title: "Create New User",
+                  })
+                }
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Add User
               </Button>
             </div>
             <div className="space-y-2">
               {[
-                { name: "Rajesh Kumar Singh", role: "Employee", id: "EMP001", status: "Active" },
-                { name: "Dr. Priya Sharma", role: "Authority", id: "AUTH001", status: "Active" },
-                { name: "Vikram Patel", role: "Admin", id: "ADMIN001", status: "Active" },
-                { name: "Sunita Devi", role: "Employee", id: "EMP002", status: "Inactive" },
+                {
+                  name: "Rajesh Kumar Singh",
+                  role: "Employee",
+                  id: "EMP001",
+                  status: "Active",
+                  email: "rajesh.singh@nalco.com",
+                  phone: "+91-9876543210",
+                },
+                {
+                  name: "Dr. Priya Sharma",
+                  role: "Authority",
+                  id: "AUTH001",
+                  status: "Active",
+                  email: "priya.sharma@nalco.com",
+                  phone: "+91-9876543211",
+                },
+                {
+                  name: "Vikram Patel",
+                  role: "Admin",
+                  id: "ADMIN001",
+                  status: "Active",
+                  email: "vikram.patel@nalco.com",
+                  phone: "+91-9876543212",
+                },
+                {
+                  name: "Sunita Devi",
+                  role: "Employee",
+                  id: "EMP002",
+                  status: "Inactive",
+                  email: "sunita.devi@nalco.com",
+                  phone: "+91-9876543213",
+                },
               ].map((user, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
                   <div>
                     <p className="font-medium">{user.name}</p>
-                    <p className="text-sm text-nalco-gray">{user.role} • {user.id}</p>
+                    <p className="text-sm text-nalco-gray">
+                      {user.role} • {user.id}
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge className={user.status === "Active" ? "bg-nalco-green text-white" : "bg-nalco-red text-white"}>
+                    <Badge
+                      className={
+                        user.status === "Active"
+                          ? "bg-nalco-green text-white"
+                          : "bg-nalco-red text-white"
+                      }
+                    >
                       {user.status}
                     </Badge>
-                    <Button size="sm" variant="outline">
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button size="sm" variant="outline">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                          <DialogTitle>Edit User - {user.name}</DialogTitle>
+                          <DialogDescription>
+                            Update user information and settings
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <Label>Full Name</Label>
+                            <Input defaultValue={user.name} />
+                          </div>
+                          <div>
+                            <Label>Employee ID</Label>
+                            <Input defaultValue={user.id} disabled />
+                          </div>
+                          <div>
+                            <Label>Email</Label>
+                            <Input defaultValue={user.email} type="email" />
+                          </div>
+                          <div>
+                            <Label>Phone</Label>
+                            <Input defaultValue={user.phone} />
+                          </div>
+                          <div>
+                            <Label>Role</Label>
+                            <Select defaultValue={user.role.toLowerCase()}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="employee">
+                                  Employee
+                                </SelectItem>
+                                <SelectItem value="authority">
+                                  Authority
+                                </SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Status</Label>
+                            <Select defaultValue={user.status.toLowerCase()}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="active">Active</SelectItem>
+                                <SelectItem value="inactive">
+                                  Inactive
+                                </SelectItem>
+                                <SelectItem value="suspended">
+                                  Suspended
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline">Cancel</Button>
+                          <Button
+                            className="bg-nalco-green hover:bg-nalco-green/90"
+                            onClick={() => {
+                              alert(`User ${user.name} updated successfully!`);
+                            }}
+                          >
+                            Save Changes
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               ))}
@@ -159,33 +291,238 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Setup</h3>
-              <Button size="sm" className="bg-nalco-green hover:bg-nalco-green/90">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Department
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    className="bg-nalco-green hover:bg-nalco-green/90"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Department
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Add New Department</DialogTitle>
+                    <DialogDescription>
+                      Create a new department in the organization
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label>Department Name</Label>
+                      <Input placeholder="Enter department name" />
+                    </div>
+                    <div>
+                      <Label>Department Head</Label>
+                      <Input placeholder="Enter head name" />
+                    </div>
+                    <div>
+                      <Label>Initial Budget</Label>
+                      <Input placeholder="₹ 0" />
+                    </div>
+                    <div>
+                      <Label>Location</Label>
+                      <Input placeholder="Office/Building location" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Description</Label>
+                    <Textarea
+                      placeholder="Department description and responsibilities"
+                      rows={3}
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline">Cancel</Button>
+                    <Button
+                      className="bg-nalco-green hover:bg-nalco-green/90"
+                      onClick={() => {
+                        alert("New department created successfully!");
+                      }}
+                    >
+                      Create Department
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {[
-                { name: "Human Resources", head: "Dr. Priya Sharma", employees: 15, budget: "₹5 Crores" },
-                { name: "Finance & Accounts", head: "Suresh Babu", employees: 22, budget: "₹12 Crores" },
-                { name: "Plant Operations", head: "Ramesh Chandran", employees: 145, budget: "₹50 Crores" },
-                { name: "Engineering", head: "Anita Das", employees: 89, budget: "₹35 Crores" },
+                {
+                  name: "Human Resources",
+                  head: "Dr. Priya Sharma",
+                  employees: 15,
+                  budget: "₹5 Crores",
+                  location: "Admin Block A",
+                },
+                {
+                  name: "Finance & Accounts",
+                  head: "Suresh Babu",
+                  employees: 22,
+                  budget: "₹12 Crores",
+                  location: "Admin Block B",
+                },
+                {
+                  name: "Plant Operations",
+                  head: "Ramesh Chandran",
+                  employees: 145,
+                  budget: "₹50 Crores",
+                  location: "Plant Area 1",
+                },
+                {
+                  name: "Engineering",
+                  head: "Anita Das",
+                  employees: 89,
+                  budget: "₹35 Crores",
+                  location: "Engineering Block",
+                },
               ].map((dept, index) => (
                 <Card key={index}>
                   <CardContent className="p-4">
                     <h4 className="font-medium mb-2">{dept.name}</h4>
-                    <p className="text-sm text-nalco-gray mb-1">Head: {dept.head}</p>
-                    <p className="text-sm text-nalco-gray mb-1">Employees: {dept.employees}</p>
-                    <p className="text-sm text-nalco-gray mb-3">Budget: {dept.budget}</p>
+                    <p className="text-sm text-nalco-gray mb-1">
+                      Head: {dept.head}
+                    </p>
+                    <p className="text-sm text-nalco-gray mb-1">
+                      Employees: {dept.employees}
+                    </p>
+                    <p className="text-sm text-nalco-gray mb-3">
+                      Budget: {dept.budget}
+                    </p>
                     <div className="flex space-x-2">
-                      <Button size="sm" variant="outline" className="flex-1">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-3xl">
+                          <DialogHeader>
+                            <DialogTitle>
+                              {dept.name} - Department Details
+                            </DialogTitle>
+                            <DialogDescription>
+                              Complete information about the department
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-2">
+                              <div>
+                                <Label>Department Name</Label>
+                                <Input value={dept.name} disabled />
+                              </div>
+                              <div>
+                                <Label>Department Head</Label>
+                                <Input value={dept.head} disabled />
+                              </div>
+                              <div>
+                                <Label>Total Employees</Label>
+                                <Input
+                                  value={dept.employees.toString()}
+                                  disabled
+                                />
+                              </div>
+                              <div>
+                                <Label>Budget Allocation</Label>
+                                <Input value={dept.budget} disabled />
+                              </div>
+                              <div>
+                                <Label>Location</Label>
+                                <Input value={dept.location} disabled />
+                              </div>
+                              <div>
+                                <Label>Status</Label>
+                                <Input value="Active" disabled />
+                              </div>
+                            </div>
+                            <div>
+                              <Label>Performance Metrics</Label>
+                              <div className="grid gap-2 md:grid-cols-3 mt-2">
+                                <div className="text-center p-3 bg-nalco-green/10 rounded">
+                                  <div className="text-2xl font-bold text-nalco-green">
+                                    94%
+                                  </div>
+                                  <div className="text-sm">Efficiency</div>
+                                </div>
+                                <div className="text-center p-3 bg-nalco-blue/10 rounded">
+                                  <div className="text-2xl font-bold text-nalco-blue">
+                                    87%
+                                  </div>
+                                  <div className="text-sm">Productivity</div>
+                                </div>
+                                <div className="text-center p-3 bg-nalco-red/10 rounded">
+                                  <div className="text-2xl font-bold text-nalco-red">
+                                    4.2/5
+                                  </div>
+                                  <div className="text-sm">Satisfaction</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline">Close</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl">
+                          <DialogHeader>
+                            <DialogTitle>
+                              Edit Department - {dept.name}
+                            </DialogTitle>
+                            <DialogDescription>
+                              Update department information
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 md:grid-cols-2">
+                            <div>
+                              <Label>Department Name</Label>
+                              <Input defaultValue={dept.name} />
+                            </div>
+                            <div>
+                              <Label>Department Head</Label>
+                              <Input defaultValue={dept.head} />
+                            </div>
+                            <div>
+                              <Label>Budget Allocation</Label>
+                              <Input defaultValue={dept.budget} />
+                            </div>
+                            <div>
+                              <Label>Location</Label>
+                              <Input defaultValue={dept.location} />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline">Cancel</Button>
+                            <Button
+                              className="bg-nalco-green hover:bg-nalco-green/90"
+                              onClick={() => {
+                                alert(
+                                  `Department ${dept.name} updated successfully!`,
+                                );
+                              }}
+                            >
+                              Save Changes
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </CardContent>
                 </Card>
@@ -215,10 +552,70 @@ export default function AdminDashboard() {
                       <span className="text-sm font-medium">IST</span>
                     </div>
                   </div>
-                  <Button size="sm" className="w-full mt-3">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Settings
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="w-full mt-3">
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit Settings
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Edit General Settings</DialogTitle>
+                        <DialogDescription>
+                          Update system configuration
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>System Name</Label>
+                          <Input defaultValue="connectNALCO" />
+                        </div>
+                        <div>
+                          <Label>Version</Label>
+                          <Input defaultValue="v2.1.0" />
+                        </div>
+                        <div>
+                          <Label>Timezone</Label>
+                          <Select defaultValue="ist">
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ist">
+                                IST (Indian Standard Time)
+                              </SelectItem>
+                              <SelectItem value="utc">UTC</SelectItem>
+                              <SelectItem value="est">EST</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>Maintenance Mode</Label>
+                          <Select defaultValue="disabled">
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="enabled">Enabled</SelectItem>
+                              <SelectItem value="disabled">Disabled</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline">Cancel</Button>
+                        <Button
+                          className="bg-nalco-green hover:bg-nalco-green/90"
+                          onClick={() => {
+                            alert("General settings updated successfully!");
+                          }}
+                        >
+                          Save Settings
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
               <Card>
@@ -235,13 +632,71 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Status</span>
-                      <Badge className="bg-nalco-green text-white">Active</Badge>
+                      <Badge className="bg-nalco-green text-white">
+                        Active
+                      </Badge>
                     </div>
                   </div>
-                  <Button size="sm" className="w-full mt-3">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Configure
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="w-full mt-3">
+                        <Edit className="h-4 w-4 mr-2" />
+                        Configure
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Email Configuration</DialogTitle>
+                        <DialogDescription>
+                          Configure SMTP settings for email notifications
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>SMTP Server</Label>
+                          <Input placeholder="smtp.nalco.com" />
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <Label>Port</Label>
+                            <Input placeholder="587" />
+                          </div>
+                          <div>
+                            <Label>Security</Label>
+                            <Select defaultValue="tls">
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="tls">TLS</SelectItem>
+                                <SelectItem value="ssl">SSL</SelectItem>
+                                <SelectItem value="none">None</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Username</Label>
+                          <Input placeholder="noreply@nalco.com" />
+                        </div>
+                        <div>
+                          <Label>Password</Label>
+                          <Input type="password" placeholder="••••••••" />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline">Cancel</Button>
+                        <Button
+                          className="bg-nalco-green hover:bg-nalco-green/90"
+                          onClick={() => {
+                            alert("Email configuration updated successfully!");
+                          }}
+                        >
+                          Save Configuration
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             </div>
@@ -293,7 +748,9 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Firewall</span>
-                      <Badge className="bg-nalco-green text-white">Active</Badge>
+                      <Badge className="bg-nalco-green text-white">
+                        Active
+                      </Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">SSL Certificate</span>
@@ -312,7 +769,9 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="text-sm">
                       <p className="font-medium">Failed login attempt</p>
-                      <p className="text-nalco-gray">From 192.168.1.100 • 2h ago</p>
+                      <p className="text-nalco-gray">
+                        From 192.168.1.100 • 2h ago
+                      </p>
                     </div>
                     <div className="text-sm">
                       <p className="font-medium">Unusual data access</p>
@@ -329,7 +788,10 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Database Management</h3>
-              <Button size="sm" className="bg-purple-600 hover:bg-purple-600/90">
+              <Button
+                size="sm"
+                className="bg-purple-600 hover:bg-purple-600/90"
+              >
                 <Upload className="h-4 w-4 mr-2" />
                 Backup Now
               </Button>
@@ -341,7 +803,9 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Connection</span>
-                      <Badge className="bg-nalco-green text-white">Healthy</Badge>
+                      <Badge className="bg-nalco-green text-white">
+                        Healthy
+                      </Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Size</span>
@@ -360,11 +824,15 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="text-sm">
                       <p className="font-medium">Auto Backup #247</p>
-                      <p className="text-nalco-gray">March 26, 2024 • 2:00 AM</p>
+                      <p className="text-nalco-gray">
+                        March 26, 2024 • 2:00 AM
+                      </p>
                     </div>
                     <div className="text-sm">
                       <p className="font-medium">Manual Backup #246</p>
-                      <p className="text-nalco-gray">March 25, 2024 • 4:30 PM</p>
+                      <p className="text-nalco-gray">
+                        March 25, 2024 • 4:30 PM
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -423,7 +891,10 @@ export default function AdminDashboard() {
             </div>
             <div>
               <Label>Additional Notes</Label>
-              <Textarea placeholder="Any additional information about the user" rows={3} />
+              <Textarea
+                placeholder="Any additional information about the user"
+                rows={3}
+              />
             </div>
           </div>
         );
@@ -557,7 +1028,7 @@ export default function AdminDashboard() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-                {/* Header */}
+        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-nalco-black">
@@ -634,7 +1105,7 @@ export default function AdminDashboard() {
                             <p className="text-sm text-nalco-gray mb-3">
                               {module.description}
                             </p>
-                                                        <Button
+                            <Button
                               variant="outline"
                               size="sm"
                               className="w-full hover:bg-nalco-blue hover:text-white transition-colors"
@@ -642,9 +1113,12 @@ export default function AdminDashboard() {
                                 e.stopPropagation();
                                 handleModuleAccess(module.path, module.title);
                               }}
-                              disabled={moduleLoading === module.path.split('/').pop()}
+                              disabled={
+                                moduleLoading === module.path.split("/").pop()
+                              }
                             >
-                              {moduleLoading === module.path.split('/').pop() ? (
+                              {moduleLoading ===
+                              module.path.split("/").pop() ? (
                                 <>
                                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                   Loading...
@@ -708,14 +1182,52 @@ export default function AdminDashboard() {
                 {recentActivities.map((activity, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between border-b pb-4 last:border-b-0"
+                    className="flex items-center justify-between border-b pb-4 last:border-b-0 hover:bg-nalco-gray/5 rounded-lg p-2 transition-colors cursor-pointer"
+                    onClick={() => {
+                      // Navigate based on activity type
+                      if (activity.action.includes("user")) {
+                        setModuleDialog({
+                          open: true,
+                          type: "users",
+                          title: "User Management",
+                        });
+                      } else if (activity.action.includes("department")) {
+                        setModuleDialog({
+                          open: true,
+                          type: "departments",
+                          title: "Department Setup",
+                        });
+                      } else if (
+                        activity.action.includes("backup") ||
+                        activity.action.includes("maintenance")
+                      ) {
+                        setModuleDialog({
+                          open: true,
+                          type: "database",
+                          title: "Database Management",
+                        });
+                      } else if (activity.action.includes("login")) {
+                        setModuleDialog({
+                          open: true,
+                          type: "security",
+                          title: "Security Center",
+                        });
+                      } else {
+                        // Generic issue navigation
+                        navigate("/issues");
+                      }
+
+                      alert(
+                        `Navigating to ${activity.action} details...\nActivity ID: ACT${Date.now()}\nUser: ${activity.user}\nTime: ${activity.time}`,
+                      );
+                    }}
                   >
                     <div className="flex items-center space-x-4">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-nalco-gray/10">
                         <Clock className="h-5 w-5 text-nalco-gray" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-nalco-black">
+                        <h4 className="font-medium text-nalco-black hover:text-nalco-blue transition-colors">
                           {activity.action}
                         </h4>
                         <p className="text-sm text-nalco-gray">
@@ -723,9 +1235,14 @@ export default function AdminDashboard() {
                         </p>
                       </div>
                     </div>
-                    <Badge className={getStatusColor(activity.status)}>
-                      {activity.status}
-                    </Badge>
+                    <div className="flex items-center space-x-2">
+                      <Badge className={getStatusColor(activity.status)}>
+                        {activity.status}
+                      </Badge>
+                      <div className="text-nalco-gray hover:text-nalco-blue transition-colors">
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -748,25 +1265,113 @@ export default function AdminDashboard() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => handleQuickAction("backup")}
+                onClick={async () => {
+                  const confirmed = confirm(
+                    "Are you sure you want to start a database backup? This may take several minutes.",
+                  );
+                  if (confirmed) {
+                    alert(
+                      "Database backup initiated...\nBackup ID: BKP" +
+                        Date.now() +
+                        "\nEstimated time: 10-15 minutes\nYou will be notified when complete.",
+                    );
+                  }
+                }}
               >
                 Backup Database
               </Button>
               <Button
                 variant="outline"
-                onClick={() => handleQuickAction("reports")}
+                onClick={async () => {
+                  const reportData =
+                    `SYSTEM REPORTS SUMMARY\n\n` +
+                    `Generated: ${new Date().toLocaleString()}\n` +
+                    `Report Period: Last 30 days\n\n` +
+                    `SYSTEM STATISTICS:\n` +
+                    `- Total Users: 11\n` +
+                    `- Active Departments: 5\n` +
+                    `- System Uptime: 99.9%\n` +
+                    `- Database Size: 1.2 GB\n\n` +
+                    `USAGE METRICS:\n` +
+                    `- Average Daily Logins: 248\n` +
+                    `- Peak Usage Time: 10:00 AM - 2:00 PM\n` +
+                    `- Most Used Features: Employee Portal, Issue Tracker\n\n` +
+                    `PERFORMANCE:\n` +
+                    `- Average Response Time: 120ms\n` +
+                    `- Error Rate: 0.1%\n` +
+                    `- User Satisfaction: 4.6/5`;
+
+                  const blob = new Blob([reportData], { type: "text/plain" });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = `system_reports_${new Date().toISOString().split("T")[0]}.txt`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+
+                  alert(
+                    "System reports generated and downloaded successfully!",
+                  );
+                }}
               >
                 Generate Reports
               </Button>
               <Button
                 variant="outline"
-                onClick={() => handleQuickAction("maintenance")}
+                onClick={() => {
+                  const confirmed = confirm(
+                    "Enable system maintenance mode? This will temporarily disable user access.",
+                  );
+                  if (confirmed) {
+                    alert(
+                      "System Maintenance Mode ENABLED\n\n" +
+                        "- User access temporarily disabled\n" +
+                        "- Maintenance window: 2 hours\n" +
+                        "- Automatic restoration scheduled\n" +
+                        "- Admin access remains active",
+                    );
+                  }
+                }}
               >
                 System Maintenance
               </Button>
-                            <Button
+              <Button
                 variant="outline"
-                onClick={() => handleQuickAction("security")}
+                onClick={async () => {
+                  const auditReport =
+                    `SECURITY AUDIT REPORT\n\n` +
+                    `Audit Date: ${new Date().toLocaleString()}\n` +
+                    `Audit ID: SA${Date.now()}\n\n` +
+                    `SECURITY STATUS:\n` +
+                    `✓ Firewall: Active and configured\n` +
+                    `✓ SSL Certificate: Valid (expires Nov 2025)\n` +
+                    `✓ User Authentication: Multi-factor enabled\n` +
+                    `✓ Database Encryption: AES-256 active\n\n` +
+                    `RECENT ACTIVITIES:\n` +
+                    `- Failed login attempts: 3 (last 24h)\n` +
+                    `- Password changes: 5 (last week)\n` +
+                    `- Admin access logs: Normal\n\n` +
+                    `RECOMMENDATIONS:\n` +
+                    `1. Review user access permissions quarterly\n` +
+                    `2. Update security policies documentation\n` +
+                    `3. Schedule penetration testing\n\n` +
+                    `THREAT LEVEL: LOW\n` +
+                    `OVERALL SECURITY SCORE: 9.2/10`;
+
+                  const blob = new Blob([auditReport], { type: "text/plain" });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = `security_audit_${new Date().toISOString().split("T")[0]}.txt`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+
+                  alert("Security audit completed and report downloaded!");
+                }}
               >
                 Security Audit
               </Button>
@@ -780,28 +1385,32 @@ export default function AdminDashboard() {
               </Button>
             </div>
           </CardContent>
-                </Card>
+        </Card>
 
         {/* Module Access Dialog */}
-        <Dialog open={moduleDialog.open} onOpenChange={(open) => setModuleDialog({...moduleDialog, open})}>
+        <Dialog
+          open={moduleDialog.open}
+          onOpenChange={(open) => setModuleDialog({ ...moduleDialog, open })}
+        >
           <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-nalco-black">
                 {moduleDialog.title}
               </DialogTitle>
               <DialogDescription>
-                Manage {moduleDialog.title.toLowerCase()} and system configurations
+                Manage {moduleDialog.title.toLowerCase()} and system
+                configurations
               </DialogDescription>
             </DialogHeader>
 
-            <div className="py-4">
-              {getModuleContent(moduleDialog.type)}
-            </div>
+            <div className="py-4">{getModuleContent(moduleDialog.type)}</div>
 
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => setModuleDialog({open: false, type: "", title: ""})}
+                onClick={() =>
+                  setModuleDialog({ open: false, type: "", title: "" })
+                }
               >
                 Close
               </Button>
@@ -810,7 +1419,7 @@ export default function AdminDashboard() {
                   className="bg-nalco-blue hover:bg-nalco-blue/90"
                   onClick={() => {
                     alert("User created successfully!");
-                    setModuleDialog({open: false, type: "", title: ""});
+                    setModuleDialog({ open: false, type: "", title: "" });
                   }}
                 >
                   Create User
@@ -820,7 +1429,7 @@ export default function AdminDashboard() {
                 className="bg-nalco-green hover:bg-nalco-green/90"
                 onClick={() => {
                   alert("Changes saved successfully!");
-                  setModuleDialog({open: false, type: "", title: ""});
+                  setModuleDialog({ open: false, type: "", title: "" });
                 }}
               >
                 Save Changes
