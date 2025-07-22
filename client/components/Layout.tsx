@@ -119,7 +119,7 @@ export default function Layout({ children }: LayoutProps) {
                 })}
               </nav>
 
-              {/* User Info and Logout */}
+              {/* User Info, Notifications and Logout */}
               {isAuthenticated && user && (
                 <div className="flex items-center space-x-3 border-l pl-4">
                   <div className="text-sm">
@@ -130,6 +130,7 @@ export default function Layout({ children }: LayoutProps) {
                       {user.role}
                     </div>
                   </div>
+                  <NotificationBell />
                   <Button
                     variant="ghost"
                     size="sm"
