@@ -1035,9 +1035,51 @@ export default function AuthorityDashboard() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <Badge variant="outline">{report.type}</Badge>
-                      <Button size="sm" variant="outline">
-                        <Download className="h-4 w-4 mr-2" />
-                        Download
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={async () => {
+                          setProcessing(`download-${index}`);
+                          try {
+                            // Simulate download process
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+
+                            // Create mock file content
+                            const content = `${report.name}\nGenerated: ${report.date}\nType: ${report.type}\n\nThis is a sample ${report.type} report.`;
+                            const blob = new Blob([content], {
+                              type: report.type === 'PDF' ? 'application/pdf' : 'application/vnd.ms-excel'
+                            });
+
+                            // Download file
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = `${report.name.replace(/\s+/g, '_')}.${report.type.toLowerCase()}`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(url);
+
+                            setSuccess(`${report.name} downloaded successfully!`);
+                          } catch (error) {
+                            setError(`Failed to download ${report.name}`);
+                          } finally {
+                            setProcessing(null);
+                          }
+                        }}
+                        disabled={processing === `download-${index}`}
+                      >
+                        {processing === `download-${index}` ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Downloading...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="h-4 w-4 mr-2" />
+                            Download
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>
