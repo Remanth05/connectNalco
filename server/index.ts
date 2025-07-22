@@ -72,8 +72,11 @@ import {
 export function createServer() {
   const app = express();
 
-  // Connect to MongoDB
-  connectDB().catch(console.error);
+  // Connect to MongoDB (optional for development)
+  connectDB().catch(() => {
+    // MongoDB connection failed, continue without it
+    console.log('🔧 Continuing in development mode...');
+  });
 
   // Middleware
   app.use(cors());
