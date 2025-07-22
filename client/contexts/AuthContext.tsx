@@ -5,6 +5,8 @@ interface User {
   role: "employee" | "authority" | "admin";
   name: string;
   isAuthenticated: boolean;
+  loginTime?: number;
+  sessionTimeout?: number;
 }
 
 interface AuthContextType {
