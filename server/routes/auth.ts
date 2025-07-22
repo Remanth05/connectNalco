@@ -140,6 +140,37 @@ export const loginUser: RequestHandler = async (req, res) => {
       return res.status(400).json(response);
     }
 
+    // Check if MongoDB is connected
+    if (!isMongoConnected()) {
+      // Development mode fallback
+      if (email === 'admin@nalco.com' && password === 'nalco@2024') {
+        const token = jwt.sign(
+          { userId: mockUser._id, employeeId: mockUser.employeeId, role: mockUser.role },
+          JWT_SECRET,
+          { expiresIn: JWT_EXPIRE }
+        );
+
+        const response: ApiResponse<{
+          user: typeof mockUser;
+          token: string;
+        }> = {
+          success: true,
+          data: {
+            user: mockUser,
+            token
+          }
+        };
+
+        return res.json(response);
+      } else {
+        const response: ApiResponse<null> = {
+          success: false,
+          error: 'Invalid credentials. For development, use admin@nalco.com / nalco@2024'
+        };
+        return res.status(401).json(response);
+      }
+    }
+
     // Find user by email
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
