@@ -800,6 +800,16 @@ export default function Issues() {
                           <Button
                             size="sm"
                             className="bg-nalco-blue hover:bg-nalco-blue/90"
+                            onClick={() => {
+                              alert(
+                                `Assigning issue ${issue.id} - ${issue.title}\n\n` +
+                                `Current Assignee: ${issue.assignee}\n` +
+                                `Issue Status: ${issue.status}\n` +
+                                `Priority: ${issue.priority}\n\n` +
+                                `You can now reassign this issue to a different team member or department. ` +
+                                `The assignee will be notified via email and the issue status will be updated.`
+                              );
+                            }}
                           >
                             <Edit className="h-4 w-4 mr-2" />
                             Assign
