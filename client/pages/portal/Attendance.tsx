@@ -114,20 +114,41 @@ export default function Attendance() {
   const calculateWorkingHours = () => {
     if (!checkInTime) return "0h 0m";
 
-    const checkInDateTime = new Date(
-      `${new Date().toDateString()} ${checkInTime}`,
-    );
-    const currentOrCheckOut =
-      checkedOut && checkOutTime
-        ? new Date(`${new Date().toDateString()} ${checkOutTime}`)
-        : currentTime;
+    try {
+      const checkInDateTime = new Date(
+        `${new Date().toDateString()} ${checkInTime}`,
+      );
+      const currentOrCheckOut =
+        checkedOut && checkOutTime
+          ? new Date(`${new Date().toDateString()} ${checkOutTime}`)
+          : currentTime;
 
-    const diffMs = currentOrCheckOut.getTime() - checkInDateTime.getTime();
-    const diffHours = diffMs / (1000 * 60 * 60);
-    const hours = Math.floor(diffHours);
-    const minutes = Math.floor((diffHours - hours) * 60);
+      // Validate dates
+      if (isNaN(checkInDateTime.getTime()) || isNaN(currentOrCheckOut.getTime())) {
+        return "0h 0m";
+      }
 
-    return `${hours}h ${minutes}m`;
+      const diffMs = currentOrCheckOut.getTime() - checkInDateTime.getTime();
+
+      // Ensure positive difference
+      if (diffMs < 0) {
+        return "0h 0m";
+      }
+
+      const diffHours = diffMs / (1000 * 60 * 60);
+      const hours = Math.floor(diffHours);
+      const minutes = Math.floor((diffHours - hours) * 60);
+
+      // Validate calculated values
+      if (isNaN(hours) || isNaN(minutes) || hours < 0 || minutes < 0) {
+        return "0h 0m";
+      }
+
+      return `${hours}h ${minutes}m`;
+    } catch (error) {
+      console.error("Error calculating working hours:", error);
+      return "0h 0m";
+    }
   };
 
   const handleCheckIn = async () => {
