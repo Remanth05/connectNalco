@@ -1103,16 +1103,40 @@ export default function AuthorityDashboard() {
                 </div>
 
                 <div className="flex space-x-2">
-                  <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                  <Button
+                    className="bg-nalco-blue hover:bg-nalco-blue/90"
+                    onClick={() => {
+                      setSuccess(`Issue ${selectedItem.id} assigned to team successfully!`);
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
                     Assign to Team
                   </Button>
-                  <Button variant="outline">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSuccess(`Issue ${selectedItem.id} status updated successfully!`);
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
                     Update Status
                   </Button>
-                  <Button variant="outline">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSuccess(`Comment added to issue ${selectedItem.id} successfully!`);
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
                     Add Comment
                   </Button>
-                  <Button variant="outline">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSuccess(`Team members notified about issue ${selectedItem.id} successfully!`);
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
                     Notify Members
                   </Button>
                 </div>
