@@ -185,6 +185,8 @@ export default function Directory() {
                 <Input
                   placeholder="Search by name, department, or team..."
                   className="pl-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <Button variant="outline">Filter</Button>
