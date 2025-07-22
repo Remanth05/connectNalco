@@ -61,6 +61,14 @@ import {
   getDepartmentAttendance,
 } from "./routes/attendance";
 
+import {
+  registerUser,
+  loginUser,
+  getCurrentUser,
+  getAllUsers,
+  updateUser,
+} from "./routes/auth";
+
 export function createServer() {
   const app = express();
 
