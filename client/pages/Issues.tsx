@@ -62,6 +62,12 @@ export default function Issues() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
+  const [actionDialogOpen, setActionDialogOpen] = useState(false);
+  const [actionType, setActionType] = useState<string>("");
+  const [assigneeValue, setAssigneeValue] = useState("");
+  const [statusValue, setStatusValue] = useState("");
+  const [commentValue, setCommentValue] = useState("");
+  const [notifyMembers, setNotifyMembers] = useState<string[]>([]);
 
   // Form state for new issue
   const [newIssue, setNewIssue] = useState({
@@ -72,6 +78,7 @@ export default function Issues() {
     location: "",
     urgency: "medium",
   });
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const issueStats = [
     {
       icon: AlertTriangle,
@@ -103,30 +110,130 @@ export default function Issues() {
     },
   ];
 
+  const [departmentIssuesDialogOpen, setDepartmentIssuesDialogOpen] =
+    useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+
   const issueCategories = [
     {
       icon: Zap,
       title: "Electrical",
       description: "Power systems, lighting, and electrical equipment",
       count: "12 active",
+      totalIssues: 15,
+      openIssues: 12,
+      inProgressIssues: 2,
+      resolvedIssues: 1,
+      issues: [
+        {
+          id: "ELE-001",
+          title: "Main power panel malfunction",
+          priority: "Critical",
+          status: "Open",
+        },
+        {
+          id: "ELE-002",
+          title: "Lighting issues in Block A",
+          priority: "High",
+          status: "In Progress",
+        },
+        {
+          id: "ELE-003",
+          title: "Backup generator maintenance",
+          priority: "Medium",
+          status: "Open",
+        },
+      ],
     },
     {
       icon: Wrench,
       title: "Mechanical",
       description: "Machinery, equipment maintenance, and repairs",
       count: "8 active",
+      totalIssues: 12,
+      openIssues: 8,
+      inProgressIssues: 3,
+      resolvedIssues: 1,
+      issues: [
+        {
+          id: "MECH-001",
+          title: "Conveyor belt malfunction",
+          priority: "High",
+          status: "In Progress",
+        },
+        {
+          id: "MECH-002",
+          title: "Pump pressure issues",
+          priority: "Medium",
+          status: "Open",
+        },
+        {
+          id: "MECH-003",
+          title: "Equipment calibration needed",
+          priority: "Low",
+          status: "Open",
+        },
+      ],
     },
     {
       icon: Shield,
       title: "Safety",
       description: "Safety violations, accidents, and hazard reports",
       count: "3 active",
+      totalIssues: 5,
+      openIssues: 3,
+      inProgressIssues: 1,
+      resolvedIssues: 1,
+      issues: [
+        {
+          id: "SAF-001",
+          title: "Emergency exit blocked",
+          priority: "Critical",
+          status: "Open",
+        },
+        {
+          id: "SAF-002",
+          title: "Missing safety equipment",
+          priority: "High",
+          status: "Open",
+        },
+        {
+          id: "SAF-003",
+          title: "Chemical spill cleanup",
+          priority: "Medium",
+          status: "In Progress",
+        },
+      ],
     },
     {
       icon: Building,
       title: "Infrastructure",
       description: "Building maintenance, facilities, and utilities",
       count: "5 active",
+      totalIssues: 8,
+      openIssues: 5,
+      inProgressIssues: 2,
+      resolvedIssues: 1,
+      issues: [
+        {
+          id: "INF-001",
+          title: "HVAC system not working",
+          priority: "Medium",
+          status: "Open",
+        },
+        {
+          id: "INF-002",
+          title: "Plumbing issues in restroom",
+          priority: "High",
+          status: "In Progress",
+        },
+        {
+          id: "INF-003",
+          title: "Roof leak in warehouse",
+          priority: "High",
+          status: "Open",
+        },
+      ],
     },
   ];
 
@@ -235,6 +342,7 @@ export default function Issues() {
         location: "",
         urgency: "medium",
       });
+      setAttachedFiles([]);
     } catch (error) {
       setError("Failed to submit issue. Please try again.");
     } finally {
@@ -416,19 +524,74 @@ export default function Issues() {
                     required
                   />
                 </div>
-                <div className="flex items-center space-x-2 p-4 bg-nalco-blue/5 rounded-lg">
-                  <Upload className="h-5 w-5 text-nalco-blue" />
-                  <div>
-                    <p className="text-sm font-medium">
-                      Attach Files (Optional)
-                    </p>
-                    <p className="text-xs text-nalco-gray">
-                      Upload photos or documents related to this issue
-                    </p>
+                <div className="p-4 bg-nalco-blue/5 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Upload className="h-5 w-5 text-nalco-blue" />
+                    <div>
+                      <p className="text-sm font-medium">
+                        Attach Files (Optional)
+                      </p>
+                      <p className="text-xs text-nalco-gray">
+                        Upload photos or documents related to this issue
+                      </p>
+                    </div>
                   </div>
-                  <Button type="button" variant="outline" size="sm">
-                    Choose Files
-                  </Button>
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      id="file-upload"
+                      multiple
+                      accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          setAttachedFiles(Array.from(e.target.files));
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        document.getElementById("file-upload")?.click()
+                      }
+                    >
+                      Choose Files
+                    </Button>
+                    {attachedFiles.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-xs text-nalco-gray mb-1">
+                          {attachedFiles.length} file(s) selected:
+                        </p>
+                        <div className="space-y-1">
+                          {attachedFiles.map((file, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between text-xs bg-white/50 p-2 rounded"
+                            >
+                              <span className="text-nalco-gray">
+                                {file.name}
+                              </span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-4 w-4 p-0 text-nalco-red"
+                                onClick={() => {
+                                  setAttachedFiles((files) =>
+                                    files.filter((_, i) => i !== index),
+                                  );
+                                }}
+                              >
+                                ×
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <DialogFooter>
                   <Button
@@ -494,6 +657,10 @@ export default function Issues() {
                 <Card
                   key={index}
                   className="cursor-pointer transition-all hover:shadow-lg hover:shadow-nalco-red/10"
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setDepartmentIssuesDialogOpen(true);
+                  }}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center">
@@ -509,9 +676,22 @@ export default function Issues() {
                     <CardDescription className="mb-2 text-nalco-gray">
                       {category.description}
                     </CardDescription>
-                    <p className="text-sm font-medium text-nalco-blue">
-                      {category.count}
-                    </p>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-nalco-blue">
+                        {category.count}
+                      </p>
+                      <div className="flex items-center space-x-4 text-xs">
+                        <span className="text-nalco-red">
+                          Open: {category.openIssues}
+                        </span>
+                        <span className="text-yellow-600">
+                          In Progress: {category.inProgressIssues}
+                        </span>
+                        <span className="text-nalco-green">
+                          Resolved: {category.resolvedIssues}
+                        </span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               );
@@ -751,11 +931,42 @@ export default function Issues() {
                 {/* Actions for authorities/admins */}
                 {(user?.role === "authority" || user?.role === "admin") && (
                   <div className="flex space-x-4 pt-4 border-t">
-                    <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                    <Button
+                      className="bg-nalco-blue hover:bg-nalco-blue/90"
+                      onClick={() => {
+                        setActionType("assign");
+                        setActionDialogOpen(true);
+                      }}
+                    >
                       Assign to Team
                     </Button>
-                    <Button variant="outline">Update Status</Button>
-                    <Button variant="outline">Add Comment</Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActionType("status");
+                        setActionDialogOpen(true);
+                      }}
+                    >
+                      Update Status
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActionType("comment");
+                        setActionDialogOpen(true);
+                      }}
+                    >
+                      Add Comment
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActionType("notify");
+                        setActionDialogOpen(true);
+                      }}
+                    >
+                      Notify Team
+                    </Button>
                   </div>
                 )}
               </div>
@@ -767,6 +978,345 @@ export default function Issues() {
                 onClick={() => setViewDialogOpen(false)}
               >
                 Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Action Dialog for Assign/Status/Comment/Notify */}
+        <Dialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>
+                {actionType === "assign" && "Assign Issue to Team"}
+                {actionType === "status" && "Update Issue Status"}
+                {actionType === "comment" && "Add Comment to Issue"}
+                {actionType === "notify" && "Notify Team Members"}
+              </DialogTitle>
+              <DialogDescription>
+                {actionType === "assign" &&
+                  "Assign this issue to a team member for resolution"}
+                {actionType === "status" &&
+                  "Update the current status of this issue"}
+                {actionType === "comment" &&
+                  "Add a comment or update to this issue"}
+                {actionType === "notify" &&
+                  "Notify relevant team members about this issue"}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              {actionType === "assign" && (
+                <div>
+                  <Label htmlFor="assignee">Assign to</Label>
+                  <Select
+                    value={assigneeValue}
+                    onValueChange={setAssigneeValue}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select team member" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rajesh.kumar">
+                        Rajesh Kumar (Maintenance)
+                      </SelectItem>
+                      <SelectItem value="sunita.devi">
+                        Sunita Devi (Safety)
+                      </SelectItem>
+                      <SelectItem value="mohammad.alam">
+                        Mohammad Alam (IT)
+                      </SelectItem>
+                      <SelectItem value="kavitha.reddy">
+                        Kavitha Reddy (Engineering)
+                      </SelectItem>
+                      <SelectItem value="maintenance.team">
+                        Maintenance Team
+                      </SelectItem>
+                      <SelectItem value="safety.team">Safety Team</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {actionType === "status" && (
+                <div>
+                  <Label htmlFor="status">New Status</Label>
+                  <Select value={statusValue} onValueChange={setStatusValue}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select new status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="open">Open</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="on-hold">On Hold</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                      <SelectItem value="closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {(actionType === "comment" ||
+                actionType === "assign" ||
+                actionType === "status") && (
+                <div>
+                  <Label htmlFor="comment">
+                    Comment {actionType === "comment" ? "*" : "(Optional)"}
+                  </Label>
+                  <Textarea
+                    id="comment"
+                    placeholder="Add your comment or notes..."
+                    value={commentValue}
+                    onChange={(e) => setCommentValue(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+              )}
+
+              {actionType === "notify" && (
+                <div>
+                  <Label>Notify Team Members</Label>
+                  <div className="space-y-2 mt-2">
+                    {[
+                      {
+                        id: "rajesh.kumar",
+                        name: "Rajesh Kumar",
+                        dept: "Maintenance",
+                      },
+                      {
+                        id: "sunita.devi",
+                        name: "Sunita Devi",
+                        dept: "Safety",
+                      },
+                      {
+                        id: "mohammad.alam",
+                        name: "Mohammad Alam",
+                        dept: "IT",
+                      },
+                      {
+                        id: "kavitha.reddy",
+                        name: "Kavitha Reddy",
+                        dept: "Engineering",
+                      },
+                      {
+                        id: "department.head",
+                        name: "Department Head",
+                        dept: "Management",
+                      },
+                    ].map((member) => (
+                      <div
+                        key={member.id}
+                        className="flex items-center space-x-2"
+                      >
+                        <input
+                          type="checkbox"
+                          id={member.id}
+                          checked={notifyMembers.includes(member.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNotifyMembers([...notifyMembers, member.id]);
+                            } else {
+                              setNotifyMembers(
+                                notifyMembers.filter((id) => id !== member.id),
+                              );
+                            }
+                          }}
+                        />
+                        <Label htmlFor={member.id} className="text-sm">
+                          {member.name} ({member.dept})
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setActionDialogOpen(false);
+                  setAssigneeValue("");
+                  setStatusValue("");
+                  setCommentValue("");
+                  setNotifyMembers([]);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-nalco-blue hover:bg-nalco-blue/90"
+                onClick={async () => {
+                  // Simulate API call
+                  setSubmitting(true);
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                  let message = "";
+                  if (actionType === "assign") {
+                    message = `Issue assigned to ${assigneeValue} successfully!`;
+                  } else if (actionType === "status") {
+                    message = `Issue status updated to ${statusValue} successfully!`;
+                  } else if (actionType === "comment") {
+                    message = "Comment added successfully!";
+                  } else if (actionType === "notify") {
+                    message = `${notifyMembers.length} team member(s) notified successfully!`;
+                  }
+
+                  setSuccess(message);
+                  setActionDialogOpen(false);
+                  setAssigneeValue("");
+                  setStatusValue("");
+                  setCommentValue("");
+                  setNotifyMembers([]);
+                  setSubmitting(false);
+                }}
+                disabled={
+                  submitting ||
+                  (actionType === "assign" && !assigneeValue) ||
+                  (actionType === "status" && !statusValue) ||
+                  (actionType === "comment" && !commentValue) ||
+                  (actionType === "notify" && notifyMembers.length === 0)
+                }
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  "Confirm"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Department Issues Dialog */}
+        <Dialog
+          open={departmentIssuesDialogOpen}
+          onOpenChange={setDepartmentIssuesDialogOpen}
+        >
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                {selectedCategory && (
+                  <>
+                    <selectedCategory.icon className="h-5 w-5" />
+                    <span>{selectedCategory.title} Department Issues</span>
+                  </>
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {selectedCategory &&
+                  `View and manage all ${selectedCategory.title.toLowerCase()} related issues`}
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedCategory && (
+              <div className="space-y-6">
+                {/* Statistics */}
+                <div className="grid gap-4 md:grid-cols-4">
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-nalco-black">
+                        {selectedCategory.totalIssues}
+                      </div>
+                      <p className="text-sm text-nalco-gray">Total Issues</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-nalco-red">
+                        {selectedCategory.openIssues}
+                      </div>
+                      <p className="text-sm text-nalco-gray">Open</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-600">
+                        {selectedCategory.inProgressIssues}
+                      </div>
+                      <p className="text-sm text-nalco-gray">In Progress</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-2xl font-bold text-nalco-green">
+                        {selectedCategory.resolvedIssues}
+                      </div>
+                      <p className="text-sm text-nalco-gray">Resolved</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Issues List */}
+                <div>
+                  <h4 className="font-medium mb-3">Recent Issues</h4>
+                  <div className="space-y-3">
+                    {selectedCategory.issues.map(
+                      (issue: any, index: number) => (
+                        <div
+                          key={index}
+                          className="border rounded-lg p-4 hover:bg-nalco-gray/5 transition-colors cursor-pointer"
+                          onClick={() => {
+                            setSelectedIssue(issue);
+                            setDepartmentIssuesDialogOpen(false);
+                            setViewDialogOpen(true);
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="flex items-center space-x-2 mb-1">
+                                <span className="font-mono text-sm text-nalco-blue">
+                                  {issue.id}
+                                </span>
+                                <Badge
+                                  className={getPriorityColor(issue.priority)}
+                                >
+                                  {issue.priority}
+                                </Badge>
+                                <Badge className={getStatusColor(issue.status)}>
+                                  {issue.status}
+                                </Badge>
+                              </div>
+                              <h5 className="font-medium text-nalco-black">
+                                {issue.title}
+                              </h5>
+                              <p className="text-sm text-nalco-gray">
+                                Click to view details
+                              </p>
+                            </div>
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4 mr-2" />
+                              View
+                            </Button>
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setDepartmentIssuesDialogOpen(false)}
+              >
+                Close
+              </Button>
+              <Button
+                className="bg-nalco-red hover:bg-nalco-red/90"
+                onClick={() => {
+                  setDepartmentIssuesDialogOpen(false);
+                  setReportDialogOpen(true);
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Report New Issue
               </Button>
             </DialogFooter>
           </DialogContent>

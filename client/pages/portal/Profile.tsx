@@ -10,11 +10,82 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, User, Mail, Phone, MapPin, Calendar } from "lucide-react";
+import {
+  ArrowLeft,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Loader2,
+  CheckCircle,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // State for profile data
+  const [profileData, setProfileData] = useState({
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@company.com",
+    phone: "+1 (555) 123-4567",
+    address: "123 Main Street, City, State 12345",
+    dateOfBirth: "1990-01-15",
+    emergencyName: "Jane Doe",
+    emergencyRelation: "Spouse",
+    emergencyPhone: "+1 (555) 987-6543",
+  });
+
+  const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  // Load profile data from localStorage on mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem(`profile_${user?.employeeId}`);
+    if (savedProfile) {
+      setProfileData(JSON.parse(savedProfile));
+    }
+  }, [user]);
+
+  const handleInputChange = (field: string, value: string) => {
+    setProfileData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSaveChanges = async () => {
+    setSaving(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Save to localStorage
+      localStorage.setItem(
+        `profile_${user?.employeeId}`,
+        JSON.stringify(profileData),
+      );
+
+      setSuccess("Profile updated successfully!");
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (error) {
+      setError("Failed to save changes. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <Layout>
@@ -73,11 +144,23 @@ export default function Profile() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" defaultValue="John" />
+                  <Input
+                    id="firstName"
+                    value={profileData.firstName}
+                    onChange={(e) =>
+                      handleInputChange("firstName", e.target.value)
+                    }
+                  />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" defaultValue="Doe" />
+                  <Input
+                    id="lastName"
+                    value={profileData.lastName}
+                    onChange={(e) =>
+                      handleInputChange("lastName", e.target.value)
+                    }
+                  />
                 </div>
               </div>
 
@@ -89,7 +172,8 @@ export default function Profile() {
                 <Input
                   id="email"
                   type="email"
-                  defaultValue="john.doe@company.com"
+                  value={profileData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                 />
               </div>
 
@@ -98,7 +182,11 @@ export default function Profile() {
                   <Phone className="h-4 w-4 mr-2" />
                   Phone Number
                 </Label>
-                <Input id="phone" defaultValue="+1 (555) 123-4567" />
+                <Input
+                  id="phone"
+                  value={profileData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                />
               </div>
 
               <div>
@@ -108,7 +196,8 @@ export default function Profile() {
                 </Label>
                 <Textarea
                   id="address"
-                  defaultValue="123 Main Street, City, State 12345"
+                  value={profileData.address}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
                   rows={3}
                 />
               </div>
@@ -118,7 +207,14 @@ export default function Profile() {
                   <Calendar className="h-4 w-4 mr-2" />
                   Date of Birth
                 </Label>
-                <Input id="dateOfBirth" type="date" defaultValue="1990-01-15" />
+                <Input
+                  id="dateOfBirth"
+                  type="date"
+                  value={profileData.dateOfBirth}
+                  onChange={(e) =>
+                    handleInputChange("dateOfBirth", e.target.value)
+                  }
+                />
               </div>
             </CardContent>
           </Card>
@@ -137,25 +233,69 @@ export default function Profile() {
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
                   <Label htmlFor="emergencyName">Contact Name</Label>
-                  <Input id="emergencyName" defaultValue="Jane Doe" />
+                  <Input
+                    id="emergencyName"
+                    value={profileData.emergencyName}
+                    onChange={(e) =>
+                      handleInputChange("emergencyName", e.target.value)
+                    }
+                  />
                 </div>
                 <div>
                   <Label htmlFor="emergencyRelation">Relationship</Label>
-                  <Input id="emergencyRelation" defaultValue="Spouse" />
+                  <Input
+                    id="emergencyRelation"
+                    value={profileData.emergencyRelation}
+                    onChange={(e) =>
+                      handleInputChange("emergencyRelation", e.target.value)
+                    }
+                  />
                 </div>
                 <div>
                   <Label htmlFor="emergencyPhone">Phone Number</Label>
-                  <Input id="emergencyPhone" defaultValue="+1 (555) 987-6543" />
+                  <Input
+                    id="emergencyPhone"
+                    value={profileData.emergencyPhone}
+                    onChange={(e) =>
+                      handleInputChange("emergencyPhone", e.target.value)
+                    }
+                  />
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
+        {/* Alerts */}
+        {success && (
+          <Alert className="mt-6 border-nalco-green bg-nalco-green/10">
+            <CheckCircle className="h-4 w-4" />
+            <AlertDescription className="text-nalco-green">
+              {success}
+            </AlertDescription>
+          </Alert>
+        )}
+        {error && (
+          <Alert variant="destructive" className="mt-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         {/* Save Button */}
         <div className="mt-8 flex justify-end">
-          <Button className="bg-nalco-red hover:bg-nalco-red/90">
-            Save Changes
+          <Button
+            className="bg-nalco-red hover:bg-nalco-red/90"
+            onClick={handleSaveChanges}
+            disabled={saving}
+          >
+            {saving ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Saving Changes...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </div>

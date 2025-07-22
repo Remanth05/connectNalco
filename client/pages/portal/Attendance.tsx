@@ -27,11 +27,80 @@ export default function Attendance() {
 
   // State for attendance tracking
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [checkedIn, setCheckedIn] = useState(false);
   const [checkedOut, setCheckedOut] = useState(false);
+  const [checkInTime, setCheckInTime] = useState<string | null>(null);
   const [checkOutTime, setCheckOutTime] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [isWorkingDay, setIsWorkingDay] = useState(true);
+
+  // Load attendance data from localStorage on mount
+  useEffect(() => {
+    const savedAttendance = localStorage.getItem(
+      `attendance_${user?.employeeId}`,
+    );
+    if (savedAttendance) {
+      const data = JSON.parse(savedAttendance);
+      const today = new Date().toDateString();
+      const todayData = data.find((record: any) => record.date === today);
+
+      if (todayData) {
+        setCheckedIn(!!todayData.checkIn);
+        setCheckedOut(!!todayData.checkOut);
+        setCheckInTime(todayData.checkIn);
+        setCheckOutTime(todayData.checkOut);
+      }
+      setAttendanceData(data);
+    } else {
+      // Initialize with default data
+      const defaultData = [
+        {
+          date: "2024-03-25",
+          checkIn: "09:15 AM",
+          checkOut: "06:30 PM",
+          hours: "8h 45m",
+          status: "Present",
+          overtime: "30m",
+        },
+        {
+          date: "2024-03-24",
+          checkIn: "09:00 AM",
+          checkOut: "06:00 PM",
+          hours: "8h 30m",
+          status: "Present",
+          overtime: "0m",
+        },
+        {
+          date: "2024-03-23",
+          checkIn: "09:30 AM",
+          checkOut: "06:15 PM",
+          hours: "8h 15m",
+          status: "Present",
+          overtime: "0m",
+        },
+        {
+          date: "2024-03-22",
+          checkIn: "-",
+          checkOut: "-",
+          hours: "0h",
+          status: "Leave",
+          overtime: "0m",
+        },
+        {
+          date: "2024-03-21",
+          checkIn: "09:45 AM",
+          checkOut: "06:45 PM",
+          hours: "8h 30m",
+          status: "Present",
+          overtime: "30m",
+        },
+      ];
+      setAttendanceData(defaultData);
+    }
+  }, [user]);
 
   // Update current time every minute
   useEffect(() => {
@@ -43,20 +112,75 @@ export default function Attendance() {
   }, []);
 
   const calculateWorkingHours = () => {
-    const checkInTime = new Date();
-    checkInTime.setHours(9, 15, 0, 0); // 9:15 AM check-in time
+    if (!checkInTime) return "0h 0m";
 
+    const checkInDateTime = new Date(
+      `${new Date().toDateString()} ${checkInTime}`,
+    );
     const currentOrCheckOut =
       checkedOut && checkOutTime
         ? new Date(`${new Date().toDateString()} ${checkOutTime}`)
         : currentTime;
 
-    const diffMs = currentOrCheckOut.getTime() - checkInTime.getTime();
+    const diffMs = currentOrCheckOut.getTime() - checkInDateTime.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
     const hours = Math.floor(diffHours);
     const minutes = Math.floor((diffHours - hours) * 60);
 
     return `${hours}h ${minutes}m`;
+  };
+
+  const handleCheckIn = async () => {
+    setProcessing(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const checkInTimeString = currentTime.toLocaleTimeString("en-US", {
+        hour12: true,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      setCheckedIn(true);
+      setCheckInTime(checkInTimeString);
+      setSuccess(`Successfully checked in at ${checkInTimeString}`);
+
+      // Save to localStorage
+      const today = new Date().toDateString();
+      const updatedData = [...attendanceData];
+      const todayIndex = updatedData.findIndex(
+        (record: any) => record.date === today,
+      );
+
+      const todayRecord = {
+        date: today,
+        checkIn: checkInTimeString,
+        checkOut: checkedOut ? checkOutTime : "-",
+        hours: checkedOut ? calculateWorkingHours() : "-",
+        status: "Present",
+        overtime: "0m",
+      };
+
+      if (todayIndex >= 0) {
+        updatedData[todayIndex] = todayRecord;
+      } else {
+        updatedData.unshift(todayRecord);
+      }
+
+      setAttendanceData(updatedData);
+      localStorage.setItem(
+        `attendance_${user?.employeeId}`,
+        JSON.stringify(updatedData),
+      );
+    } catch (error) {
+      setError("Failed to check in. Please try again.");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleCheckOut = async () => {
@@ -77,6 +201,35 @@ export default function Attendance() {
       setCheckedOut(true);
       setCheckOutTime(checkOutTimeString);
       setSuccess(`Successfully checked out at ${checkOutTimeString}`);
+
+      // Update localStorage
+      const today = new Date().toDateString();
+      const updatedData = [...attendanceData];
+      const todayIndex = updatedData.findIndex(
+        (record: any) => record.date === today,
+      );
+
+      const workingHours = calculateWorkingHours();
+      const todayRecord = {
+        date: today,
+        checkIn: checkInTime || "-",
+        checkOut: checkOutTimeString,
+        hours: workingHours,
+        status: "Present",
+        overtime: "0m", // Calculate based on standard hours
+      };
+
+      if (todayIndex >= 0) {
+        updatedData[todayIndex] = todayRecord;
+      } else {
+        updatedData.unshift(todayRecord);
+      }
+
+      setAttendanceData(updatedData);
+      localStorage.setItem(
+        `attendance_${user?.employeeId}`,
+        JSON.stringify(updatedData),
+      );
     } catch (error) {
       setError("Failed to check out. Please try again.");
     } finally {
@@ -84,48 +237,7 @@ export default function Attendance() {
     }
   };
 
-  const attendanceData = [
-    {
-      date: "2024-03-25",
-      checkIn: "09:15 AM",
-      checkOut: "06:30 PM",
-      hours: "8h 45m",
-      status: "Present",
-      overtime: "30m",
-    },
-    {
-      date: "2024-03-24",
-      checkIn: "09:00 AM",
-      checkOut: "06:00 PM",
-      hours: "8h 30m",
-      status: "Present",
-      overtime: "0m",
-    },
-    {
-      date: "2024-03-23",
-      checkIn: "09:30 AM",
-      checkOut: "06:15 PM",
-      hours: "8h 15m",
-      status: "Present",
-      overtime: "0m",
-    },
-    {
-      date: "2024-03-22",
-      checkIn: "-",
-      checkOut: "-",
-      hours: "0h",
-      status: "Leave",
-      overtime: "0m",
-    },
-    {
-      date: "2024-03-21",
-      checkIn: "09:45 AM",
-      checkOut: "06:45 PM",
-      hours: "8h 30m",
-      status: "Present",
-      overtime: "30m",
-    },
-  ];
+  // attendanceData is now managed in state and loaded from localStorage
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -206,12 +318,31 @@ export default function Attendance() {
             <div className="grid gap-6 md:grid-cols-4">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <div className="h-16 w-16 rounded-full bg-nalco-green/10 flex items-center justify-center">
-                    <CheckCircle className="h-8 w-8 text-nalco-green" />
-                  </div>
+                  {!checkedIn ? (
+                    <Button
+                      className="bg-nalco-green hover:bg-nalco-green/90 h-16 w-32"
+                      onClick={handleCheckIn}
+                      disabled={processing}
+                    >
+                      {processing ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Checking In...
+                        </>
+                      ) : (
+                        "Check In"
+                      )}
+                    </Button>
+                  ) : (
+                    <div className="h-16 w-16 rounded-full bg-nalco-green/10 flex items-center justify-center">
+                      <CheckCircle className="h-8 w-8 text-nalco-green" />
+                    </div>
+                  )}
                 </div>
                 <p className="text-sm text-nalco-gray">Check In</p>
-                <p className="text-xl font-bold text-nalco-black">09:15 AM</p>
+                <p className="text-xl font-bold text-nalco-black">
+                  {checkInTime || "-"}
+                </p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
@@ -246,7 +377,7 @@ export default function Attendance() {
                   <Button
                     className="bg-nalco-red hover:bg-nalco-red/90"
                     onClick={handleCheckOut}
-                    disabled={checkedOut || processing}
+                    disabled={!checkedIn || checkedOut || processing}
                   >
                     {processing ? (
                       <>
@@ -255,6 +386,8 @@ export default function Attendance() {
                       </>
                     ) : checkedOut ? (
                       "Checked Out"
+                    ) : !checkedIn ? (
+                      "Check In First"
                     ) : (
                       "Check Out"
                     )}
@@ -265,10 +398,16 @@ export default function Attendance() {
                   className={
                     checkedOut
                       ? "bg-nalco-red text-white"
-                      : "bg-nalco-green text-white"
+                      : checkedIn
+                        ? "bg-nalco-green text-white"
+                        : "bg-nalco-gray text-white"
                   }
                 >
-                  {checkedOut ? "Checked Out" : "Working"}
+                  {checkedOut
+                    ? "Checked Out"
+                    : checkedIn
+                      ? "Working"
+                      : "Not Checked In"}
                 </Badge>
               </div>
             </div>

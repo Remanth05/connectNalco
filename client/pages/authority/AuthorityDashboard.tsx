@@ -74,6 +74,43 @@ export default function AuthorityDashboard() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [newEmployeeData, setNewEmployeeData] = useState({
+    fullName: "",
+    employeeId: "",
+    email: "",
+    designation: "",
+    joinDate: "",
+    phone: "",
+  });
+  const [employeeList, setEmployeeList] = useState([
+    {
+      name: "Rajesh Kumar Singh",
+      designation: "HR Executive",
+      status: "Active",
+      id: "EMP001",
+      email: "rajesh.singh@nalco.com",
+      phone: "+91-9876543210",
+      joinDate: "2022-03-15",
+    },
+    {
+      name: "Sunita Devi",
+      designation: "HR Assistant",
+      status: "Active",
+      id: "EMP002",
+      email: "sunita.devi@nalco.com",
+      phone: "+91-9876543213",
+      joinDate: "2021-07-20",
+    },
+    {
+      name: "Mohammad Alam",
+      designation: "Trainee",
+      status: "On Leave",
+      id: "EMP003",
+      email: "mohammad.alam@nalco.com",
+      phone: "+91-9876543214",
+      joinDate: "2023-11-05",
+    },
+  ]);
 
   // Module action states
   const [moduleDialog, setModuleDialog] = useState<{
@@ -292,79 +329,179 @@ export default function AuthorityDashboard() {
                   </DialogHeader>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <Label>Full Name</Label>
-                      <Input placeholder="Enter employee name" />
+                      <Label>Full Name *</Label>
+                      <Input
+                        placeholder="Enter employee name"
+                        value={newEmployeeData.fullName}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            fullName: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                     <div>
-                      <Label>Employee ID</Label>
-                      <Input placeholder="EMP###" />
+                      <Label>Employee ID *</Label>
+                      <Input
+                        placeholder="EMP###"
+                        value={newEmployeeData.employeeId}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            employeeId: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                     <div>
-                      <Label>Email</Label>
-                      <Input placeholder="employee@nalco.com" type="email" />
+                      <Label>Email *</Label>
+                      <Input
+                        placeholder="employee@nalco.com"
+                        type="email"
+                        value={newEmployeeData.email}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            email: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                     <div>
-                      <Label>Designation</Label>
-                      <Select>
+                      <Label>Designation *</Label>
+                      <Select
+                        value={newEmployeeData.designation}
+                        onValueChange={(value) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            designation: value,
+                          })
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select designation" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="executive">Executive</SelectItem>
-                          <SelectItem value="assistant">Assistant</SelectItem>
-                          <SelectItem value="trainee">Trainee</SelectItem>
-                          <SelectItem value="manager">Manager</SelectItem>
+                          <SelectItem value="HR Executive">
+                            HR Executive
+                          </SelectItem>
+                          <SelectItem value="HR Assistant">
+                            HR Assistant
+                          </SelectItem>
+                          <SelectItem value="Trainee">Trainee</SelectItem>
+                          <SelectItem value="Manager">Manager</SelectItem>
+                          <SelectItem value="Senior Executive">
+                            Senior Executive
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <Label>Join Date</Label>
-                      <Input type="date" />
+                      <Label>Join Date *</Label>
+                      <Input
+                        type="date"
+                        value={newEmployeeData.joinDate}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            joinDate: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                     <div>
-                      <Label>Phone</Label>
-                      <Input placeholder="+91-9876543210" />
+                      <Label>Phone *</Label>
+                      <Input
+                        placeholder="+91-9876543210"
+                        value={newEmployeeData.phone}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            phone: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                   </div>
                   <DialogFooter>
                     <Button variant="outline">Cancel</Button>
-                    <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
-                      Add Employee
+                    <Button
+                      className="bg-nalco-blue hover:bg-nalco-blue/90"
+                      onClick={async () => {
+                        // Validate form data
+                        if (
+                          !newEmployeeData.fullName ||
+                          !newEmployeeData.employeeId ||
+                          !newEmployeeData.email ||
+                          !newEmployeeData.designation ||
+                          !newEmployeeData.joinDate ||
+                          !newEmployeeData.phone
+                        ) {
+                          setError("Please fill in all required fields");
+                          return;
+                        }
+
+                        setProcessing("add-employee");
+                        setError("");
+                        setSuccess("");
+
+                        try {
+                          // Simulate API call
+                          await new Promise((resolve) =>
+                            setTimeout(resolve, 2000),
+                          );
+
+                          const newEmployee = {
+                            name: newEmployeeData.fullName,
+                            designation: newEmployeeData.designation,
+                            status: "Active",
+                            id: newEmployeeData.employeeId,
+                            email: newEmployeeData.email,
+                            phone: newEmployeeData.phone,
+                            joinDate: newEmployeeData.joinDate,
+                          };
+
+                          setEmployeeList([...employeeList, newEmployee]);
+                          setSuccess(
+                            `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully!`,
+                          );
+
+                          // Reset form
+                          setNewEmployeeData({
+                            fullName: "",
+                            employeeId: "",
+                            email: "",
+                            designation: "",
+                            joinDate: "",
+                            phone: "",
+                          });
+
+                          // Close dialog
+                          setModuleDialog({ open: false, type: "", title: "" });
+                        } catch (error) {
+                          setError("Failed to add employee. Please try again.");
+                        } finally {
+                          setProcessing(null);
+                        }
+                      }}
+                      disabled={processing === "add-employee"}
+                    >
+                      {processing === "add-employee" ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Adding...
+                        </>
+                      ) : (
+                        "Add Employee"
+                      )}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
             </div>
             <div className="space-y-2">
-              {[
-                {
-                  name: "Rajesh Kumar Singh",
-                  designation: "HR Executive",
-                  status: "Active",
-                  id: "EMP001",
-                  email: "rajesh.singh@nalco.com",
-                  phone: "+91-9876543210",
-                  joinDate: "2022-03-15",
-                },
-                {
-                  name: "Sunita Devi",
-                  designation: "HR Assistant",
-                  status: "Active",
-                  id: "EMP002",
-                  email: "sunita.devi@nalco.com",
-                  phone: "+91-9876543213",
-                  joinDate: "2021-07-20",
-                },
-                {
-                  name: "Mohammad Alam",
-                  designation: "Trainee",
-                  status: "On Leave",
-                  id: "EMP003",
-                  email: "mohammad.alam@nalco.com",
-                  phone: "+91-9876543214",
-                  joinDate: "2023-11-05",
-                },
-              ].map((emp, index) => (
+              {employeeList.map((emp, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-3 border rounded-lg hover:bg-nalco-gray/5"
@@ -489,13 +626,23 @@ export default function AuthorityDashboard() {
                     <Button
                       size="sm"
                       className="bg-nalco-green hover:bg-nalco-green/90"
+                      onClick={() =>
+                        handleApproval(leave.id, "leave", "approve")
+                      }
+                      disabled={processing === leave.id}
                     >
-                      Approve
+                      {processing === leave.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        "Approve"
+                      )}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       className="text-nalco-red"
+                      onClick={() => openRejectionDialog(leave, "leave")}
+                      disabled={processing === leave.id}
                     >
                       Reject
                     </Button>
@@ -510,7 +657,11 @@ export default function AuthorityDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Issues</h3>
-              <Button size="sm" className="bg-nalco-red hover:bg-nalco-red/90">
+              <Button
+                size="sm"
+                className="bg-nalco-red hover:bg-nalco-red/90"
+                onClick={() => navigate("/issues")}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Report Issue
               </Button>
@@ -518,32 +669,59 @@ export default function AuthorityDashboard() {
             <div className="space-y-2">
               {[
                 {
+                  id: "DEPT-001",
                   title: "System Access Issue",
                   priority: "High",
                   status: "Open",
                   reporter: "Kavitha Reddy",
+                  description: "Unable to access department database",
+                  assignedTo: "IT Support",
                 },
                 {
+                  id: "DEPT-002",
                   title: "Printer Not Working",
                   priority: "Medium",
                   status: "In Progress",
                   reporter: "Rajesh Kumar",
+                  description: "Department printer jamming frequently",
+                  assignedTo: "Admin Team",
                 },
                 {
+                  id: "DEPT-003",
                   title: "Training Request",
                   priority: "Low",
                   status: "Resolved",
                   reporter: "Sunita Devi",
+                  description: "Request for Excel training for team",
+                  assignedTo: "HR Training",
                 },
               ].map((issue, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 border rounded-lg"
+                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-nalco-gray/5 transition-colors cursor-pointer"
+                  onClick={() => {
+                    // Navigate to detailed issue view
+                    setSelectedItem(issue);
+                    setModuleDialog({
+                      open: true,
+                      type: "issue-detail",
+                      title: `Issue Details - ${issue.id}`,
+                    });
+                  }}
                 >
-                  <div>
-                    <p className="font-medium">{issue.title}</p>
-                    <p className="text-sm text-nalco-gray">
-                      Reported by: {issue.reporter}
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span className="font-mono text-sm text-nalco-blue">
+                        {issue.id}
+                      </span>
+                      <p className="font-medium">{issue.title}</p>
+                    </div>
+                    <p className="text-sm text-nalco-gray mb-1">
+                      {issue.description}
+                    </p>
+                    <p className="text-xs text-nalco-gray">
+                      Reported by: {issue.reporter} • Assigned to:{" "}
+                      {issue.assignedTo}
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -580,9 +758,54 @@ export default function AuthorityDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Pending Reimbursements</h3>
-              <Button size="sm" variant="outline">
-                <Download className="h-4 w-4 mr-2" />
-                Export
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async () => {
+                  setProcessing("export-reimbursements");
+                  try {
+                    // Simulate export process
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                    // Create CSV content
+                    const csvContent = `Employee Name,Type,Amount,Description,Status,Date\n${pendingReimbursements
+                      .map(
+                        (r) =>
+                          `${r.employeeName},${r.type},${r.amount},"${r.description}",${r.status},${r.submittedDate}`,
+                      )
+                      .join("\n")}`;
+
+                    // Download CSV
+                    const blob = new Blob([csvContent], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = `reimbursements-${new Date().toISOString().split("T")[0]}.csv`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+
+                    setSuccess("Reimbursements exported successfully!");
+                  } catch (error) {
+                    setError("Failed to export reimbursements");
+                  } finally {
+                    setProcessing(null);
+                  }
+                }}
+                disabled={processing === "export-reimbursements"}
+              >
+                {processing === "export-reimbursements" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Exporting...
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </>
+                )}
               </Button>
             </div>
             <div className="space-y-2">
@@ -604,13 +827,25 @@ export default function AuthorityDashboard() {
                     <Button
                       size="sm"
                       className="bg-nalco-green hover:bg-nalco-green/90"
+                      onClick={() =>
+                        handleApproval(reimb.id, "reimbursement", "approve")
+                      }
+                      disabled={processing === reimb.id}
                     >
-                      Approve
+                      {processing === reimb.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        "Approve"
+                      )}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       className="text-nalco-red"
+                      onClick={() =>
+                        openRejectionDialog(reimb, "reimbursement")
+                      }
+                      disabled={processing === reimb.id}
                     >
                       Reject
                     </Button>
@@ -757,7 +992,29 @@ export default function AuthorityDashboard() {
                   <p className="text-sm text-nalco-gray">
                     Current month average
                   </p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess(
+                        "Attendance report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "attendance",
+                        title: "Attendance Report Details",
+                        data: {
+                          percentage: "94%",
+                          details: "Monthly attendance analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Attendance Report Details",
+                      });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
@@ -768,7 +1025,29 @@ export default function AuthorityDashboard() {
                   <h4 className="font-medium mb-2">Leave Utilization</h4>
                   <p className="text-2xl font-bold text-nalco-blue">68%</p>
                   <p className="text-sm text-nalco-gray">Annual leave taken</p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess(
+                        "Leave utilization report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "leave",
+                        title: "Leave Utilization Report",
+                        data: {
+                          percentage: "68%",
+                          details: "Annual leave utilization analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Leave Utilization Report",
+                      });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
@@ -779,7 +1058,29 @@ export default function AuthorityDashboard() {
                   <h4 className="font-medium mb-2">Performance Score</h4>
                   <p className="text-2xl font-bold text-nalco-green">4.2/5</p>
                   <p className="text-sm text-nalco-gray">Department average</p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess(
+                        "Performance report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "performance",
+                        title: "Performance Score Report",
+                        data: {
+                          score: "4.2/5",
+                          details: "Department performance analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Performance Score Report",
+                      });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
@@ -790,7 +1091,29 @@ export default function AuthorityDashboard() {
                   <h4 className="font-medium mb-2">Training Hours</h4>
                   <p className="text-2xl font-bold text-nalco-red">156</p>
                   <p className="text-sm text-nalco-gray">Total this quarter</p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess(
+                        "Training hours report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "training",
+                        title: "Training Hours Report",
+                        data: {
+                          hours: "156",
+                          details: "Quarterly training hours analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Training Hours Report",
+                      });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
@@ -827,9 +1150,58 @@ export default function AuthorityDashboard() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <Badge variant="outline">{report.type}</Badge>
-                      <Button size="sm" variant="outline">
-                        <Download className="h-4 w-4 mr-2" />
-                        Download
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={async () => {
+                          setProcessing(`download-${index}`);
+                          try {
+                            // Simulate download process
+                            await new Promise((resolve) =>
+                              setTimeout(resolve, 2000),
+                            );
+
+                            // Create mock file content
+                            const content = `${report.name}\nGenerated: ${report.date}\nType: ${report.type}\n\nThis is a sample ${report.type} report.`;
+                            const blob = new Blob([content], {
+                              type:
+                                report.type === "PDF"
+                                  ? "application/pdf"
+                                  : "application/vnd.ms-excel",
+                            });
+
+                            // Download file
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement("a");
+                            link.href = url;
+                            link.download = `${report.name.replace(/\s+/g, "_")}.${report.type.toLowerCase()}`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(url);
+
+                            setSuccess(
+                              `${report.name} downloaded successfully!`,
+                            );
+                          } catch (error) {
+                            setError(`Failed to download ${report.name}`);
+                          } finally {
+                            setProcessing(null);
+                          }
+                        }}
+                        disabled={processing === `download-${index}`}
+                      >
+                        {processing === `download-${index}` ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Downloading...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="h-4 w-4 mr-2" />
+                            Download
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -892,6 +1264,183 @@ export default function AuthorityDashboard() {
                 </div>
               ))}
             </div>
+          </div>
+        );
+      case "report-detail":
+        return (
+          <div className="space-y-4">
+            {selectedItem && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h3 className="text-2xl font-semibold">
+                    {selectedItem.title}
+                  </h3>
+                  <p className="text-sm text-nalco-gray mt-2">
+                    {selectedItem.data?.details}
+                  </p>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-3">
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-3xl font-bold text-nalco-blue mb-2">
+                        {selectedItem.data?.percentage ||
+                          selectedItem.data?.score ||
+                          selectedItem.data?.hours}
+                      </div>
+                      <p className="text-sm text-nalco-gray">Current Value</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-3xl font-bold text-nalco-green mb-2">
+                        +5%
+                      </div>
+                      <p className="text-sm text-nalco-gray">vs Last Month</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <div className="text-3xl font-bold text-nalco-red mb-2">
+                        Target
+                      </div>
+                      <p className="text-sm text-nalco-gray">95%</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div>
+                  <h4 className="font-medium mb-3">Detailed Analysis</h4>
+                  <div className="bg-nalco-gray/5 p-4 rounded-lg">
+                    <p className="text-sm text-nalco-gray">
+                      This report provides comprehensive insights into{" "}
+                      {selectedItem.type} metrics for the current period. The
+                      data shows positive trends and areas for improvement.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex space-x-4">
+                  <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Full Report
+                  </Button>
+                  <Button variant="outline">
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Historical Data
+                  </Button>
+                  <Button variant="outline">Share Report</Button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      case "issue-detail":
+        return (
+          <div className="space-y-4">
+            {selectedItem && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      {selectedItem.title}
+                    </h3>
+                    <p className="text-sm text-nalco-gray">
+                      Issue ID: {selectedItem.id}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge
+                      className={
+                        selectedItem.priority === "High"
+                          ? "bg-nalco-red text-white"
+                          : selectedItem.priority === "Medium"
+                            ? "bg-yellow-500 text-white"
+                            : "bg-nalco-blue text-white"
+                      }
+                    >
+                      {selectedItem.priority}
+                    </Badge>
+                    <Badge
+                      className={
+                        selectedItem.status === "Open"
+                          ? "bg-nalco-red text-white"
+                          : selectedItem.status === "In Progress"
+                            ? "bg-yellow-500 text-white"
+                            : "bg-nalco-green text-white"
+                      }
+                    >
+                      {selectedItem.status}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label>Reported by</Label>
+                    <p className="text-sm">{selectedItem.reporter}</p>
+                  </div>
+                  <div>
+                    <Label>Assigned to</Label>
+                    <p className="text-sm">{selectedItem.assignedTo}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Description</Label>
+                  <p className="text-sm text-nalco-gray">
+                    {selectedItem.description}
+                  </p>
+                </div>
+
+                <div className="flex space-x-2">
+                  <Button
+                    className="bg-nalco-blue hover:bg-nalco-blue/90"
+                    onClick={() => {
+                      setSuccess(
+                        `Issue ${selectedItem.id} assigned to team successfully!`,
+                      );
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
+                    Assign to Team
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSuccess(
+                        `Issue ${selectedItem.id} status updated successfully!`,
+                      );
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
+                    Update Status
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSuccess(
+                        `Comment added to issue ${selectedItem.id} successfully!`,
+                      );
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
+                    Add Comment
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSuccess(
+                        `Team members notified about issue ${selectedItem.id} successfully!`,
+                      );
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    }}
+                  >
+                    Notify Members
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         );
       default:

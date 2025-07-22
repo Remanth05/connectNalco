@@ -44,22 +44,24 @@ export default function Portal() {
     {
       id: "TASK-001",
       title: "Complete Annual Performance Review",
-      description: "Submit your self-assessment for the annual performance review cycle",
+      description:
+        "Submit your self-assessment for the annual performance review cycle",
       priority: "High",
       dueDate: "March 31, 2024",
       type: "Performance",
       action: "Submit Review",
-      link: "/portal/performance"
+      link: "/portal/performance",
     },
     {
       id: "TASK-002",
       title: "Update Emergency Contact Information",
-      description: "HR requires updated emergency contact details in your profile",
+      description:
+        "HR requires updated emergency contact details in your profile",
       priority: "Medium",
       dueDate: "April 15, 2024",
       type: "Profile",
       action: "Update Profile",
-      link: "/portal/profile"
+      link: "/portal/profile",
     },
     {
       id: "TASK-003",
@@ -69,8 +71,8 @@ export default function Portal() {
       dueDate: "April 5, 2024",
       type: "Training",
       action: "Start Training",
-      link: "/training/safety"
-    }
+      link: "/training/safety",
+    },
   ];
 
   const getPriorityColor = (priority: string) => {
@@ -143,7 +145,7 @@ export default function Portal() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-                {/* Header */}
+        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-nalco-black">
@@ -186,7 +188,7 @@ export default function Portal() {
               </div>
             </CardContent>
           </Card>
-                    <Dialog open={tasksDialogOpen} onOpenChange={setTasksDialogOpen}>
+          <Dialog open={tasksDialogOpen} onOpenChange={setTasksDialogOpen}>
             <DialogTrigger asChild>
               <Card className="cursor-pointer transition-all hover:shadow-lg hover:shadow-nalco-green/10">
                 <CardContent className="flex items-center p-6">
@@ -195,7 +197,9 @@ export default function Portal() {
                     <p className="text-sm font-medium text-nalco-gray">
                       Pending Tasks
                     </p>
-                    <p className="text-2xl font-bold text-nalco-black">{pendingTasks.length}</p>
+                    <p className="text-2xl font-bold text-nalco-black">
+                      {pendingTasks.length}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -205,7 +209,9 @@ export default function Portal() {
                 <DialogTitle className="flex items-center space-x-2">
                   <FileText className="h-5 w-5" />
                   <span>Pending Tasks</span>
-                  <Badge className="bg-nalco-green text-white">{pendingTasks.length} tasks</Badge>
+                  <Badge className="bg-nalco-green text-white">
+                    {pendingTasks.length} tasks
+                  </Badge>
                 </DialogTitle>
                 <DialogDescription>
                   Tasks requiring your attention and action
@@ -214,18 +220,27 @@ export default function Portal() {
 
               <div className="space-y-4">
                 {pendingTasks.map((task, index) => (
-                  <div key={index} className="border rounded-lg p-4 hover:bg-nalco-gray/5 transition-colors">
+                  <div
+                    key={index}
+                    className="border rounded-lg p-4 hover:bg-nalco-gray/5 transition-colors"
+                  >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="font-mono text-sm text-nalco-blue">{task.id}</span>
+                          <span className="font-mono text-sm text-nalco-blue">
+                            {task.id}
+                          </span>
                           <Badge className={getPriorityColor(task.priority)}>
                             {task.priority}
                           </Badge>
                           <Badge variant="outline">{task.type}</Badge>
                         </div>
-                        <h3 className="font-semibold text-nalco-black mb-1">{task.title}</h3>
-                        <p className="text-sm text-nalco-gray mb-2">{task.description}</p>
+                        <h3 className="font-semibold text-nalco-black mb-1">
+                          {task.title}
+                        </h3>
+                        <p className="text-sm text-nalco-gray mb-2">
+                          {task.description}
+                        </p>
                         <div className="flex items-center space-x-4 text-xs text-nalco-gray">
                           <span>Due: {task.dueDate}</span>
                           <span>Assigned to: {user?.name}</span>
@@ -259,7 +274,9 @@ export default function Portal() {
                 {pendingTasks.length === 0 && (
                   <div className="text-center py-8">
                     <CheckCircle className="h-12 w-12 text-nalco-green mx-auto mb-4" />
-                    <p className="text-nalco-gray">No pending tasks! Great job staying on top of things.</p>
+                    <p className="text-nalco-gray">
+                      No pending tasks! Great job staying on top of things.
+                    </p>
                   </div>
                 )}
               </div>
@@ -338,32 +355,50 @@ export default function Portal() {
           <Card>
             <CardContent className="p-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between border-b pb-4">
+                <div
+                  className="flex items-center justify-between border-b pb-4 cursor-pointer hover:bg-nalco-gray/5 p-2 rounded transition-colors"
+                  onClick={() => navigate("/portal/leave")}
+                >
                   <div className="flex items-center">
                     <Calendar className="h-5 w-5 text-nalco-blue" />
                     <span className="ml-3 text-nalco-black">
                       Leave application submitted
                     </span>
                   </div>
-                  <span className="text-sm text-nalco-gray">2 hours ago</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-nalco-gray">2 hours ago</span>
+                    <ExternalLink className="h-4 w-4 text-nalco-gray" />
+                  </div>
                 </div>
-                <div className="flex items-center justify-between border-b pb-4">
+                <div
+                  className="flex items-center justify-between border-b pb-4 cursor-pointer hover:bg-nalco-gray/5 p-2 rounded transition-colors"
+                  onClick={() => navigate("/portal/payslips")}
+                >
                   <div className="flex items-center">
                     <FileText className="h-5 w-5 text-nalco-green" />
                     <span className="ml-3 text-nalco-black">
                       Payslip for March 2024 available
                     </span>
                   </div>
-                  <span className="text-sm text-nalco-gray">1 day ago</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-nalco-gray">1 day ago</span>
+                    <ExternalLink className="h-4 w-4 text-nalco-gray" />
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
+                <div
+                  className="flex items-center justify-between cursor-pointer hover:bg-nalco-gray/5 p-2 rounded transition-colors"
+                  onClick={() => navigate("/portal/reimbursements")}
+                >
                   <div className="flex items-center">
                     <CreditCard className="h-5 w-5 text-nalco-red" />
                     <span className="ml-3 text-nalco-black">
                       Reimbursement approved
                     </span>
                   </div>
-                  <span className="text-sm text-nalco-gray">3 days ago</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-nalco-gray">3 days ago</span>
+                    <ExternalLink className="h-4 w-4 text-nalco-gray" />
+                  </div>
                 </div>
               </div>
             </CardContent>
