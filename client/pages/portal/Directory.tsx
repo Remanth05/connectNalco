@@ -195,15 +195,24 @@ export default function Directory() {
         </Card>
 
         {/* Department Summary */}
-        <div className="mb-6 grid gap-6 md:grid-cols-5">
+        <div className="mb-6 grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardContent className="flex items-center p-6">
+              <Building2 className="h-8 w-8 text-nalco-red" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-nalco-gray">
+                  Human Resources
+                </p>
+                <p className="text-2xl font-bold text-nalco-black">{departmentCounts["Human Resources"] || 0}</p>
+              </div>
+            </CardContent>
+          </Card>
           <Card>
             <CardContent className="flex items-center p-6">
               <Building2 className="h-8 w-8 text-nalco-blue" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Engineering
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">45</p>
+                <p className="text-sm font-medium text-nalco-gray">Engineering</p>
+                <p className="text-2xl font-bold text-nalco-black">{departmentCounts["Engineering"] || 0}</p>
               </div>
             </CardContent>
           </Card>
@@ -211,26 +220,8 @@ export default function Directory() {
             <CardContent className="flex items-center p-6">
               <Building2 className="h-8 w-8 text-nalco-green" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Product</p>
-                <p className="text-2xl font-bold text-nalco-black">12</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <Building2 className="h-8 w-8 text-nalco-red" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Design</p>
-                <p className="text-2xl font-bold text-nalco-black">8</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <Building2 className="h-8 w-8 text-yellow-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Sales</p>
-                <p className="text-2xl font-bold text-nalco-black">20</p>
+                <p className="text-sm font-medium text-nalco-gray">Finance</p>
+                <p className="text-2xl font-bold text-nalco-black">{departmentCounts["Finance"] || 0}</p>
               </div>
             </CardContent>
           </Card>
@@ -238,8 +229,8 @@ export default function Directory() {
             <CardContent className="flex items-center p-6">
               <Building2 className="h-8 w-8 text-nalco-gray" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Marketing</p>
-                <p className="text-2xl font-bold text-nalco-black">15</p>
+                <p className="text-sm font-medium text-nalco-gray">Total</p>
+                <p className="text-2xl font-bold text-nalco-black">{employees.length}</p>
               </div>
             </CardContent>
           </Card>
