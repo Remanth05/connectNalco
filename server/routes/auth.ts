@@ -7,6 +7,30 @@ import mongoose from 'mongoose';
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
 
+// Helper to check if MongoDB is connected
+const isMongoConnected = () => {
+  return mongoose.connection.readyState === 1;
+};
+
+// Mock user for development without MongoDB
+const mockUser = {
+  _id: 'dev_user_001',
+  employeeId: 'ADMIN001',
+  name: 'Development User',
+  email: 'admin@nalco.com',
+  role: 'admin',
+  department: 'Information Technology',
+  designation: 'System Administrator',
+  phone: '+91-6752-242001',
+  status: 'active',
+  avatar: 'DU',
+  location: 'Damanjodi Plant',
+  team: 'IT Support',
+  joinDate: new Date('2024-01-01'),
+  createdAt: new Date(),
+  updatedAt: new Date()
+};
+
 // Register new user
 export const registerUser: RequestHandler = async (req, res) => {
   try {
