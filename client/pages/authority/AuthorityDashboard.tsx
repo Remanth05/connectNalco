@@ -390,8 +390,64 @@ export default function AuthorityDashboard() {
                   </div>
                   <DialogFooter>
                     <Button variant="outline">Cancel</Button>
-                    <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
-                      Add Employee
+                    <Button
+                      className="bg-nalco-blue hover:bg-nalco-blue/90"
+                      onClick={async () => {
+                        // Validate form data
+                        if (!newEmployeeData.fullName || !newEmployeeData.employeeId || !newEmployeeData.email || !newEmployeeData.designation || !newEmployeeData.joinDate || !newEmployeeData.phone) {
+                          setError("Please fill in all required fields");
+                          return;
+                        }
+
+                        setProcessing('add-employee');
+                        setError("");
+                        setSuccess("");
+
+                        try {
+                          // Simulate API call
+                          await new Promise(resolve => setTimeout(resolve, 2000));
+
+                          const newEmployee = {
+                            name: newEmployeeData.fullName,
+                            designation: newEmployeeData.designation,
+                            status: "Active",
+                            id: newEmployeeData.employeeId,
+                            email: newEmployeeData.email,
+                            phone: newEmployeeData.phone,
+                            joinDate: newEmployeeData.joinDate,
+                          };
+
+                          setEmployeeList([...employeeList, newEmployee]);
+                          setSuccess(`Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully!`);
+
+                          // Reset form
+                          setNewEmployeeData({
+                            fullName: "",
+                            employeeId: "",
+                            email: "",
+                            designation: "",
+                            joinDate: "",
+                            phone: "",
+                          });
+
+                          // Close dialog
+                          setModuleDialog({ open: false, type: "", title: "" });
+                        } catch (error) {
+                          setError("Failed to add employee. Please try again.");
+                        } finally {
+                          setProcessing(null);
+                        }
+                      }}
+                      disabled={processing === 'add-employee'}
+                    >
+                      {processing === 'add-employee' ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Adding...
+                        </>
+                      ) : (
+                        "Add Employee"
+                      )}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
