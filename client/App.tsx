@@ -24,6 +24,8 @@ import Directory from "./pages/portal/Directory";
 import Facilities from "./pages/portal/Facilities";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
+import Analytics from "./pages/Analytics";
+import Safety from "./pages/Safety";
 
 const queryClient = new QueryClient();
 
