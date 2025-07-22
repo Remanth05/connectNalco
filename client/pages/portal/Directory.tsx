@@ -47,7 +47,7 @@ export default function Directory() {
           avatar: "RK",
           status: "Available",
           employeeId: "EMP001",
-          joinDate: "2022-03-15"
+          joinDate: "2022-03-15",
         },
         {
           id: 2,
@@ -61,7 +61,7 @@ export default function Directory() {
           avatar: "PS",
           status: "In Meeting",
           employeeId: "AUTH001",
-          joinDate: "2018-06-20"
+          joinDate: "2018-06-20",
         },
         {
           id: 3,
@@ -75,7 +75,7 @@ export default function Directory() {
           avatar: "SD",
           status: "Available",
           employeeId: "EMP002",
-          joinDate: "2021-07-20"
+          joinDate: "2021-07-20",
         },
         {
           id: 4,
@@ -89,7 +89,7 @@ export default function Directory() {
           avatar: "MA",
           status: "On Leave",
           employeeId: "EMP003",
-          joinDate: "2023-11-05"
+          joinDate: "2023-11-05",
         },
         {
           id: 5,
@@ -103,7 +103,7 @@ export default function Directory() {
           avatar: "AD",
           status: "Available",
           employeeId: "ENG001",
-          joinDate: "2019-01-10"
+          joinDate: "2019-01-10",
         },
         {
           id: 6,
@@ -117,7 +117,7 @@ export default function Directory() {
           avatar: "SB",
           status: "Available",
           employeeId: "FIN001",
-          joinDate: "2020-04-15"
+          joinDate: "2020-04-15",
         },
       ];
       setEmployees(defaultEmployees);
@@ -126,11 +126,12 @@ export default function Directory() {
   }, []);
 
   // Filter employees based on search term
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.team.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.position.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEmployees = employees.filter(
+    (employee) =>
+      employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.team.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.position.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Get department counts
@@ -203,7 +204,9 @@ export default function Directory() {
                 <p className="text-sm font-medium text-nalco-gray">
                   Human Resources
                 </p>
-                <p className="text-2xl font-bold text-nalco-black">{departmentCounts["Human Resources"] || 0}</p>
+                <p className="text-2xl font-bold text-nalco-black">
+                  {departmentCounts["Human Resources"] || 0}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -211,8 +214,12 @@ export default function Directory() {
             <CardContent className="flex items-center p-6">
               <Building2 className="h-8 w-8 text-nalco-blue" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Engineering</p>
-                <p className="text-2xl font-bold text-nalco-black">{departmentCounts["Engineering"] || 0}</p>
+                <p className="text-sm font-medium text-nalco-gray">
+                  Engineering
+                </p>
+                <p className="text-2xl font-bold text-nalco-black">
+                  {departmentCounts["Engineering"] || 0}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -221,7 +228,9 @@ export default function Directory() {
               <Building2 className="h-8 w-8 text-nalco-green" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-nalco-gray">Finance</p>
-                <p className="text-2xl font-bold text-nalco-black">{departmentCounts["Finance"] || 0}</p>
+                <p className="text-2xl font-bold text-nalco-black">
+                  {departmentCounts["Finance"] || 0}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -230,7 +239,9 @@ export default function Directory() {
               <Building2 className="h-8 w-8 text-nalco-gray" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-nalco-gray">Total</p>
-                <p className="text-2xl font-bold text-nalco-black">{employees.length}</p>
+                <p className="text-2xl font-bold text-nalco-black">
+                  {employees.length}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -252,7 +263,9 @@ export default function Directory() {
               <div className="text-center py-8">
                 <Users className="h-12 w-12 text-nalco-gray mx-auto mb-4" />
                 <p className="text-nalco-gray">
-                  {searchTerm ? "No employees found matching your search." : "No employees found."}
+                  {searchTerm
+                    ? "No employees found matching your search."
+                    : "No employees found."}
                 </p>
               </div>
             ) : (

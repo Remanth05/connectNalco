@@ -124,7 +124,10 @@ export default function Attendance() {
           : currentTime;
 
       // Validate dates
-      if (isNaN(checkInDateTime.getTime()) || isNaN(currentOrCheckOut.getTime())) {
+      if (
+        isNaN(checkInDateTime.getTime()) ||
+        isNaN(currentOrCheckOut.getTime())
+      ) {
         return "0h 0m";
       }
 

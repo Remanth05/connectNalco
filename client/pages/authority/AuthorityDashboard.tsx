@@ -474,16 +474,28 @@ export default function AuthorityDashboard() {
                             email: newEmployeeData.email,
                             phone: newEmployeeData.phone,
                             location: "Damanjodi Plant",
-                            avatar: newEmployeeData.fullName.split(' ').map(n => n[0]).join('').toUpperCase(),
+                            avatar: newEmployeeData.fullName
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .toUpperCase(),
                             status: "Available",
                             employeeId: newEmployeeData.employeeId,
-                            joinDate: newEmployeeData.joinDate
+                            joinDate: newEmployeeData.joinDate,
                           };
 
                           // Update directory data in localStorage
-                          const existingEmployees = JSON.parse(localStorage.getItem("nalco_employees") || "[]");
-                          const updatedEmployees = [...existingEmployees, directoryEmployee];
-                          localStorage.setItem("nalco_employees", JSON.stringify(updatedEmployees));
+                          const existingEmployees = JSON.parse(
+                            localStorage.getItem("nalco_employees") || "[]",
+                          );
+                          const updatedEmployees = [
+                            ...existingEmployees,
+                            directoryEmployee,
+                          ];
+                          localStorage.setItem(
+                            "nalco_employees",
+                            JSON.stringify(updatedEmployees),
+                          );
 
                           setSuccess(
                             `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully and is now available in the directory!`,
@@ -1348,10 +1360,13 @@ export default function AuthorityDashboard() {
                     onClick={async () => {
                       setProcessing("download-full-report");
                       try {
-                        await new Promise((resolve) => setTimeout(resolve, 2000));
+                        await new Promise((resolve) =>
+                          setTimeout(resolve, 2000),
+                        );
 
                         // Create comprehensive report content
-                        const reportContent = `${selectedItem.title} - Full Report\n\n` +
+                        const reportContent =
+                          `${selectedItem.title} - Full Report\n\n` +
                           `Generated: ${new Date().toLocaleDateString()}\n` +
                           `Report Type: ${selectedItem.type}\n` +
                           `Current Value: ${selectedItem.data?.percentage || selectedItem.data?.score || selectedItem.data?.hours}\n\n` +
@@ -1368,7 +1383,9 @@ export default function AuthorityDashboard() {
                           `Target achievement: 95%`;
 
                         // Download the report
-                        const blob = new Blob([reportContent], { type: "text/plain" });
+                        const blob = new Blob([reportContent], {
+                          type: "text/plain",
+                        });
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement("a");
                         link.href = url;
@@ -1378,7 +1395,9 @@ export default function AuthorityDashboard() {
                         document.body.removeChild(link);
                         URL.revokeObjectURL(url);
 
-                        setSuccess(`${selectedItem.title} full report downloaded successfully!`);
+                        setSuccess(
+                          `${selectedItem.title} full report downloaded successfully!`,
+                        );
                       } catch (error) {
                         setError("Failed to download full report");
                       } finally {
@@ -1404,10 +1423,13 @@ export default function AuthorityDashboard() {
                     onClick={async () => {
                       setProcessing("view-historical");
                       try {
-                        await new Promise((resolve) => setTimeout(resolve, 1500));
+                        await new Promise((resolve) =>
+                          setTimeout(resolve, 1500),
+                        );
 
                         // Create historical data content
-                        const historicalData = `${selectedItem.title} - Historical Data\n\n` +
+                        const historicalData =
+                          `${selectedItem.title} - Historical Data\n\n` +
                           `LAST 12 MONTHS TREND:\n` +
                           `Jan 2024: 88%\n` +
                           `Feb 2024: 89%\n` +
@@ -1432,7 +1454,9 @@ export default function AuthorityDashboard() {
                           `Consistent improvement over the year`;
 
                         // Download historical data
-                        const blob = new Blob([historicalData], { type: "text/plain" });
+                        const blob = new Blob([historicalData], {
+                          type: "text/plain",
+                        });
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement("a");
                         link.href = url;
@@ -1442,7 +1466,9 @@ export default function AuthorityDashboard() {
                         document.body.removeChild(link);
                         URL.revokeObjectURL(url);
 
-                        setSuccess(`${selectedItem.title} historical data downloaded successfully!`);
+                        setSuccess(
+                          `${selectedItem.title} historical data downloaded successfully!`,
+                        );
                       } catch (error) {
                         setError("Failed to download historical data");
                       } finally {
@@ -1468,13 +1494,15 @@ export default function AuthorityDashboard() {
                     onClick={async () => {
                       setProcessing("share-report");
                       try {
-                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                        await new Promise((resolve) =>
+                          setTimeout(resolve, 1000),
+                        );
 
                         // Create shareable report summary
                         const shareData = {
                           title: `${selectedItem.title} - Department Report`,
                           text: `${selectedItem.title} Summary:\nCurrent Value: ${selectedItem.data?.percentage || selectedItem.data?.score || selectedItem.data?.hours}\nTrend: +5% vs Last Month\nGenerated on: ${new Date().toLocaleDateString()}`,
-                          url: window.location.href
+                          url: window.location.href,
                         };
 
                         // Try to use Web Share API if available
@@ -1484,12 +1512,12 @@ export default function AuthorityDashboard() {
                         } else {
                           // Fallback: copy to clipboard
                           await navigator.clipboard.writeText(
-                            `${shareData.title}\n\n${shareData.text}\n\nView full report at: ${shareData.url}`
+                            `${shareData.title}\n\n${shareData.text}\n\nView full report at: ${shareData.url}`,
                           );
                           setSuccess("Report details copied to clipboard!");
                         }
                       } catch (error) {
-                        if (error.name !== 'AbortError') {
+                        if (error.name !== "AbortError") {
                           setError("Failed to share report");
                         }
                       } finally {
@@ -1883,10 +1911,17 @@ export default function AuthorityDashboard() {
                 className="w-full bg-nalco-red hover:bg-nalco-red/90"
                 onClick={() => {
                   // Scroll to pending approvals section
-                  const pendingSection = document.querySelector('[data-testid="pending-approvals"]') ||
-                                        document.querySelector('h1').parentElement?.parentElement?.querySelector('div:nth-of-type(3)');
+                  const pendingSection =
+                    document.querySelector(
+                      '[data-testid="pending-approvals"]',
+                    ) ||
+                    document
+                      .querySelector("h1")
+                      .parentElement?.parentElement?.querySelector(
+                        "div:nth-of-type(3)",
+                      );
                   if (pendingSection) {
-                    pendingSection.scrollIntoView({ behavior: 'smooth' });
+                    pendingSection.scrollIntoView({ behavior: "smooth" });
                   }
                   setSuccess("Navigated to pending approvals section!");
                 }}
@@ -1897,7 +1932,9 @@ export default function AuthorityDashboard() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => handleModuleAccess("reports", "Department Reports")}
+                onClick={() =>
+                  handleModuleAccess("reports", "Department Reports")
+                }
                 disabled={moduleLoading === "reports"}
               >
                 {moduleLoading === "reports" ? (
@@ -1915,7 +1952,9 @@ export default function AuthorityDashboard() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => handleModuleAccess("employees", "Employee Management")}
+                onClick={() =>
+                  handleModuleAccess("employees", "Employee Management")
+                }
                 disabled={moduleLoading === "employees"}
               >
                 {moduleLoading === "employees" ? (
@@ -1948,14 +1987,16 @@ export default function AuthorityDashboard() {
 
                     setSuccess(
                       `Team meeting scheduled successfully!\n` +
-                      `Meeting ID: ${meetingId}\n` +
-                      `Date: ${meetingTime.toLocaleDateString()}\n` +
-                      `Time: 10:00 AM\n` +
-                      `Location: Conference Room A\n` +
-                      `Invitations sent to all team members.`
+                        `Meeting ID: ${meetingId}\n` +
+                        `Date: ${meetingTime.toLocaleDateString()}\n` +
+                        `Time: 10:00 AM\n` +
+                        `Location: Conference Room A\n` +
+                        `Invitations sent to all team members.`,
                     );
                   } catch (error) {
-                    setError("Failed to schedule team meeting. Please try again.");
+                    setError(
+                      "Failed to schedule team meeting. Please try again.",
+                    );
                   } finally {
                     setProcessing(null);
                   }
@@ -1986,7 +2027,8 @@ export default function AuthorityDashboard() {
                     await new Promise((resolve) => setTimeout(resolve, 1500));
 
                     // Generate analytics summary
-                    const analyticsData = `DEPARTMENT ANALYTICS SUMMARY\n\n` +
+                    const analyticsData =
+                      `DEPARTMENT ANALYTICS SUMMARY\n\n` +
                       `Performance Metrics:\n` +
                       `- Attendance Rate: 94%\n` +
                       `- Project Completion: 87%\n` +
@@ -1999,7 +2041,9 @@ export default function AuthorityDashboard() {
                       `Generated: ${new Date().toLocaleString()}`;
 
                     // Create and download analytics file
-                    const blob = new Blob([analyticsData], { type: "text/plain" });
+                    const blob = new Blob([analyticsData], {
+                      type: "text/plain",
+                    });
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement("a");
                     link.href = url;
@@ -2009,7 +2053,9 @@ export default function AuthorityDashboard() {
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
 
-                    setSuccess("Department analytics generated and downloaded successfully!");
+                    setSuccess(
+                      "Department analytics generated and downloaded successfully!",
+                    );
                   } catch (error) {
                     setError("Failed to generate analytics. Please try again.");
                   } finally {

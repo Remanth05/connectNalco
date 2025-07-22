@@ -54,25 +54,32 @@ export default function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-    const [moduleDialog, setModuleDialog] = useState<{open: boolean, type: string, title: string}>({
+  const [moduleDialog, setModuleDialog] = useState<{
+    open: boolean;
+    type: string;
+    title: string;
+  }>({
     open: false,
     type: "",
-    title: ""
+    title: "",
   });
   const [moduleLoading, setModuleLoading] = useState<string | null>(null);
 
-  const handleModuleAccess = async (modulePath: string, moduleTitle: string) => {
-    const moduleType = modulePath.split('/').pop() || "";
+  const handleModuleAccess = async (
+    modulePath: string,
+    moduleTitle: string,
+  ) => {
+    const moduleType = modulePath.split("/").pop() || "";
     setModuleLoading(moduleType);
 
     try {
       // Simulate module loading
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setModuleDialog({
         open: true,
         type: moduleType,
-        title: moduleTitle
+        title: moduleTitle,
       });
     } catch (error) {
       alert(`Failed to access ${moduleTitle} module. Please try again.`);
@@ -81,13 +88,13 @@ export default function AdminDashboard() {
     }
   };
 
-      const handleQuickAction = (action: string) => {
+  const handleQuickAction = (action: string) => {
     switch (action) {
       case "create-user":
         setModuleDialog({
           open: true,
           type: "create-user",
-          title: "Create New User"
+          title: "Create New User",
         });
         break;
       case "backup":
@@ -128,11 +135,13 @@ export default function AdminDashboard() {
               <Button
                 size="sm"
                 className="bg-nalco-blue hover:bg-nalco-blue/90"
-                onClick={() => setModuleDialog({
-                  open: true,
-                  type: "create-user",
-                  title: "Create New User"
-                })}
+                onClick={() =>
+                  setModuleDialog({
+                    open: true,
+                    type: "create-user",
+                    title: "Create New User",
+                  })
+                }
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add User
@@ -140,18 +149,57 @@ export default function AdminDashboard() {
             </div>
             <div className="space-y-2">
               {[
-                { name: "Rajesh Kumar Singh", role: "Employee", id: "EMP001", status: "Active", email: "rajesh.singh@nalco.com", phone: "+91-9876543210" },
-                { name: "Dr. Priya Sharma", role: "Authority", id: "AUTH001", status: "Active", email: "priya.sharma@nalco.com", phone: "+91-9876543211" },
-                { name: "Vikram Patel", role: "Admin", id: "ADMIN001", status: "Active", email: "vikram.patel@nalco.com", phone: "+91-9876543212" },
-                { name: "Sunita Devi", role: "Employee", id: "EMP002", status: "Inactive", email: "sunita.devi@nalco.com", phone: "+91-9876543213" },
+                {
+                  name: "Rajesh Kumar Singh",
+                  role: "Employee",
+                  id: "EMP001",
+                  status: "Active",
+                  email: "rajesh.singh@nalco.com",
+                  phone: "+91-9876543210",
+                },
+                {
+                  name: "Dr. Priya Sharma",
+                  role: "Authority",
+                  id: "AUTH001",
+                  status: "Active",
+                  email: "priya.sharma@nalco.com",
+                  phone: "+91-9876543211",
+                },
+                {
+                  name: "Vikram Patel",
+                  role: "Admin",
+                  id: "ADMIN001",
+                  status: "Active",
+                  email: "vikram.patel@nalco.com",
+                  phone: "+91-9876543212",
+                },
+                {
+                  name: "Sunita Devi",
+                  role: "Employee",
+                  id: "EMP002",
+                  status: "Inactive",
+                  email: "sunita.devi@nalco.com",
+                  phone: "+91-9876543213",
+                },
               ].map((user, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
                   <div>
                     <p className="font-medium">{user.name}</p>
-                    <p className="text-sm text-nalco-gray">{user.role} • {user.id}</p>
+                    <p className="text-sm text-nalco-gray">
+                      {user.role} • {user.id}
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge className={user.status === "Active" ? "bg-nalco-green text-white" : "bg-nalco-red text-white"}>
+                    <Badge
+                      className={
+                        user.status === "Active"
+                          ? "bg-nalco-green text-white"
+                          : "bg-nalco-red text-white"
+                      }
+                    >
                       {user.status}
                     </Badge>
                     <Dialog>
@@ -191,8 +239,12 @@ export default function AdminDashboard() {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="employee">Employee</SelectItem>
-                                <SelectItem value="authority">Authority</SelectItem>
+                                <SelectItem value="employee">
+                                  Employee
+                                </SelectItem>
+                                <SelectItem value="authority">
+                                  Authority
+                                </SelectItem>
                                 <SelectItem value="admin">Admin</SelectItem>
                               </SelectContent>
                             </Select>
@@ -205,8 +257,12 @@ export default function AdminDashboard() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="active">Active</SelectItem>
-                                <SelectItem value="inactive">Inactive</SelectItem>
-                                <SelectItem value="suspended">Suspended</SelectItem>
+                                <SelectItem value="inactive">
+                                  Inactive
+                                </SelectItem>
+                                <SelectItem value="suspended">
+                                  Suspended
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -237,7 +293,10 @@ export default function AdminDashboard() {
               <h3 className="text-lg font-semibold">Department Setup</h3>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="bg-nalco-green hover:bg-nalco-green/90">
+                  <Button
+                    size="sm"
+                    className="bg-nalco-green hover:bg-nalco-green/90"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Department
                   </Button>
@@ -269,7 +328,10 @@ export default function AdminDashboard() {
                   </div>
                   <div>
                     <Label>Description</Label>
-                    <Textarea placeholder="Department description and responsibilities" rows={3} />
+                    <Textarea
+                      placeholder="Department description and responsibilities"
+                      rows={3}
+                    />
                   </div>
                   <DialogFooter>
                     <Button variant="outline">Cancel</Button>
@@ -287,28 +349,64 @@ export default function AdminDashboard() {
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {[
-                { name: "Human Resources", head: "Dr. Priya Sharma", employees: 15, budget: "₹5 Crores", location: "Admin Block A" },
-                { name: "Finance & Accounts", head: "Suresh Babu", employees: 22, budget: "₹12 Crores", location: "Admin Block B" },
-                { name: "Plant Operations", head: "Ramesh Chandran", employees: 145, budget: "₹50 Crores", location: "Plant Area 1" },
-                { name: "Engineering", head: "Anita Das", employees: 89, budget: "₹35 Crores", location: "Engineering Block" },
+                {
+                  name: "Human Resources",
+                  head: "Dr. Priya Sharma",
+                  employees: 15,
+                  budget: "₹5 Crores",
+                  location: "Admin Block A",
+                },
+                {
+                  name: "Finance & Accounts",
+                  head: "Suresh Babu",
+                  employees: 22,
+                  budget: "₹12 Crores",
+                  location: "Admin Block B",
+                },
+                {
+                  name: "Plant Operations",
+                  head: "Ramesh Chandran",
+                  employees: 145,
+                  budget: "₹50 Crores",
+                  location: "Plant Area 1",
+                },
+                {
+                  name: "Engineering",
+                  head: "Anita Das",
+                  employees: 89,
+                  budget: "₹35 Crores",
+                  location: "Engineering Block",
+                },
               ].map((dept, index) => (
                 <Card key={index}>
                   <CardContent className="p-4">
                     <h4 className="font-medium mb-2">{dept.name}</h4>
-                    <p className="text-sm text-nalco-gray mb-1">Head: {dept.head}</p>
-                    <p className="text-sm text-nalco-gray mb-1">Employees: {dept.employees}</p>
-                    <p className="text-sm text-nalco-gray mb-3">Budget: {dept.budget}</p>
+                    <p className="text-sm text-nalco-gray mb-1">
+                      Head: {dept.head}
+                    </p>
+                    <p className="text-sm text-nalco-gray mb-1">
+                      Employees: {dept.employees}
+                    </p>
+                    <p className="text-sm text-nalco-gray mb-3">
+                      Budget: {dept.budget}
+                    </p>
                     <div className="flex space-x-2">
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button size="sm" variant="outline" className="flex-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             View
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-3xl">
                           <DialogHeader>
-                            <DialogTitle>{dept.name} - Department Details</DialogTitle>
+                            <DialogTitle>
+                              {dept.name} - Department Details
+                            </DialogTitle>
                             <DialogDescription>
                               Complete information about the department
                             </DialogDescription>
@@ -325,7 +423,10 @@ export default function AdminDashboard() {
                               </div>
                               <div>
                                 <Label>Total Employees</Label>
-                                <Input value={dept.employees.toString()} disabled />
+                                <Input
+                                  value={dept.employees.toString()}
+                                  disabled
+                                />
                               </div>
                               <div>
                                 <Label>Budget Allocation</Label>
@@ -344,15 +445,21 @@ export default function AdminDashboard() {
                               <Label>Performance Metrics</Label>
                               <div className="grid gap-2 md:grid-cols-3 mt-2">
                                 <div className="text-center p-3 bg-nalco-green/10 rounded">
-                                  <div className="text-2xl font-bold text-nalco-green">94%</div>
+                                  <div className="text-2xl font-bold text-nalco-green">
+                                    94%
+                                  </div>
                                   <div className="text-sm">Efficiency</div>
                                 </div>
                                 <div className="text-center p-3 bg-nalco-blue/10 rounded">
-                                  <div className="text-2xl font-bold text-nalco-blue">87%</div>
+                                  <div className="text-2xl font-bold text-nalco-blue">
+                                    87%
+                                  </div>
                                   <div className="text-sm">Productivity</div>
                                 </div>
                                 <div className="text-center p-3 bg-nalco-red/10 rounded">
-                                  <div className="text-2xl font-bold text-nalco-red">4.2/5</div>
+                                  <div className="text-2xl font-bold text-nalco-red">
+                                    4.2/5
+                                  </div>
                                   <div className="text-sm">Satisfaction</div>
                                 </div>
                               </div>
@@ -365,14 +472,20 @@ export default function AdminDashboard() {
                       </Dialog>
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button size="sm" variant="outline" className="flex-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
                             <Edit className="h-4 w-4 mr-2" />
                             Edit
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl">
                           <DialogHeader>
-                            <DialogTitle>Edit Department - {dept.name}</DialogTitle>
+                            <DialogTitle>
+                              Edit Department - {dept.name}
+                            </DialogTitle>
                             <DialogDescription>
                               Update department information
                             </DialogDescription>
@@ -400,7 +513,9 @@ export default function AdminDashboard() {
                             <Button
                               className="bg-nalco-green hover:bg-nalco-green/90"
                               onClick={() => {
-                                alert(`Department ${dept.name} updated successfully!`);
+                                alert(
+                                  `Department ${dept.name} updated successfully!`,
+                                );
                               }}
                             >
                               Save Changes
@@ -467,7 +582,9 @@ export default function AdminDashboard() {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="ist">IST (Indian Standard Time)</SelectItem>
+                              <SelectItem value="ist">
+                                IST (Indian Standard Time)
+                              </SelectItem>
                               <SelectItem value="utc">UTC</SelectItem>
                               <SelectItem value="est">EST</SelectItem>
                             </SelectContent>
@@ -515,7 +632,9 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Status</span>
-                      <Badge className="bg-nalco-green text-white">Active</Badge>
+                      <Badge className="bg-nalco-green text-white">
+                        Active
+                      </Badge>
                     </div>
                   </div>
                   <Dialog>
@@ -629,7 +748,9 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Firewall</span>
-                      <Badge className="bg-nalco-green text-white">Active</Badge>
+                      <Badge className="bg-nalco-green text-white">
+                        Active
+                      </Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">SSL Certificate</span>
@@ -648,7 +769,9 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="text-sm">
                       <p className="font-medium">Failed login attempt</p>
-                      <p className="text-nalco-gray">From 192.168.1.100 • 2h ago</p>
+                      <p className="text-nalco-gray">
+                        From 192.168.1.100 • 2h ago
+                      </p>
                     </div>
                     <div className="text-sm">
                       <p className="font-medium">Unusual data access</p>
@@ -665,7 +788,10 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Database Management</h3>
-              <Button size="sm" className="bg-purple-600 hover:bg-purple-600/90">
+              <Button
+                size="sm"
+                className="bg-purple-600 hover:bg-purple-600/90"
+              >
                 <Upload className="h-4 w-4 mr-2" />
                 Backup Now
               </Button>
@@ -677,7 +803,9 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Connection</span>
-                      <Badge className="bg-nalco-green text-white">Healthy</Badge>
+                      <Badge className="bg-nalco-green text-white">
+                        Healthy
+                      </Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Size</span>
@@ -696,11 +824,15 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <div className="text-sm">
                       <p className="font-medium">Auto Backup #247</p>
-                      <p className="text-nalco-gray">March 26, 2024 • 2:00 AM</p>
+                      <p className="text-nalco-gray">
+                        March 26, 2024 • 2:00 AM
+                      </p>
                     </div>
                     <div className="text-sm">
                       <p className="font-medium">Manual Backup #246</p>
-                      <p className="text-nalco-gray">March 25, 2024 • 4:30 PM</p>
+                      <p className="text-nalco-gray">
+                        March 25, 2024 • 4:30 PM
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -759,7 +891,10 @@ export default function AdminDashboard() {
             </div>
             <div>
               <Label>Additional Notes</Label>
-              <Textarea placeholder="Any additional information about the user" rows={3} />
+              <Textarea
+                placeholder="Any additional information about the user"
+                rows={3}
+              />
             </div>
           </div>
         );
@@ -893,7 +1028,7 @@ export default function AdminDashboard() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-                {/* Header */}
+        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-nalco-black">
@@ -970,7 +1105,7 @@ export default function AdminDashboard() {
                             <p className="text-sm text-nalco-gray mb-3">
                               {module.description}
                             </p>
-                                                        <Button
+                            <Button
                               variant="outline"
                               size="sm"
                               className="w-full hover:bg-nalco-blue hover:text-white transition-colors"
@@ -978,9 +1113,12 @@ export default function AdminDashboard() {
                                 e.stopPropagation();
                                 handleModuleAccess(module.path, module.title);
                               }}
-                              disabled={moduleLoading === module.path.split('/').pop()}
+                              disabled={
+                                moduleLoading === module.path.split("/").pop()
+                              }
                             >
-                              {moduleLoading === module.path.split('/').pop() ? (
+                              {moduleLoading ===
+                              module.path.split("/").pop() ? (
                                 <>
                                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                   Loading...
@@ -1051,32 +1189,37 @@ export default function AdminDashboard() {
                         setModuleDialog({
                           open: true,
                           type: "users",
-                          title: "User Management"
+                          title: "User Management",
                         });
                       } else if (activity.action.includes("department")) {
                         setModuleDialog({
                           open: true,
                           type: "departments",
-                          title: "Department Setup"
+                          title: "Department Setup",
                         });
-                      } else if (activity.action.includes("backup") || activity.action.includes("maintenance")) {
+                      } else if (
+                        activity.action.includes("backup") ||
+                        activity.action.includes("maintenance")
+                      ) {
                         setModuleDialog({
                           open: true,
                           type: "database",
-                          title: "Database Management"
+                          title: "Database Management",
                         });
                       } else if (activity.action.includes("login")) {
                         setModuleDialog({
                           open: true,
                           type: "security",
-                          title: "Security Center"
+                          title: "Security Center",
                         });
                       } else {
                         // Generic issue navigation
                         navigate("/issues");
                       }
 
-                      alert(`Navigating to ${activity.action} details...\nActivity ID: ACT${Date.now()}\nUser: ${activity.user}\nTime: ${activity.time}`);
+                      alert(
+                        `Navigating to ${activity.action} details...\nActivity ID: ACT${Date.now()}\nUser: ${activity.user}\nTime: ${activity.time}`,
+                      );
                     }}
                   >
                     <div className="flex items-center space-x-4">
@@ -1123,9 +1266,15 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 onClick={async () => {
-                  const confirmed = confirm("Are you sure you want to start a database backup? This may take several minutes.");
+                  const confirmed = confirm(
+                    "Are you sure you want to start a database backup? This may take several minutes.",
+                  );
                   if (confirmed) {
-                    alert("Database backup initiated...\nBackup ID: BKP" + Date.now() + "\nEstimated time: 10-15 minutes\nYou will be notified when complete.");
+                    alert(
+                      "Database backup initiated...\nBackup ID: BKP" +
+                        Date.now() +
+                        "\nEstimated time: 10-15 minutes\nYou will be notified when complete.",
+                    );
                   }
                 }}
               >
@@ -1134,7 +1283,8 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 onClick={async () => {
-                  const reportData = `SYSTEM REPORTS SUMMARY\n\n` +
+                  const reportData =
+                    `SYSTEM REPORTS SUMMARY\n\n` +
                     `Generated: ${new Date().toLocaleString()}\n` +
                     `Report Period: Last 30 days\n\n` +
                     `SYSTEM STATISTICS:\n` +
@@ -1161,7 +1311,9 @@ export default function AdminDashboard() {
                   document.body.removeChild(link);
                   URL.revokeObjectURL(url);
 
-                  alert("System reports generated and downloaded successfully!");
+                  alert(
+                    "System reports generated and downloaded successfully!",
+                  );
                 }}
               >
                 Generate Reports
@@ -1169,13 +1321,17 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  const confirmed = confirm("Enable system maintenance mode? This will temporarily disable user access.");
+                  const confirmed = confirm(
+                    "Enable system maintenance mode? This will temporarily disable user access.",
+                  );
                   if (confirmed) {
-                    alert("System Maintenance Mode ENABLED\n\n" +
-                      "- User access temporarily disabled\n" +
-                      "- Maintenance window: 2 hours\n" +
-                      "- Automatic restoration scheduled\n" +
-                      "- Admin access remains active");
+                    alert(
+                      "System Maintenance Mode ENABLED\n\n" +
+                        "- User access temporarily disabled\n" +
+                        "- Maintenance window: 2 hours\n" +
+                        "- Automatic restoration scheduled\n" +
+                        "- Admin access remains active",
+                    );
                   }
                 }}
               >
@@ -1184,7 +1340,8 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 onClick={async () => {
-                  const auditReport = `SECURITY AUDIT REPORT\n\n` +
+                  const auditReport =
+                    `SECURITY AUDIT REPORT\n\n` +
                     `Audit Date: ${new Date().toLocaleString()}\n` +
                     `Audit ID: SA${Date.now()}\n\n` +
                     `SECURITY STATUS:\n` +
@@ -1228,28 +1385,32 @@ export default function AdminDashboard() {
               </Button>
             </div>
           </CardContent>
-                </Card>
+        </Card>
 
         {/* Module Access Dialog */}
-        <Dialog open={moduleDialog.open} onOpenChange={(open) => setModuleDialog({...moduleDialog, open})}>
+        <Dialog
+          open={moduleDialog.open}
+          onOpenChange={(open) => setModuleDialog({ ...moduleDialog, open })}
+        >
           <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-nalco-black">
                 {moduleDialog.title}
               </DialogTitle>
               <DialogDescription>
-                Manage {moduleDialog.title.toLowerCase()} and system configurations
+                Manage {moduleDialog.title.toLowerCase()} and system
+                configurations
               </DialogDescription>
             </DialogHeader>
 
-            <div className="py-4">
-              {getModuleContent(moduleDialog.type)}
-            </div>
+            <div className="py-4">{getModuleContent(moduleDialog.type)}</div>
 
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => setModuleDialog({open: false, type: "", title: ""})}
+                onClick={() =>
+                  setModuleDialog({ open: false, type: "", title: "" })
+                }
               >
                 Close
               </Button>
@@ -1258,7 +1419,7 @@ export default function AdminDashboard() {
                   className="bg-nalco-blue hover:bg-nalco-blue/90"
                   onClick={() => {
                     alert("User created successfully!");
-                    setModuleDialog({open: false, type: "", title: ""});
+                    setModuleDialog({ open: false, type: "", title: "" });
                   }}
                 >
                   Create User
@@ -1268,7 +1429,7 @@ export default function AdminDashboard() {
                 className="bg-nalco-green hover:bg-nalco-green/90"
                 onClick={() => {
                   alert("Changes saved successfully!");
-                  setModuleDialog({open: false, type: "", title: ""});
+                  setModuleDialog({ open: false, type: "", title: "" });
                 }}
               >
                 Save Changes

@@ -5,6 +5,7 @@ This guide will help you set up and configure MongoDB for the NALCO connectNALCO
 ## 🗄️ Database Overview
 
 The application now uses MongoDB to store:
+
 - User credentials and profiles
 - Employee information
 - Authentication tokens
@@ -16,32 +17,36 @@ The application now uses MongoDB to store:
 ### Option 1: Local MongoDB (Recommended for Development)
 
 1. **Install MongoDB Community Server**
+
    ```bash
    # Ubuntu/Debian
    sudo apt-get install mongodb
-   
+
    # macOS with Homebrew
    brew install mongodb-community
-   
+
    # Windows: Download from https://www.mongodb.com/try/download/community
    ```
 
 2. **Start MongoDB Service**
+
    ```bash
    # Linux/macOS
    sudo systemctl start mongod
    # or
    brew services start mongodb-community
-   
+
    # Windows: MongoDB will start automatically or use MongoDB Compass
    ```
 
 3. **Create Environment File**
+
    ```bash
    cp .env.example .env
    ```
-   
+
    Edit `.env` with your MongoDB connection string:
+
    ```env
    MONGODB_URI=mongodb://localhost:27017/nalco_connect
    JWT_SECRET=your-super-secret-jwt-key-change-in-production
@@ -55,16 +60,19 @@ The application now uses MongoDB to store:
 ### Option 2: MongoDB Atlas (Recommended for Production)
 
 1. **Create MongoDB Atlas Account**
+
    - Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
    - Create a free account
    - Create a new cluster
 
 2. **Get Connection String**
+
    - Click "Connect" on your cluster
    - Choose "Connect your application"
    - Copy the connection string
 
 3. **Update Environment Variables**
+
    ```env
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/nalco_connect?retryWrites=true&w=majority
    JWT_SECRET=your-super-secret-jwt-key-change-in-production
@@ -80,18 +88,21 @@ The application now uses MongoDB to store:
 After seeding, you'll have these default accounts:
 
 ### Administrator
+
 - **Email**: admin@nalco.com
 - **Password**: nalco@2024
 - **Role**: Admin
 - **Access**: Full system administration
 
 ### Department Head (Authority)
+
 - **Email**: priya.sharma@nalco.com
 - **Password**: nalco@2024
 - **Role**: Authority
 - **Department**: Human Resources
 
 ### Employee
+
 - **Email**: rajesh.singh@nalco.com
 - **Password**: nalco@2024
 - **Role**: Employee
@@ -100,6 +111,7 @@ After seeding, you'll have these default accounts:
 ## 🔧 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` - User login
 - `POST /api/auth/register` - Register new user
 - `GET /api/auth/me` - Get current user profile
@@ -109,33 +121,35 @@ After seeding, you'll have these default accounts:
 ### Usage Examples
 
 #### Login
+
 ```javascript
-const response = await fetch('/api/auth/login', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const response = await fetch("/api/auth/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    email: 'admin@nalco.com',
-    password: 'nalco@2024'
-  })
+    email: "admin@nalco.com",
+    password: "nalco@2024",
+  }),
 });
 const data = await response.json();
 ```
 
 #### Register New User
+
 ```javascript
-const response = await fetch('/api/auth/register', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const response = await fetch("/api/auth/register", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    employeeId: 'EMP004',
-    name: 'New Employee',
-    email: 'new.employee@nalco.com',
-    password: 'nalco@2024',
-    phone: '+91-9876543219',
-    department: 'Engineering',
-    designation: 'Engineer',
-    role: 'employee'
-  })
+    employeeId: "EMP004",
+    name: "New Employee",
+    email: "new.employee@nalco.com",
+    password: "nalco@2024",
+    phone: "+91-9876543219",
+    department: "Engineering",
+    designation: "Engineer",
+    role: "employee",
+  }),
 });
 ```
 
@@ -161,6 +175,7 @@ npm start
 ## 🗂️ Database Structure
 
 ### Users Collection
+
 ```javascript
 {
   _id: ObjectId,
@@ -193,6 +208,7 @@ npm start
 ## 🚨 Troubleshooting
 
 ### MongoDB Connection Issues
+
 ```bash
 # Check MongoDB status
 systemctl status mongod
@@ -205,13 +221,16 @@ sudo journalctl -u mongod
 ```
 
 ### Seeding Issues
+
 ```bash
 # Clear database and re-seed
 npm run seed-db:dev
 ```
 
 ### Permission Issues
+
 Make sure MongoDB has proper permissions:
+
 ```bash
 sudo chown -R mongodb:mongodb /var/lib/mongodb
 sudo chown mongodb:mongodb /tmp/mongodb-27017.sock
@@ -238,6 +257,7 @@ The authentication is now integrated with the frontend AuthContext. Users will:
 ## 📞 Support
 
 For issues or questions:
+
 - Check MongoDB logs
 - Verify environment variables
 - Ensure MongoDB service is running
