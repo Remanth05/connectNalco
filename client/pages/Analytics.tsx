@@ -229,7 +229,7 @@ RECOMMENDATIONS:
               onClick={handleRefresh}
               disabled={refreshing}
             >
-              <Refresh className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
               {refreshing ? "Refreshing..." : "Refresh Data"}
             </Button>
             <Button onClick={handleExport} className="bg-nalco-blue hover:bg-nalco-blue/90">
