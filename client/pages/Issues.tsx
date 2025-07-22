@@ -110,30 +110,69 @@ export default function Issues() {
     },
   ];
 
+  const [departmentIssuesDialogOpen, setDepartmentIssuesDialogOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+
   const issueCategories = [
     {
       icon: Zap,
       title: "Electrical",
       description: "Power systems, lighting, and electrical equipment",
       count: "12 active",
+      totalIssues: 15,
+      openIssues: 12,
+      inProgressIssues: 2,
+      resolvedIssues: 1,
+      issues: [
+        { id: "ELE-001", title: "Main power panel malfunction", priority: "Critical", status: "Open" },
+        { id: "ELE-002", title: "Lighting issues in Block A", priority: "High", status: "In Progress" },
+        { id: "ELE-003", title: "Backup generator maintenance", priority: "Medium", status: "Open" },
+      ]
     },
     {
       icon: Wrench,
       title: "Mechanical",
       description: "Machinery, equipment maintenance, and repairs",
       count: "8 active",
+      totalIssues: 12,
+      openIssues: 8,
+      inProgressIssues: 3,
+      resolvedIssues: 1,
+      issues: [
+        { id: "MECH-001", title: "Conveyor belt malfunction", priority: "High", status: "In Progress" },
+        { id: "MECH-002", title: "Pump pressure issues", priority: "Medium", status: "Open" },
+        { id: "MECH-003", title: "Equipment calibration needed", priority: "Low", status: "Open" },
+      ]
     },
     {
       icon: Shield,
       title: "Safety",
       description: "Safety violations, accidents, and hazard reports",
       count: "3 active",
+      totalIssues: 5,
+      openIssues: 3,
+      inProgressIssues: 1,
+      resolvedIssues: 1,
+      issues: [
+        { id: "SAF-001", title: "Emergency exit blocked", priority: "Critical", status: "Open" },
+        { id: "SAF-002", title: "Missing safety equipment", priority: "High", status: "Open" },
+        { id: "SAF-003", title: "Chemical spill cleanup", priority: "Medium", status: "In Progress" },
+      ]
     },
     {
       icon: Building,
       title: "Infrastructure",
       description: "Building maintenance, facilities, and utilities",
       count: "5 active",
+      totalIssues: 8,
+      openIssues: 5,
+      inProgressIssues: 2,
+      resolvedIssues: 1,
+      issues: [
+        { id: "INF-001", title: "HVAC system not working", priority: "Medium", status: "Open" },
+        { id: "INF-002", title: "Plumbing issues in restroom", priority: "High", status: "In Progress" },
+        { id: "INF-003", title: "Roof leak in warehouse", priority: "High", status: "Open" },
+      ]
     },
   ];
 
@@ -546,6 +585,10 @@ export default function Issues() {
                 <Card
                   key={index}
                   className="cursor-pointer transition-all hover:shadow-lg hover:shadow-nalco-red/10"
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setDepartmentIssuesDialogOpen(true);
+                  }}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center">
@@ -561,9 +604,16 @@ export default function Issues() {
                     <CardDescription className="mb-2 text-nalco-gray">
                       {category.description}
                     </CardDescription>
-                    <p className="text-sm font-medium text-nalco-blue">
-                      {category.count}
-                    </p>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-nalco-blue">
+                        {category.count}
+                      </p>
+                      <div className="flex items-center space-x-4 text-xs">
+                        <span className="text-nalco-red">Open: {category.openIssues}</span>
+                        <span className="text-yellow-600">In Progress: {category.inProgressIssues}</span>
+                        <span className="text-nalco-green">Resolved: {category.resolvedIssues}</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               );
