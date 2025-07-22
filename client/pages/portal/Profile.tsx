@@ -10,7 +10,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, Loader2, CheckCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Loader2,
+  CheckCircle,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -46,9 +55,9 @@ export default function Profile() {
   }, [user]);
 
   const handleInputChange = (field: string, value: string) => {
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -59,10 +68,13 @@ export default function Profile() {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Save to localStorage
-      localStorage.setItem(`profile_${user?.employeeId}`, JSON.stringify(profileData));
+      localStorage.setItem(
+        `profile_${user?.employeeId}`,
+        JSON.stringify(profileData),
+      );
 
       setSuccess("Profile updated successfully!");
 
@@ -135,7 +147,9 @@ export default function Profile() {
                   <Input
                     id="firstName"
                     value={profileData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("firstName", e.target.value)
+                    }
                   />
                 </div>
                 <div>
@@ -143,7 +157,9 @@ export default function Profile() {
                   <Input
                     id="lastName"
                     value={profileData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("lastName", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -157,7 +173,7 @@ export default function Profile() {
                   id="email"
                   type="email"
                   value={profileData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                 />
               </div>
 
@@ -169,7 +185,7 @@ export default function Profile() {
                 <Input
                   id="phone"
                   value={profileData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                 />
               </div>
 
@@ -181,7 +197,7 @@ export default function Profile() {
                 <Textarea
                   id="address"
                   value={profileData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
                   rows={3}
                 />
               </div>
@@ -195,7 +211,9 @@ export default function Profile() {
                   id="dateOfBirth"
                   type="date"
                   value={profileData.dateOfBirth}
-                  onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("dateOfBirth", e.target.value)
+                  }
                 />
               </div>
             </CardContent>
@@ -218,7 +236,9 @@ export default function Profile() {
                   <Input
                     id="emergencyName"
                     value={profileData.emergencyName}
-                    onChange={(e) => handleInputChange('emergencyName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("emergencyName", e.target.value)
+                    }
                   />
                 </div>
                 <div>
@@ -226,7 +246,9 @@ export default function Profile() {
                   <Input
                     id="emergencyRelation"
                     value={profileData.emergencyRelation}
-                    onChange={(e) => handleInputChange('emergencyRelation', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("emergencyRelation", e.target.value)
+                    }
                   />
                 </div>
                 <div>
@@ -234,7 +256,9 @@ export default function Profile() {
                   <Input
                     id="emergencyPhone"
                     value={profileData.emergencyPhone}
-                    onChange={(e) => handleInputChange('emergencyPhone', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("emergencyPhone", e.target.value)
+                    }
                   />
                 </div>
               </div>

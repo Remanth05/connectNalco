@@ -333,7 +333,12 @@ export default function AuthorityDashboard() {
                       <Input
                         placeholder="Enter employee name"
                         value={newEmployeeData.fullName}
-                        onChange={(e) => setNewEmployeeData({...newEmployeeData, fullName: e.target.value})}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            fullName: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -341,7 +346,12 @@ export default function AuthorityDashboard() {
                       <Input
                         placeholder="EMP###"
                         value={newEmployeeData.employeeId}
-                        onChange={(e) => setNewEmployeeData({...newEmployeeData, employeeId: e.target.value})}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            employeeId: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -350,24 +360,40 @@ export default function AuthorityDashboard() {
                         placeholder="employee@nalco.com"
                         type="email"
                         value={newEmployeeData.email}
-                        onChange={(e) => setNewEmployeeData({...newEmployeeData, email: e.target.value})}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            email: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
                       <Label>Designation *</Label>
                       <Select
                         value={newEmployeeData.designation}
-                        onValueChange={(value) => setNewEmployeeData({...newEmployeeData, designation: value})}
+                        onValueChange={(value) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            designation: value,
+                          })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select designation" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="HR Executive">HR Executive</SelectItem>
-                          <SelectItem value="HR Assistant">HR Assistant</SelectItem>
+                          <SelectItem value="HR Executive">
+                            HR Executive
+                          </SelectItem>
+                          <SelectItem value="HR Assistant">
+                            HR Assistant
+                          </SelectItem>
                           <SelectItem value="Trainee">Trainee</SelectItem>
                           <SelectItem value="Manager">Manager</SelectItem>
-                          <SelectItem value="Senior Executive">Senior Executive</SelectItem>
+                          <SelectItem value="Senior Executive">
+                            Senior Executive
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -376,7 +402,12 @@ export default function AuthorityDashboard() {
                       <Input
                         type="date"
                         value={newEmployeeData.joinDate}
-                        onChange={(e) => setNewEmployeeData({...newEmployeeData, joinDate: e.target.value})}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            joinDate: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -384,7 +415,12 @@ export default function AuthorityDashboard() {
                       <Input
                         placeholder="+91-9876543210"
                         value={newEmployeeData.phone}
-                        onChange={(e) => setNewEmployeeData({...newEmployeeData, phone: e.target.value})}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            phone: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -394,18 +430,27 @@ export default function AuthorityDashboard() {
                       className="bg-nalco-blue hover:bg-nalco-blue/90"
                       onClick={async () => {
                         // Validate form data
-                        if (!newEmployeeData.fullName || !newEmployeeData.employeeId || !newEmployeeData.email || !newEmployeeData.designation || !newEmployeeData.joinDate || !newEmployeeData.phone) {
+                        if (
+                          !newEmployeeData.fullName ||
+                          !newEmployeeData.employeeId ||
+                          !newEmployeeData.email ||
+                          !newEmployeeData.designation ||
+                          !newEmployeeData.joinDate ||
+                          !newEmployeeData.phone
+                        ) {
                           setError("Please fill in all required fields");
                           return;
                         }
 
-                        setProcessing('add-employee');
+                        setProcessing("add-employee");
                         setError("");
                         setSuccess("");
 
                         try {
                           // Simulate API call
-                          await new Promise(resolve => setTimeout(resolve, 2000));
+                          await new Promise((resolve) =>
+                            setTimeout(resolve, 2000),
+                          );
 
                           const newEmployee = {
                             name: newEmployeeData.fullName,
@@ -418,7 +463,9 @@ export default function AuthorityDashboard() {
                           };
 
                           setEmployeeList([...employeeList, newEmployee]);
-                          setSuccess(`Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully!`);
+                          setSuccess(
+                            `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully!`,
+                          );
 
                           // Reset form
                           setNewEmployeeData({
@@ -438,9 +485,9 @@ export default function AuthorityDashboard() {
                           setProcessing(null);
                         }
                       }}
-                      disabled={processing === 'add-employee'}
+                      disabled={processing === "add-employee"}
                     >
-                      {processing === 'add-employee' ? (
+                      {processing === "add-employee" ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                           Adding...
@@ -579,20 +626,22 @@ export default function AuthorityDashboard() {
                     <Button
                       size="sm"
                       className="bg-nalco-green hover:bg-nalco-green/90"
-                      onClick={() => handleApproval(leave.id, 'leave', 'approve')}
+                      onClick={() =>
+                        handleApproval(leave.id, "leave", "approve")
+                      }
                       disabled={processing === leave.id}
                     >
                       {processing === leave.id ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        'Approve'
+                        "Approve"
                       )}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       className="text-nalco-red"
-                      onClick={() => openRejectionDialog(leave, 'leave')}
+                      onClick={() => openRejectionDialog(leave, "leave")}
                       disabled={processing === leave.id}
                     >
                       Reject
@@ -611,7 +660,7 @@ export default function AuthorityDashboard() {
               <Button
                 size="sm"
                 className="bg-nalco-red hover:bg-nalco-red/90"
-                onClick={() => navigate('/issues')}
+                onClick={() => navigate("/issues")}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Report Issue
@@ -653,19 +702,26 @@ export default function AuthorityDashboard() {
                   onClick={() => {
                     // Navigate to detailed issue view
                     setSelectedItem(issue);
-                    setModuleDialog({ open: true, type: 'issue-detail', title: `Issue Details - ${issue.id}` });
+                    setModuleDialog({
+                      open: true,
+                      type: "issue-detail",
+                      title: `Issue Details - ${issue.id}`,
+                    });
                   }}
                 >
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-mono text-sm text-nalco-blue">{issue.id}</span>
+                      <span className="font-mono text-sm text-nalco-blue">
+                        {issue.id}
+                      </span>
                       <p className="font-medium">{issue.title}</p>
                     </div>
                     <p className="text-sm text-nalco-gray mb-1">
                       {issue.description}
                     </p>
                     <p className="text-xs text-nalco-gray">
-                      Reported by: {issue.reporter} • Assigned to: {issue.assignedTo}
+                      Reported by: {issue.reporter} • Assigned to:{" "}
+                      {issue.assignedTo}
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -706,37 +762,40 @@ export default function AuthorityDashboard() {
                 size="sm"
                 variant="outline"
                 onClick={async () => {
-                  setProcessing('export-reimbursements');
+                  setProcessing("export-reimbursements");
                   try {
                     // Simulate export process
-                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
 
                     // Create CSV content
-                    const csvContent = `Employee Name,Type,Amount,Description,Status,Date\n${pendingReimbursements.map(r =>
-                      `${r.employeeName},${r.type},${r.amount},"${r.description}",${r.status},${r.submittedDate}`
-                    ).join('\n')}`;
+                    const csvContent = `Employee Name,Type,Amount,Description,Status,Date\n${pendingReimbursements
+                      .map(
+                        (r) =>
+                          `${r.employeeName},${r.type},${r.amount},"${r.description}",${r.status},${r.submittedDate}`,
+                      )
+                      .join("\n")}`;
 
                     // Download CSV
-                    const blob = new Blob([csvContent], { type: 'text/csv' });
+                    const blob = new Blob([csvContent], { type: "text/csv" });
                     const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
+                    const link = document.createElement("a");
                     link.href = url;
-                    link.download = `reimbursements-${new Date().toISOString().split('T')[0]}.csv`;
+                    link.download = `reimbursements-${new Date().toISOString().split("T")[0]}.csv`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
 
-                    setSuccess('Reimbursements exported successfully!');
+                    setSuccess("Reimbursements exported successfully!");
                   } catch (error) {
-                    setError('Failed to export reimbursements');
+                    setError("Failed to export reimbursements");
                   } finally {
                     setProcessing(null);
                   }
                 }}
-                disabled={processing === 'export-reimbursements'}
+                disabled={processing === "export-reimbursements"}
               >
-                {processing === 'export-reimbursements' ? (
+                {processing === "export-reimbursements" ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     Exporting...
@@ -768,20 +827,24 @@ export default function AuthorityDashboard() {
                     <Button
                       size="sm"
                       className="bg-nalco-green hover:bg-nalco-green/90"
-                      onClick={() => handleApproval(reimb.id, 'reimbursement', 'approve')}
+                      onClick={() =>
+                        handleApproval(reimb.id, "reimbursement", "approve")
+                      }
                       disabled={processing === reimb.id}
                     >
                       {processing === reimb.id ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        'Approve'
+                        "Approve"
                       )}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       className="text-nalco-red"
-                      onClick={() => openRejectionDialog(reimb, 'reimbursement')}
+                      onClick={() =>
+                        openRejectionDialog(reimb, "reimbursement")
+                      }
                       disabled={processing === reimb.id}
                     >
                       Reject
@@ -934,9 +997,22 @@ export default function AuthorityDashboard() {
                     variant="outline"
                     className="mt-2 w-full"
                     onClick={() => {
-                      setSuccess('Attendance report details loaded successfully!');
-                      setSelectedItem({ type: 'attendance', title: 'Attendance Report Details', data: { percentage: '94%', details: 'Monthly attendance analysis' } });
-                      setModuleDialog({ open: true, type: 'report-detail', title: 'Attendance Report Details' });
+                      setSuccess(
+                        "Attendance report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "attendance",
+                        title: "Attendance Report Details",
+                        data: {
+                          percentage: "94%",
+                          details: "Monthly attendance analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Attendance Report Details",
+                      });
                     }}
                   >
                     <Eye className="h-4 w-4 mr-2" />
@@ -954,9 +1030,22 @@ export default function AuthorityDashboard() {
                     variant="outline"
                     className="mt-2 w-full"
                     onClick={() => {
-                      setSuccess('Leave utilization report details loaded successfully!');
-                      setSelectedItem({ type: 'leave', title: 'Leave Utilization Report', data: { percentage: '68%', details: 'Annual leave utilization analysis' } });
-                      setModuleDialog({ open: true, type: 'report-detail', title: 'Leave Utilization Report' });
+                      setSuccess(
+                        "Leave utilization report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "leave",
+                        title: "Leave Utilization Report",
+                        data: {
+                          percentage: "68%",
+                          details: "Annual leave utilization analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Leave Utilization Report",
+                      });
                     }}
                   >
                     <Eye className="h-4 w-4 mr-2" />
@@ -974,9 +1063,22 @@ export default function AuthorityDashboard() {
                     variant="outline"
                     className="mt-2 w-full"
                     onClick={() => {
-                      setSuccess('Performance report details loaded successfully!');
-                      setSelectedItem({ type: 'performance', title: 'Performance Score Report', data: { score: '4.2/5', details: 'Department performance analysis' } });
-                      setModuleDialog({ open: true, type: 'report-detail', title: 'Performance Score Report' });
+                      setSuccess(
+                        "Performance report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "performance",
+                        title: "Performance Score Report",
+                        data: {
+                          score: "4.2/5",
+                          details: "Department performance analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Performance Score Report",
+                      });
                     }}
                   >
                     <Eye className="h-4 w-4 mr-2" />
@@ -994,9 +1096,22 @@ export default function AuthorityDashboard() {
                     variant="outline"
                     className="mt-2 w-full"
                     onClick={() => {
-                      setSuccess('Training hours report details loaded successfully!');
-                      setSelectedItem({ type: 'training', title: 'Training Hours Report', data: { hours: '156', details: 'Quarterly training hours analysis' } });
-                      setModuleDialog({ open: true, type: 'report-detail', title: 'Training Hours Report' });
+                      setSuccess(
+                        "Training hours report details loaded successfully!",
+                      );
+                      setSelectedItem({
+                        type: "training",
+                        title: "Training Hours Report",
+                        data: {
+                          hours: "156",
+                          details: "Quarterly training hours analysis",
+                        },
+                      });
+                      setModuleDialog({
+                        open: true,
+                        type: "report-detail",
+                        title: "Training Hours Report",
+                      });
                     }}
                   >
                     <Eye className="h-4 w-4 mr-2" />
@@ -1042,25 +1157,32 @@ export default function AuthorityDashboard() {
                           setProcessing(`download-${index}`);
                           try {
                             // Simulate download process
-                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            await new Promise((resolve) =>
+                              setTimeout(resolve, 2000),
+                            );
 
                             // Create mock file content
                             const content = `${report.name}\nGenerated: ${report.date}\nType: ${report.type}\n\nThis is a sample ${report.type} report.`;
                             const blob = new Blob([content], {
-                              type: report.type === 'PDF' ? 'application/pdf' : 'application/vnd.ms-excel'
+                              type:
+                                report.type === "PDF"
+                                  ? "application/pdf"
+                                  : "application/vnd.ms-excel",
                             });
 
                             // Download file
                             const url = URL.createObjectURL(blob);
-                            const link = document.createElement('a');
+                            const link = document.createElement("a");
                             link.href = url;
-                            link.download = `${report.name.replace(/\s+/g, '_')}.${report.type.toLowerCase()}`;
+                            link.download = `${report.name.replace(/\s+/g, "_")}.${report.type.toLowerCase()}`;
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
                             URL.revokeObjectURL(url);
 
-                            setSuccess(`${report.name} downloaded successfully!`);
+                            setSuccess(
+                              `${report.name} downloaded successfully!`,
+                            );
                           } catch (error) {
                             setError(`Failed to download ${report.name}`);
                           } finally {
@@ -1150,28 +1272,38 @@ export default function AuthorityDashboard() {
             {selectedItem && (
               <div className="space-y-6">
                 <div className="text-center">
-                  <h3 className="text-2xl font-semibold">{selectedItem.title}</h3>
-                  <p className="text-sm text-nalco-gray mt-2">{selectedItem.data?.details}</p>
+                  <h3 className="text-2xl font-semibold">
+                    {selectedItem.title}
+                  </h3>
+                  <p className="text-sm text-nalco-gray mt-2">
+                    {selectedItem.data?.details}
+                  </p>
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-3">
                   <Card>
                     <CardContent className="p-4 text-center">
                       <div className="text-3xl font-bold text-nalco-blue mb-2">
-                        {selectedItem.data?.percentage || selectedItem.data?.score || selectedItem.data?.hours}
+                        {selectedItem.data?.percentage ||
+                          selectedItem.data?.score ||
+                          selectedItem.data?.hours}
                       </div>
                       <p className="text-sm text-nalco-gray">Current Value</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <div className="text-3xl font-bold text-nalco-green mb-2">+5%</div>
+                      <div className="text-3xl font-bold text-nalco-green mb-2">
+                        +5%
+                      </div>
                       <p className="text-sm text-nalco-gray">vs Last Month</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <div className="text-3xl font-bold text-nalco-red mb-2">Target</div>
+                      <div className="text-3xl font-bold text-nalco-red mb-2">
+                        Target
+                      </div>
                       <p className="text-sm text-nalco-gray">95%</p>
                     </CardContent>
                   </Card>
@@ -1181,8 +1313,9 @@ export default function AuthorityDashboard() {
                   <h4 className="font-medium mb-3">Detailed Analysis</h4>
                   <div className="bg-nalco-gray/5 p-4 rounded-lg">
                     <p className="text-sm text-nalco-gray">
-                      This report provides comprehensive insights into {selectedItem.type} metrics for the current period.
-                      The data shows positive trends and areas for improvement.
+                      This report provides comprehensive insights into{" "}
+                      {selectedItem.type} metrics for the current period. The
+                      data shows positive trends and areas for improvement.
                     </p>
                   </div>
                 </div>
@@ -1196,9 +1329,7 @@ export default function AuthorityDashboard() {
                     <Eye className="h-4 w-4 mr-2" />
                     View Historical Data
                   </Button>
-                  <Button variant="outline">
-                    Share Report
-                  </Button>
+                  <Button variant="outline">Share Report</Button>
                 </div>
               </div>
             )}
@@ -1211,14 +1342,34 @@ export default function AuthorityDashboard() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold">{selectedItem.title}</h3>
-                    <p className="text-sm text-nalco-gray">Issue ID: {selectedItem.id}</p>
+                    <h3 className="text-lg font-semibold">
+                      {selectedItem.title}
+                    </h3>
+                    <p className="text-sm text-nalco-gray">
+                      Issue ID: {selectedItem.id}
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge className={selectedItem.priority === "High" ? "bg-nalco-red text-white" : selectedItem.priority === "Medium" ? "bg-yellow-500 text-white" : "bg-nalco-blue text-white"}>
+                    <Badge
+                      className={
+                        selectedItem.priority === "High"
+                          ? "bg-nalco-red text-white"
+                          : selectedItem.priority === "Medium"
+                            ? "bg-yellow-500 text-white"
+                            : "bg-nalco-blue text-white"
+                      }
+                    >
                       {selectedItem.priority}
                     </Badge>
-                    <Badge className={selectedItem.status === "Open" ? "bg-nalco-red text-white" : selectedItem.status === "In Progress" ? "bg-yellow-500 text-white" : "bg-nalco-green text-white"}>
+                    <Badge
+                      className={
+                        selectedItem.status === "Open"
+                          ? "bg-nalco-red text-white"
+                          : selectedItem.status === "In Progress"
+                            ? "bg-yellow-500 text-white"
+                            : "bg-nalco-green text-white"
+                      }
+                    >
                       {selectedItem.status}
                     </Badge>
                   </div>
@@ -1237,14 +1388,18 @@ export default function AuthorityDashboard() {
 
                 <div>
                   <Label>Description</Label>
-                  <p className="text-sm text-nalco-gray">{selectedItem.description}</p>
+                  <p className="text-sm text-nalco-gray">
+                    {selectedItem.description}
+                  </p>
                 </div>
 
                 <div className="flex space-x-2">
                   <Button
                     className="bg-nalco-blue hover:bg-nalco-blue/90"
                     onClick={() => {
-                      setSuccess(`Issue ${selectedItem.id} assigned to team successfully!`);
+                      setSuccess(
+                        `Issue ${selectedItem.id} assigned to team successfully!`,
+                      );
                       setModuleDialog({ open: false, type: "", title: "" });
                     }}
                   >
@@ -1253,7 +1408,9 @@ export default function AuthorityDashboard() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setSuccess(`Issue ${selectedItem.id} status updated successfully!`);
+                      setSuccess(
+                        `Issue ${selectedItem.id} status updated successfully!`,
+                      );
                       setModuleDialog({ open: false, type: "", title: "" });
                     }}
                   >
@@ -1262,7 +1419,9 @@ export default function AuthorityDashboard() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setSuccess(`Comment added to issue ${selectedItem.id} successfully!`);
+                      setSuccess(
+                        `Comment added to issue ${selectedItem.id} successfully!`,
+                      );
                       setModuleDialog({ open: false, type: "", title: "" });
                     }}
                   >
@@ -1271,7 +1430,9 @@ export default function AuthorityDashboard() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setSuccess(`Team members notified about issue ${selectedItem.id} successfully!`);
+                      setSuccess(
+                        `Team members notified about issue ${selectedItem.id} successfully!`,
+                      );
                       setModuleDialog({ open: false, type: "", title: "" });
                     }}
                   >

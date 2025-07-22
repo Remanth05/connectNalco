@@ -170,7 +170,7 @@ export default function Reimbursements() {
         amount: parseFloat(formData.amount),
         currency: "INR",
         description: formData.description,
-        submittedDate: new Date().toISOString().split('T')[0],
+        submittedDate: new Date().toISOString().split("T")[0],
         status: "pending",
       };
 

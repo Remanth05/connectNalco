@@ -39,7 +39,9 @@ export default function Attendance() {
 
   // Load attendance data from localStorage on mount
   useEffect(() => {
-    const savedAttendance = localStorage.getItem(`attendance_${user?.employeeId}`);
+    const savedAttendance = localStorage.getItem(
+      `attendance_${user?.employeeId}`,
+    );
     if (savedAttendance) {
       const data = JSON.parse(savedAttendance);
       const today = new Date().toDateString();
@@ -112,10 +114,13 @@ export default function Attendance() {
   const calculateWorkingHours = () => {
     if (!checkInTime) return "0h 0m";
 
-    const checkInDateTime = new Date(`${new Date().toDateString()} ${checkInTime}`);
-    const currentOrCheckOut = checkedOut && checkOutTime
-      ? new Date(`${new Date().toDateString()} ${checkOutTime}`)
-      : currentTime;
+    const checkInDateTime = new Date(
+      `${new Date().toDateString()} ${checkInTime}`,
+    );
+    const currentOrCheckOut =
+      checkedOut && checkOutTime
+        ? new Date(`${new Date().toDateString()} ${checkOutTime}`)
+        : currentTime;
 
     const diffMs = currentOrCheckOut.getTime() - checkInDateTime.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
@@ -147,7 +152,9 @@ export default function Attendance() {
       // Save to localStorage
       const today = new Date().toDateString();
       const updatedData = [...attendanceData];
-      const todayIndex = updatedData.findIndex((record: any) => record.date === today);
+      const todayIndex = updatedData.findIndex(
+        (record: any) => record.date === today,
+      );
 
       const todayRecord = {
         date: today,
@@ -165,7 +172,10 @@ export default function Attendance() {
       }
 
       setAttendanceData(updatedData);
-      localStorage.setItem(`attendance_${user?.employeeId}`, JSON.stringify(updatedData));
+      localStorage.setItem(
+        `attendance_${user?.employeeId}`,
+        JSON.stringify(updatedData),
+      );
     } catch (error) {
       setError("Failed to check in. Please try again.");
     } finally {
@@ -195,7 +205,9 @@ export default function Attendance() {
       // Update localStorage
       const today = new Date().toDateString();
       const updatedData = [...attendanceData];
-      const todayIndex = updatedData.findIndex((record: any) => record.date === today);
+      const todayIndex = updatedData.findIndex(
+        (record: any) => record.date === today,
+      );
 
       const workingHours = calculateWorkingHours();
       const todayRecord = {
@@ -214,7 +226,10 @@ export default function Attendance() {
       }
 
       setAttendanceData(updatedData);
-      localStorage.setItem(`attendance_${user?.employeeId}`, JSON.stringify(updatedData));
+      localStorage.setItem(
+        `attendance_${user?.employeeId}`,
+        JSON.stringify(updatedData),
+      );
     } catch (error) {
       setError("Failed to check out. Please try again.");
     } finally {
@@ -388,7 +403,11 @@ export default function Attendance() {
                         : "bg-nalco-gray text-white"
                   }
                 >
-                  {checkedOut ? "Checked Out" : checkedIn ? "Working" : "Not Checked In"}
+                  {checkedOut
+                    ? "Checked Out"
+                    : checkedIn
+                      ? "Working"
+                      : "Not Checked In"}
                 </Badge>
               </div>
             </div>

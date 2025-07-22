@@ -17,7 +17,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, FileText, Download, Eye, Search, Loader2, X } from "lucide-react";
+import {
+  ArrowLeft,
+  FileText,
+  Download,
+  Eye,
+  Search,
+  Loader2,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -87,15 +95,15 @@ export default function Payslips() {
     setDownloading(payslip.id);
     try {
       // Simulate download process
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Create a mock PDF blob
       const pdfContent = `Payslip for ${payslip.month}\nEmployee: John Doe\nGross Salary: ${formatCurrency(payslip.grossSalary)}\nNet Salary: ${formatCurrency(payslip.netSalary)}`;
-      const blob = new Blob([pdfContent], { type: 'application/pdf' });
+      const blob = new Blob([pdfContent], { type: "application/pdf" });
 
       // Create download link
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = `payslip-${payslip.id}.pdf`;
       document.body.appendChild(link);
@@ -103,7 +111,7 @@ export default function Payslips() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download failed:', error);
+      console.error("Download failed:", error);
     } finally {
       setDownloading(null);
     }
@@ -394,19 +402,35 @@ export default function Payslips() {
                   <div>
                     <h4 className="font-medium mb-2">Employee Information</h4>
                     <div className="space-y-1 text-sm">
-                      <p><strong>Employee ID:</strong> EMP001</p>
-                      <p><strong>Name:</strong> John Doe</p>
-                      <p><strong>Department:</strong> Engineering</p>
-                      <p><strong>Designation:</strong> Senior Engineer</p>
+                      <p>
+                        <strong>Employee ID:</strong> EMP001
+                      </p>
+                      <p>
+                        <strong>Name:</strong> John Doe
+                      </p>
+                      <p>
+                        <strong>Department:</strong> Engineering
+                      </p>
+                      <p>
+                        <strong>Designation:</strong> Senior Engineer
+                      </p>
                     </div>
                   </div>
                   <div>
                     <h4 className="font-medium mb-2">Pay Period</h4>
                     <div className="space-y-1 text-sm">
-                      <p><strong>Month:</strong> {selectedPayslip.month}</p>
-                      <p><strong>Pay Date:</strong> {selectedPayslip.date}</p>
-                      <p><strong>Working Days:</strong> 22</p>
-                      <p><strong>Days Present:</strong> 20</p>
+                      <p>
+                        <strong>Month:</strong> {selectedPayslip.month}
+                      </p>
+                      <p>
+                        <strong>Pay Date:</strong> {selectedPayslip.date}
+                      </p>
+                      <p>
+                        <strong>Working Days:</strong> 22
+                      </p>
+                      <p>
+                        <strong>Days Present:</strong> 20
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -418,23 +442,33 @@ export default function Payslips() {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>Basic Salary</span>
-                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.6)}</span>
+                        <span>
+                          {formatCurrency(selectedPayslip.grossSalary * 0.6)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>HRA</span>
-                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.2)}</span>
+                        <span>
+                          {formatCurrency(selectedPayslip.grossSalary * 0.2)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>Special Allowance</span>
-                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.15)}</span>
+                        <span>
+                          {formatCurrency(selectedPayslip.grossSalary * 0.15)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>Medical Allowance</span>
-                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.05)}</span>
+                        <span>
+                          {formatCurrency(selectedPayslip.grossSalary * 0.05)}
+                        </span>
                       </div>
                       <div className="border-t pt-2 flex justify-between font-semibold">
                         <span>Gross Salary</span>
-                        <span>{formatCurrency(selectedPayslip.grossSalary)}</span>
+                        <span>
+                          {formatCurrency(selectedPayslip.grossSalary)}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -447,19 +481,42 @@ export default function Payslips() {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>PF</span>
-                        <span>{formatCurrency((selectedPayslip.grossSalary - selectedPayslip.netSalary) * 0.4)}</span>
+                        <span>
+                          {formatCurrency(
+                            (selectedPayslip.grossSalary -
+                              selectedPayslip.netSalary) *
+                              0.4,
+                          )}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>ESI</span>
-                        <span>{formatCurrency((selectedPayslip.grossSalary - selectedPayslip.netSalary) * 0.1)}</span>
+                        <span>
+                          {formatCurrency(
+                            (selectedPayslip.grossSalary -
+                              selectedPayslip.netSalary) *
+                              0.1,
+                          )}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>Income Tax</span>
-                        <span>{formatCurrency((selectedPayslip.grossSalary - selectedPayslip.netSalary) * 0.5)}</span>
+                        <span>
+                          {formatCurrency(
+                            (selectedPayslip.grossSalary -
+                              selectedPayslip.netSalary) *
+                              0.5,
+                          )}
+                        </span>
                       </div>
                       <div className="border-t pt-2 flex justify-between font-semibold">
                         <span>Total Deductions</span>
-                        <span>{formatCurrency(selectedPayslip.grossSalary - selectedPayslip.netSalary)}</span>
+                        <span>
+                          {formatCurrency(
+                            selectedPayslip.grossSalary -
+                              selectedPayslip.netSalary,
+                          )}
+                        </span>
                       </div>
                     </div>
                   </div>
