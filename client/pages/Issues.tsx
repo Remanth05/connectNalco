@@ -72,6 +72,7 @@ export default function Issues() {
     location: "",
     urgency: "medium",
   });
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const issueStats = [
     {
       icon: AlertTriangle,
@@ -235,6 +236,7 @@ export default function Issues() {
         location: "",
         urgency: "medium",
       });
+      setAttachedFiles([]);
     } catch (error) {
       setError("Failed to submit issue. Please try again.");
     } finally {
@@ -416,19 +418,63 @@ export default function Issues() {
                     required
                   />
                 </div>
-                <div className="flex items-center space-x-2 p-4 bg-nalco-blue/5 rounded-lg">
-                  <Upload className="h-5 w-5 text-nalco-blue" />
-                  <div>
-                    <p className="text-sm font-medium">
-                      Attach Files (Optional)
-                    </p>
-                    <p className="text-xs text-nalco-gray">
-                      Upload photos or documents related to this issue
-                    </p>
+                <div className="p-4 bg-nalco-blue/5 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Upload className="h-5 w-5 text-nalco-blue" />
+                    <div>
+                      <p className="text-sm font-medium">
+                        Attach Files (Optional)
+                      </p>
+                      <p className="text-xs text-nalco-gray">
+                        Upload photos or documents related to this issue
+                      </p>
+                    </div>
                   </div>
-                  <Button type="button" variant="outline" size="sm">
-                    Choose Files
-                  </Button>
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      id="file-upload"
+                      multiple
+                      accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          setAttachedFiles(Array.from(e.target.files));
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('file-upload')?.click()}
+                    >
+                      Choose Files
+                    </Button>
+                    {attachedFiles.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-xs text-nalco-gray mb-1">{attachedFiles.length} file(s) selected:</p>
+                        <div className="space-y-1">
+                          {attachedFiles.map((file, index) => (
+                            <div key={index} className="flex items-center justify-between text-xs bg-white/50 p-2 rounded">
+                              <span className="text-nalco-gray">{file.name}</span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-4 w-4 p-0 text-nalco-red"
+                                onClick={() => {
+                                  setAttachedFiles(files => files.filter((_, i) => i !== index));
+                                }}
+                              >
+                                ×
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <DialogFooter>
                   <Button
