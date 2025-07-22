@@ -929,7 +929,16 @@ export default function AuthorityDashboard() {
                   <p className="text-sm text-nalco-gray">
                     Current month average
                   </p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess('Attendance report details loaded successfully!');
+                      setSelectedItem({ type: 'attendance', title: 'Attendance Report Details', data: { percentage: '94%', details: 'Monthly attendance analysis' } });
+                      setModuleDialog({ open: true, type: 'report-detail', title: 'Attendance Report Details' });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
