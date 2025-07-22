@@ -510,7 +510,11 @@ export default function AuthorityDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Issues</h3>
-              <Button size="sm" className="bg-nalco-red hover:bg-nalco-red/90">
+              <Button
+                size="sm"
+                className="bg-nalco-red hover:bg-nalco-red/90"
+                onClick={() => navigate('/issues')}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Report Issue
               </Button>
@@ -518,32 +522,52 @@ export default function AuthorityDashboard() {
             <div className="space-y-2">
               {[
                 {
+                  id: "DEPT-001",
                   title: "System Access Issue",
                   priority: "High",
                   status: "Open",
                   reporter: "Kavitha Reddy",
+                  description: "Unable to access department database",
+                  assignedTo: "IT Support",
                 },
                 {
+                  id: "DEPT-002",
                   title: "Printer Not Working",
                   priority: "Medium",
                   status: "In Progress",
                   reporter: "Rajesh Kumar",
+                  description: "Department printer jamming frequently",
+                  assignedTo: "Admin Team",
                 },
                 {
+                  id: "DEPT-003",
                   title: "Training Request",
                   priority: "Low",
                   status: "Resolved",
                   reporter: "Sunita Devi",
+                  description: "Request for Excel training for team",
+                  assignedTo: "HR Training",
                 },
               ].map((issue, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 border rounded-lg"
+                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-nalco-gray/5 transition-colors cursor-pointer"
+                  onClick={() => {
+                    // Navigate to detailed issue view
+                    setSelectedItem(issue);
+                    setModuleDialog({ open: true, type: 'issue-detail', title: `Issue Details - ${issue.id}` });
+                  }}
                 >
-                  <div>
-                    <p className="font-medium">{issue.title}</p>
-                    <p className="text-sm text-nalco-gray">
-                      Reported by: {issue.reporter}
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span className="font-mono text-sm text-nalco-blue">{issue.id}</span>
+                      <p className="font-medium">{issue.title}</p>
+                    </div>
+                    <p className="text-sm text-nalco-gray mb-1">
+                      {issue.description}
+                    </p>
+                    <p className="text-xs text-nalco-gray">
+                      Reported by: {issue.reporter} • Assigned to: {issue.assignedTo}
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
