@@ -918,6 +918,60 @@ export default function AuthorityDashboard() {
             </div>
           </div>
         );
+      case "issue-detail":
+        return (
+          <div className="space-y-4">
+            {selectedItem && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">{selectedItem.title}</h3>
+                    <p className="text-sm text-nalco-gray">Issue ID: {selectedItem.id}</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge className={selectedItem.priority === "High" ? "bg-nalco-red text-white" : selectedItem.priority === "Medium" ? "bg-yellow-500 text-white" : "bg-nalco-blue text-white"}>
+                      {selectedItem.priority}
+                    </Badge>
+                    <Badge className={selectedItem.status === "Open" ? "bg-nalco-red text-white" : selectedItem.status === "In Progress" ? "bg-yellow-500 text-white" : "bg-nalco-green text-white"}>
+                      {selectedItem.status}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label>Reported by</Label>
+                    <p className="text-sm">{selectedItem.reporter}</p>
+                  </div>
+                  <div>
+                    <Label>Assigned to</Label>
+                    <p className="text-sm">{selectedItem.assignedTo}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Description</Label>
+                  <p className="text-sm text-nalco-gray">{selectedItem.description}</p>
+                </div>
+
+                <div className="flex space-x-2">
+                  <Button className="bg-nalco-blue hover:bg-nalco-blue/90">
+                    Assign to Team
+                  </Button>
+                  <Button variant="outline">
+                    Update Status
+                  </Button>
+                  <Button variant="outline">
+                    Add Comment
+                  </Button>
+                  <Button variant="outline">
+                    Notify Members
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
       default:
         return <div>Module content not available</div>;
     }
