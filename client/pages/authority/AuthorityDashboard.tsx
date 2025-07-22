@@ -989,7 +989,16 @@ export default function AuthorityDashboard() {
                   <h4 className="font-medium mb-2">Training Hours</h4>
                   <p className="text-2xl font-bold text-nalco-red">156</p>
                   <p className="text-sm text-nalco-gray">Total this quarter</p>
-                  <Button size="sm" variant="outline" className="mt-2 w-full">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setSuccess('Training hours report details loaded successfully!');
+                      setSelectedItem({ type: 'training', title: 'Training Hours Report', data: { hours: '156', details: 'Quarterly training hours analysis' } });
+                      setModuleDialog({ open: true, type: 'report-detail', title: 'Training Hours Report' });
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
