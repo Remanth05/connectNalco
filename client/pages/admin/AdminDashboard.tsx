@@ -124,17 +124,25 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">User Management</h3>
-              <Button size="sm" className="bg-nalco-blue hover:bg-nalco-blue/90">
+              <Button
+                size="sm"
+                className="bg-nalco-blue hover:bg-nalco-blue/90"
+                onClick={() => setModuleDialog({
+                  open: true,
+                  type: "create-user",
+                  title: "Create New User"
+                })}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Add User
               </Button>
             </div>
             <div className="space-y-2">
               {[
-                { name: "Rajesh Kumar Singh", role: "Employee", id: "EMP001", status: "Active" },
-                { name: "Dr. Priya Sharma", role: "Authority", id: "AUTH001", status: "Active" },
-                { name: "Vikram Patel", role: "Admin", id: "ADMIN001", status: "Active" },
-                { name: "Sunita Devi", role: "Employee", id: "EMP002", status: "Inactive" },
+                { name: "Rajesh Kumar Singh", role: "Employee", id: "EMP001", status: "Active", email: "rajesh.singh@nalco.com", phone: "+91-9876543210" },
+                { name: "Dr. Priya Sharma", role: "Authority", id: "AUTH001", status: "Active", email: "priya.sharma@nalco.com", phone: "+91-9876543211" },
+                { name: "Vikram Patel", role: "Admin", id: "ADMIN001", status: "Active", email: "vikram.patel@nalco.com", phone: "+91-9876543212" },
+                { name: "Sunita Devi", role: "Employee", id: "EMP002", status: "Inactive", email: "sunita.devi@nalco.com", phone: "+91-9876543213" },
               ].map((user, index) => (
                 <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
@@ -145,9 +153,76 @@ export default function AdminDashboard() {
                     <Badge className={user.status === "Active" ? "bg-nalco-green text-white" : "bg-nalco-red text-white"}>
                       {user.status}
                     </Badge>
-                    <Button size="sm" variant="outline">
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button size="sm" variant="outline">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                          <DialogTitle>Edit User - {user.name}</DialogTitle>
+                          <DialogDescription>
+                            Update user information and settings
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <Label>Full Name</Label>
+                            <Input defaultValue={user.name} />
+                          </div>
+                          <div>
+                            <Label>Employee ID</Label>
+                            <Input defaultValue={user.id} disabled />
+                          </div>
+                          <div>
+                            <Label>Email</Label>
+                            <Input defaultValue={user.email} type="email" />
+                          </div>
+                          <div>
+                            <Label>Phone</Label>
+                            <Input defaultValue={user.phone} />
+                          </div>
+                          <div>
+                            <Label>Role</Label>
+                            <Select defaultValue={user.role.toLowerCase()}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="employee">Employee</SelectItem>
+                                <SelectItem value="authority">Authority</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Status</Label>
+                            <Select defaultValue={user.status.toLowerCase()}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="active">Active</SelectItem>
+                                <SelectItem value="inactive">Inactive</SelectItem>
+                                <SelectItem value="suspended">Suspended</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline">Cancel</Button>
+                          <Button
+                            className="bg-nalco-green hover:bg-nalco-green/90"
+                            onClick={() => {
+                              alert(`User ${user.name} updated successfully!`);
+                            }}
+                          >
+                            Save Changes
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               ))}
