@@ -234,17 +234,62 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Setup</h3>
-              <Button size="sm" className="bg-nalco-green hover:bg-nalco-green/90">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Department
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="bg-nalco-green hover:bg-nalco-green/90">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Department
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Add New Department</DialogTitle>
+                    <DialogDescription>
+                      Create a new department in the organization
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label>Department Name</Label>
+                      <Input placeholder="Enter department name" />
+                    </div>
+                    <div>
+                      <Label>Department Head</Label>
+                      <Input placeholder="Enter head name" />
+                    </div>
+                    <div>
+                      <Label>Initial Budget</Label>
+                      <Input placeholder="₹ 0" />
+                    </div>
+                    <div>
+                      <Label>Location</Label>
+                      <Input placeholder="Office/Building location" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Description</Label>
+                    <Textarea placeholder="Department description and responsibilities" rows={3} />
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline">Cancel</Button>
+                    <Button
+                      className="bg-nalco-green hover:bg-nalco-green/90"
+                      onClick={() => {
+                        alert("New department created successfully!");
+                      }}
+                    >
+                      Create Department
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {[
-                { name: "Human Resources", head: "Dr. Priya Sharma", employees: 15, budget: "₹5 Crores" },
-                { name: "Finance & Accounts", head: "Suresh Babu", employees: 22, budget: "₹12 Crores" },
-                { name: "Plant Operations", head: "Ramesh Chandran", employees: 145, budget: "₹50 Crores" },
-                { name: "Engineering", head: "Anita Das", employees: 89, budget: "₹35 Crores" },
+                { name: "Human Resources", head: "Dr. Priya Sharma", employees: 15, budget: "₹5 Crores", location: "Admin Block A" },
+                { name: "Finance & Accounts", head: "Suresh Babu", employees: 22, budget: "₹12 Crores", location: "Admin Block B" },
+                { name: "Plant Operations", head: "Ramesh Chandran", employees: 145, budget: "₹50 Crores", location: "Plant Area 1" },
+                { name: "Engineering", head: "Anita Das", employees: 89, budget: "₹35 Crores", location: "Engineering Block" },
               ].map((dept, index) => (
                 <Card key={index}>
                   <CardContent className="p-4">
@@ -253,14 +298,115 @@ export default function AdminDashboard() {
                     <p className="text-sm text-nalco-gray mb-1">Employees: {dept.employees}</p>
                     <p className="text-sm text-nalco-gray mb-3">Budget: {dept.budget}</p>
                     <div className="flex space-x-2">
-                      <Button size="sm" variant="outline" className="flex-1">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="outline" className="flex-1">
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-3xl">
+                          <DialogHeader>
+                            <DialogTitle>{dept.name} - Department Details</DialogTitle>
+                            <DialogDescription>
+                              Complete information about the department
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-2">
+                              <div>
+                                <Label>Department Name</Label>
+                                <Input value={dept.name} disabled />
+                              </div>
+                              <div>
+                                <Label>Department Head</Label>
+                                <Input value={dept.head} disabled />
+                              </div>
+                              <div>
+                                <Label>Total Employees</Label>
+                                <Input value={dept.employees.toString()} disabled />
+                              </div>
+                              <div>
+                                <Label>Budget Allocation</Label>
+                                <Input value={dept.budget} disabled />
+                              </div>
+                              <div>
+                                <Label>Location</Label>
+                                <Input value={dept.location} disabled />
+                              </div>
+                              <div>
+                                <Label>Status</Label>
+                                <Input value="Active" disabled />
+                              </div>
+                            </div>
+                            <div>
+                              <Label>Performance Metrics</Label>
+                              <div className="grid gap-2 md:grid-cols-3 mt-2">
+                                <div className="text-center p-3 bg-nalco-green/10 rounded">
+                                  <div className="text-2xl font-bold text-nalco-green">94%</div>
+                                  <div className="text-sm">Efficiency</div>
+                                </div>
+                                <div className="text-center p-3 bg-nalco-blue/10 rounded">
+                                  <div className="text-2xl font-bold text-nalco-blue">87%</div>
+                                  <div className="text-sm">Productivity</div>
+                                </div>
+                                <div className="text-center p-3 bg-nalco-red/10 rounded">
+                                  <div className="text-2xl font-bold text-nalco-red">4.2/5</div>
+                                  <div className="text-sm">Satisfaction</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline">Close</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="outline" className="flex-1">
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl">
+                          <DialogHeader>
+                            <DialogTitle>Edit Department - {dept.name}</DialogTitle>
+                            <DialogDescription>
+                              Update department information
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 md:grid-cols-2">
+                            <div>
+                              <Label>Department Name</Label>
+                              <Input defaultValue={dept.name} />
+                            </div>
+                            <div>
+                              <Label>Department Head</Label>
+                              <Input defaultValue={dept.head} />
+                            </div>
+                            <div>
+                              <Label>Budget Allocation</Label>
+                              <Input defaultValue={dept.budget} />
+                            </div>
+                            <div>
+                              <Label>Location</Label>
+                              <Input defaultValue={dept.location} />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline">Cancel</Button>
+                            <Button
+                              className="bg-nalco-green hover:bg-nalco-green/90"
+                              onClick={() => {
+                                alert(`Department ${dept.name} updated successfully!`);
+                              }}
+                            >
+                              Save Changes
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </CardContent>
                 </Card>
