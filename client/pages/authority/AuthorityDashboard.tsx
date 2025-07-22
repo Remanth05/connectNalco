@@ -702,9 +702,51 @@ export default function AuthorityDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Pending Reimbursements</h3>
-              <Button size="sm" variant="outline">
-                <Download className="h-4 w-4 mr-2" />
-                Export
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async () => {
+                  setProcessing('export-reimbursements');
+                  try {
+                    // Simulate export process
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    // Create CSV content
+                    const csvContent = `Employee Name,Type,Amount,Description,Status,Date\n${pendingReimbursements.map(r =>
+                      `${r.employeeName},${r.type},${r.amount},"${r.description}",${r.status},${r.submittedDate}`
+                    ).join('\n')}`;
+
+                    // Download CSV
+                    const blob = new Blob([csvContent], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `reimbursements-${new Date().toISOString().split('T')[0]}.csv`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+
+                    setSuccess('Reimbursements exported successfully!');
+                  } catch (error) {
+                    setError('Failed to export reimbursements');
+                  } finally {
+                    setProcessing(null);
+                  }
+                }}
+                disabled={processing === 'export-reimbursements'}
+              >
+                {processing === 'export-reimbursements' ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Exporting...
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </>
+                )}
               </Button>
             </div>
             <div className="space-y-2">
