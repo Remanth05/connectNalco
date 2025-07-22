@@ -517,10 +517,66 @@ export default function AdminDashboard() {
                       <Badge className="bg-nalco-green text-white">Active</Badge>
                     </div>
                   </div>
-                  <Button size="sm" className="w-full mt-3">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Configure
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="w-full mt-3">
+                        <Edit className="h-4 w-4 mr-2" />
+                        Configure
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Email Configuration</DialogTitle>
+                        <DialogDescription>
+                          Configure SMTP settings for email notifications
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>SMTP Server</Label>
+                          <Input placeholder="smtp.nalco.com" />
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <Label>Port</Label>
+                            <Input placeholder="587" />
+                          </div>
+                          <div>
+                            <Label>Security</Label>
+                            <Select defaultValue="tls">
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="tls">TLS</SelectItem>
+                                <SelectItem value="ssl">SSL</SelectItem>
+                                <SelectItem value="none">None</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Username</Label>
+                          <Input placeholder="noreply@nalco.com" />
+                        </div>
+                        <div>
+                          <Label>Password</Label>
+                          <Input type="password" placeholder="••••••••" />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline">Cancel</Button>
+                        <Button
+                          className="bg-nalco-green hover:bg-nalco-green/90"
+                          onClick={() => {
+                            alert("Email configuration updated successfully!");
+                          }}
+                        >
+                          Save Configuration
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             </div>
