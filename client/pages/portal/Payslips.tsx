@@ -373,6 +373,141 @@ export default function Payslips() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Payslip View Dialog */}
+        <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-2">
+                <FileText className="h-5 w-5" />
+                <span>Payslip Details - {selectedPayslip?.month}</span>
+              </DialogTitle>
+              <DialogDescription>
+                Detailed breakdown of your salary for {selectedPayslip?.month}
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedPayslip && (
+              <div className="space-y-6">
+                {/* Header Info */}
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <h4 className="font-medium mb-2">Employee Information</h4>
+                    <div className="space-y-1 text-sm">
+                      <p><strong>Employee ID:</strong> EMP001</p>
+                      <p><strong>Name:</strong> John Doe</p>
+                      <p><strong>Department:</strong> Engineering</p>
+                      <p><strong>Designation:</strong> Senior Engineer</p>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">Pay Period</h4>
+                    <div className="space-y-1 text-sm">
+                      <p><strong>Month:</strong> {selectedPayslip.month}</p>
+                      <p><strong>Pay Date:</strong> {selectedPayslip.date}</p>
+                      <p><strong>Working Days:</strong> 22</p>
+                      <p><strong>Days Present:</strong> 20</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Earnings */}
+                <div>
+                  <h4 className="font-medium mb-3">Earnings</h4>
+                  <div className="border rounded-lg p-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Basic Salary</span>
+                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.6)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>HRA</span>
+                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Special Allowance</span>
+                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.15)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Medical Allowance</span>
+                        <span>{formatCurrency(selectedPayslip.grossSalary * 0.05)}</span>
+                      </div>
+                      <div className="border-t pt-2 flex justify-between font-semibold">
+                        <span>Gross Salary</span>
+                        <span>{formatCurrency(selectedPayslip.grossSalary)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Deductions */}
+                <div>
+                  <h4 className="font-medium mb-3">Deductions</h4>
+                  <div className="border rounded-lg p-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>PF</span>
+                        <span>{formatCurrency((selectedPayslip.grossSalary - selectedPayslip.netSalary) * 0.4)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>ESI</span>
+                        <span>{formatCurrency((selectedPayslip.grossSalary - selectedPayslip.netSalary) * 0.1)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Income Tax</span>
+                        <span>{formatCurrency((selectedPayslip.grossSalary - selectedPayslip.netSalary) * 0.5)}</span>
+                      </div>
+                      <div className="border-t pt-2 flex justify-between font-semibold">
+                        <span>Total Deductions</span>
+                        <span>{formatCurrency(selectedPayslip.grossSalary - selectedPayslip.netSalary)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Net Pay */}
+                <div className="bg-nalco-green/10 border border-nalco-green rounded-lg p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-semibold">Net Pay</span>
+                    <span className="text-2xl font-bold text-nalco-green">
+                      {formatCurrency(selectedPayslip.netSalary)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setViewDialogOpen(false)}
+              >
+                Close
+              </Button>
+              <Button
+                className="bg-nalco-blue hover:bg-nalco-blue/90"
+                onClick={() => {
+                  if (selectedPayslip) {
+                    handleDownloadPayslip(selectedPayslip);
+                  }
+                }}
+                disabled={downloading === selectedPayslip?.id}
+              >
+                {downloading === selectedPayslip?.id ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Downloading...
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
