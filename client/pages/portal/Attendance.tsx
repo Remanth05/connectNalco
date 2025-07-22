@@ -395,24 +395,39 @@ export default function Attendance() {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <Button
-                    className="bg-nalco-red hover:bg-nalco-red/90"
-                    onClick={handleCheckOut}
-                    disabled={!checkedIn || checkedOut || processing}
-                  >
-                    {processing ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Checking Out...
-                      </>
-                    ) : checkedOut ? (
-                      "Checked Out"
-                    ) : !checkedIn ? (
-                      "Check In First"
-                    ) : (
-                      "Check Out"
-                    )}
-                  </Button>
+                  {checkedOut ? (
+                    <div className="h-16 w-16 rounded-full bg-nalco-red/10 flex items-center justify-center">
+                      <CheckCircle className="h-8 w-8 text-nalco-red" />
+                    </div>
+                  ) : (
+                    <Button
+                      className="bg-nalco-red hover:bg-nalco-red/90 h-16 w-32"
+                      onClick={handleCheckOut}
+                      disabled={!checkedIn || processing}
+                    >
+                      {processing ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Checking Out...
+                        </>
+                      ) : !checkedIn ? (
+                        "Check In First"
+                      ) : (
+                        "Check Out"
+                      )}
+                    </Button>
+                  )}
+                </div>
+                <p className="text-sm text-nalco-gray">Check Out</p>
+                <p className="text-xl font-bold text-nalco-black">
+                  {checkedOut ? checkOutTime : "-"}
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <div className="h-16 w-16 rounded-full bg-nalco-blue/10 flex items-center justify-center">
+                    <Clock className="h-8 w-8 text-nalco-blue" />
+                  </div>
                 </div>
                 <p className="text-sm text-nalco-gray">Current Status</p>
                 <Badge
