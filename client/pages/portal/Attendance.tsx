@@ -201,6 +201,11 @@ export default function Attendance() {
         `attendance_${user?.employeeId}`,
         JSON.stringify(updatedData),
       );
+
+      // Sync attendance update across the system
+      if (user?.employeeId) {
+        syncAttendanceUpdate(todayRecord, user.employeeId);
+      }
     } catch (error) {
       setError("Failed to check in. Please try again.");
     } finally {
