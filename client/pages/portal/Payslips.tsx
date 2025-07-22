@@ -17,7 +17,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, FileText, Download, Eye, Search } from "lucide-react";
+import { ArrowLeft, FileText, Download, Eye, Search, Loader2, X } from "lucide-react";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 
 export default function Payslips() {
@@ -58,11 +67,46 @@ export default function Payslips() {
     },
   ];
 
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [selectedPayslip, setSelectedPayslip] = useState<any>(null);
+  const [downloading, setDownloading] = useState<string | null>(null);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
     }).format(amount);
+  };
+
+  const handleViewPayslip = (payslip: any) => {
+    setSelectedPayslip(payslip);
+    setViewDialogOpen(true);
+  };
+
+  const handleDownloadPayslip = async (payslip: any) => {
+    setDownloading(payslip.id);
+    try {
+      // Simulate download process
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Create a mock PDF blob
+      const pdfContent = `Payslip for ${payslip.month}\nEmployee: John Doe\nGross Salary: ${formatCurrency(payslip.grossSalary)}\nNet Salary: ${formatCurrency(payslip.netSalary)}`;
+      const blob = new Blob([pdfContent], { type: 'application/pdf' });
+
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `payslip-${payslip.id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setDownloading(null);
+    }
   };
 
   return (
