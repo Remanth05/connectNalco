@@ -436,10 +436,68 @@ export default function AdminDashboard() {
                       <span className="text-sm font-medium">IST</span>
                     </div>
                   </div>
-                  <Button size="sm" className="w-full mt-3">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Settings
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="w-full mt-3">
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit Settings
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Edit General Settings</DialogTitle>
+                        <DialogDescription>
+                          Update system configuration
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>System Name</Label>
+                          <Input defaultValue="connectNALCO" />
+                        </div>
+                        <div>
+                          <Label>Version</Label>
+                          <Input defaultValue="v2.1.0" />
+                        </div>
+                        <div>
+                          <Label>Timezone</Label>
+                          <Select defaultValue="ist">
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ist">IST (Indian Standard Time)</SelectItem>
+                              <SelectItem value="utc">UTC</SelectItem>
+                              <SelectItem value="est">EST</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>Maintenance Mode</Label>
+                          <Select defaultValue="disabled">
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="enabled">Enabled</SelectItem>
+                              <SelectItem value="disabled">Disabled</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline">Cancel</Button>
+                        <Button
+                          className="bg-nalco-green hover:bg-nalco-green/90"
+                          onClick={() => {
+                            alert("General settings updated successfully!");
+                          }}
+                        >
+                          Save Settings
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
               <Card>
