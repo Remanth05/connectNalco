@@ -338,32 +338,50 @@ export default function Portal() {
           <Card>
             <CardContent className="p-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between border-b pb-4">
+                <div
+                  className="flex items-center justify-between border-b pb-4 cursor-pointer hover:bg-nalco-gray/5 p-2 rounded transition-colors"
+                  onClick={() => navigate('/portal/leave')}
+                >
                   <div className="flex items-center">
                     <Calendar className="h-5 w-5 text-nalco-blue" />
                     <span className="ml-3 text-nalco-black">
                       Leave application submitted
                     </span>
                   </div>
-                  <span className="text-sm text-nalco-gray">2 hours ago</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-nalco-gray">2 hours ago</span>
+                    <ExternalLink className="h-4 w-4 text-nalco-gray" />
+                  </div>
                 </div>
-                <div className="flex items-center justify-between border-b pb-4">
+                <div
+                  className="flex items-center justify-between border-b pb-4 cursor-pointer hover:bg-nalco-gray/5 p-2 rounded transition-colors"
+                  onClick={() => navigate('/portal/payslips')}
+                >
                   <div className="flex items-center">
                     <FileText className="h-5 w-5 text-nalco-green" />
                     <span className="ml-3 text-nalco-black">
                       Payslip for March 2024 available
                     </span>
                   </div>
-                  <span className="text-sm text-nalco-gray">1 day ago</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-nalco-gray">1 day ago</span>
+                    <ExternalLink className="h-4 w-4 text-nalco-gray" />
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
+                <div
+                  className="flex items-center justify-between cursor-pointer hover:bg-nalco-gray/5 p-2 rounded transition-colors"
+                  onClick={() => navigate('/portal/reimbursements')}
+                >
                   <div className="flex items-center">
                     <CreditCard className="h-5 w-5 text-nalco-red" />
                     <span className="ml-3 text-nalco-black">
                       Reimbursement approved
                     </span>
                   </div>
-                  <span className="text-sm text-nalco-gray">3 days ago</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-nalco-gray">3 days ago</span>
+                    <ExternalLink className="h-4 w-4 text-nalco-gray" />
+                  </div>
                 </div>
               </div>
             </CardContent>
