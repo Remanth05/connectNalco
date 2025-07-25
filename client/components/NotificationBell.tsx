@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Popover,
   PopoverContent,
@@ -32,6 +33,7 @@ interface Notification {
 
 export default function NotificationBell() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -232,8 +234,9 @@ export default function NotificationBell() {
 
   const handleNotificationClick = (notification: Notification) => {
     markAsRead(notification.id);
+    setIsOpen(false); // Close the popover
     if (notification.actionUrl) {
-      window.location.href = notification.actionUrl;
+      navigate(notification.actionUrl);
     }
   };
 
@@ -348,7 +351,8 @@ export default function NotificationBell() {
               className="w-full"
               onClick={() => {
                 setIsOpen(false);
-                // You could navigate to a full notifications page here
+                // Navigate to settings or a dedicated notifications page
+                navigate("/settings");
               }}
             >
               View All Notifications
