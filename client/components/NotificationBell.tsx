@@ -351,7 +351,8 @@ export default function NotificationBell() {
               className="w-full"
               onClick={() => {
                 setIsOpen(false);
-                // You could navigate to a full notifications page here
+                // Navigate to settings or a dedicated notifications page
+                navigate("/settings");
               }}
             >
               View All Notifications
