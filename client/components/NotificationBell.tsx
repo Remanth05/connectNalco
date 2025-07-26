@@ -58,6 +58,7 @@ export default function NotificationBell() {
         type: "warning",
         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
         read: false,
+        actionUrl: "/settings",
       },
       {
         id: "notif-3",
@@ -67,6 +68,24 @@ export default function NotificationBell() {
         timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
         read: true,
         actionUrl: "/portal/payslips",
+      },
+      {
+        id: "notif-4",
+        title: "New Issue Reported",
+        message: "A new safety issue has been reported in your department requiring immediate attention.",
+        type: "warning",
+        timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+        read: false,
+        actionUrl: "/issues",
+      },
+      {
+        id: "notif-5",
+        title: "Profile Update Required",
+        message: "Please update your emergency contact information in your profile.",
+        type: "info",
+        timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        read: false,
+        actionUrl: "/portal/profile",
       },
     ];
 
@@ -92,6 +111,24 @@ export default function NotificationBell() {
           read: false,
           actionUrl: "/authority/attendance",
         },
+        {
+          id: "notif-auth-3",
+          title: "Department Issue Escalated",
+          message: "A critical safety issue has been escalated to your department for immediate action.",
+          type: "error",
+          timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/issues",
+        },
+        {
+          id: "notif-auth-4",
+          title: "Reimbursement Requests",
+          message: "2 new reimbursement requests require your approval.",
+          type: "info",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/authority/dashboard",
+        },
       );
     }
 
@@ -104,6 +141,7 @@ export default function NotificationBell() {
           type: "warning",
           timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
           read: false,
+          actionUrl: "/admin/dashboard",
         },
         {
           id: "notif-admin-2",
@@ -112,6 +150,7 @@ export default function NotificationBell() {
           type: "error",
           timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
           read: false,
+          actionUrl: "/admin/dashboard",
         },
         {
           id: "notif-admin-3",
@@ -121,6 +160,25 @@ export default function NotificationBell() {
           type: "success",
           timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
           read: true,
+          actionUrl: "/settings",
+        },
+        {
+          id: "notif-admin-4",
+          title: "Critical Issues Report",
+          message: "5 critical issues require immediate admin attention across all departments.",
+          type: "error",
+          timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/issues",
+        },
+        {
+          id: "notif-admin-5",
+          title: "Department Analytics Ready",
+          message: "Monthly analytics report for all departments is now available for review.",
+          type: "info",
+          timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/analytics",
         },
       );
     }
@@ -235,8 +293,61 @@ export default function NotificationBell() {
   const handleNotificationClick = (notification: Notification) => {
     markAsRead(notification.id);
     setIsOpen(false); // Close the popover
+
     if (notification.actionUrl) {
-      navigate(notification.actionUrl);
+      // Handle role-based routing and ensure the user goes to the right place
+      let targetUrl = notification.actionUrl;
+
+      // For employee notifications about portal features, ensure they go to the right portal section
+      if (user?.role === "employee" && notification.actionUrl.startsWith("/portal/")) {
+        targetUrl = notification.actionUrl;
+      }
+      // For authority notifications, ensure they go to authority dashboard sections
+      else if (user?.role === "authority" && notification.actionUrl === "/authority/dashboard") {
+        targetUrl = "/authority/dashboard";
+      }
+      // For admin notifications, ensure they go to admin dashboard sections
+      else if (user?.role === "admin" && notification.actionUrl === "/admin/dashboard") {
+        targetUrl = "/admin/dashboard";
+      }
+      // For universal features like issues, settings, analytics - route directly
+      else if (["/issues", "/settings", "/analytics", "/safety"].includes(notification.actionUrl)) {
+        targetUrl = notification.actionUrl;
+      }
+      // If the URL doesn't match expected patterns, try to route to appropriate dashboard
+      else {
+        switch (user?.role) {
+          case "admin":
+            targetUrl = "/admin/dashboard";
+            break;
+          case "authority":
+            targetUrl = "/authority/dashboard";
+            break;
+          case "employee":
+            targetUrl = "/portal";
+            break;
+          default:
+            targetUrl = "/";
+        }
+      }
+
+      console.log(`Navigating from notification: ${notification.title} -> ${targetUrl}`);
+      navigate(targetUrl);
+    } else {
+      // If no actionUrl, route to appropriate dashboard based on role
+      switch (user?.role) {
+        case "admin":
+          navigate("/admin/dashboard");
+          break;
+        case "authority":
+          navigate("/authority/dashboard");
+          break;
+        case "employee":
+          navigate("/portal");
+          break;
+        default:
+          navigate("/");
+      }
     }
   };
 

@@ -1158,28 +1158,83 @@ export default function Issues() {
               <Button
                 className="bg-nalco-blue hover:bg-nalco-blue/90"
                 onClick={async () => {
-                  // Simulate API call
-                  setSubmitting(true);
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                  let message = "";
-                  if (actionType === "assign") {
-                    message = `Issue assigned to ${assigneeValue} successfully!`;
-                  } else if (actionType === "status") {
-                    message = `Issue status updated to ${statusValue} successfully!`;
-                  } else if (actionType === "comment") {
-                    message = "Comment added successfully!";
-                  } else if (actionType === "notify") {
-                    message = `${notifyMembers.length} team member(s) notified successfully!`;
+                  // Validate required fields first
+                  if (
+                    (actionType === "assign" && !assigneeValue) ||
+                    (actionType === "status" && !statusValue) ||
+                    (actionType === "comment" && !commentValue) ||
+                    (actionType === "notify" && notifyMembers.length === 0)
+                  ) {
+                    setError("Please fill in all required fields");
+                    return;
                   }
 
-                  setSuccess(message);
-                  setActionDialogOpen(false);
-                  setAssigneeValue("");
-                  setStatusValue("");
-                  setCommentValue("");
-                  setNotifyMembers([]);
-                  setSubmitting(false);
+                  setSubmitting(true);
+                  setError("");
+
+                  try {
+                    // Simulate API call with delay
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                    // Update the selected issue with the new data
+                    if (selectedIssue) {
+                      const updatedIssue = { ...selectedIssue };
+
+                      if (actionType === "assign" && assigneeValue) {
+                        updatedIssue.assignee = assigneeValue;
+
+                        // Update the issues list
+                        setRecentIssues(prev => prev.map(issue =>
+                          issue.id === selectedIssue.id
+                            ? { ...issue, assignee: assigneeValue }
+                            : issue
+                        ));
+                      }
+
+                      if (actionType === "status" && statusValue) {
+                        updatedIssue.status = statusValue === "in-progress" ? "In Progress" :
+                                             statusValue === "on-hold" ? "On Hold" :
+                                             statusValue === "resolved" ? "Resolved" :
+                                             statusValue === "closed" ? "Closed" : "Open";
+
+                        // Update the issues list
+                        setRecentIssues(prev => prev.map(issue =>
+                          issue.id === selectedIssue.id
+                            ? { ...issue, status: updatedIssue.status }
+                            : issue
+                        ));
+                      }
+
+                      setSelectedIssue(updatedIssue);
+                    }
+
+                    let message = "";
+                    if (actionType === "assign") {
+                      message = `Issue ${selectedIssue?.id} assigned to ${assigneeValue} successfully! The assignee has been notified and the issue is now being tracked.`;
+                    } else if (actionType === "status") {
+                      message = `Issue ${selectedIssue?.id} status updated to ${statusValue} successfully! All stakeholders have been notified of the status change.`;
+                    } else if (actionType === "comment") {
+                      message = `Comment added to issue ${selectedIssue?.id} successfully! The comment has been logged and relevant team members notified.`;
+                    } else if (actionType === "notify") {
+                      message = `${notifyMembers.length} team member(s) notified about issue ${selectedIssue?.id} successfully! Notifications have been sent via email and system alerts.`;
+                    }
+
+                    setSuccess(message);
+
+                    // Reset form but keep dialogs open for 2 seconds to show success
+                    setTimeout(() => {
+                      setActionDialogOpen(false);
+                      setAssigneeValue("");
+                      setStatusValue("");
+                      setCommentValue("");
+                      setNotifyMembers([]);
+                    }, 2000);
+
+                  } catch (error) {
+                    setError("Failed to process action. Please try again.");
+                  } finally {
+                    setSubmitting(false);
+                  }
                 }}
                 disabled={
                   submitting ||
