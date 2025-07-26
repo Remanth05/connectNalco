@@ -293,8 +293,61 @@ export default function NotificationBell() {
   const handleNotificationClick = (notification: Notification) => {
     markAsRead(notification.id);
     setIsOpen(false); // Close the popover
+
     if (notification.actionUrl) {
-      navigate(notification.actionUrl);
+      // Handle role-based routing and ensure the user goes to the right place
+      let targetUrl = notification.actionUrl;
+
+      // For employee notifications about portal features, ensure they go to the right portal section
+      if (user?.role === "employee" && notification.actionUrl.startsWith("/portal/")) {
+        targetUrl = notification.actionUrl;
+      }
+      // For authority notifications, ensure they go to authority dashboard sections
+      else if (user?.role === "authority" && notification.actionUrl === "/authority/dashboard") {
+        targetUrl = "/authority/dashboard";
+      }
+      // For admin notifications, ensure they go to admin dashboard sections
+      else if (user?.role === "admin" && notification.actionUrl === "/admin/dashboard") {
+        targetUrl = "/admin/dashboard";
+      }
+      // For universal features like issues, settings, analytics - route directly
+      else if (["/issues", "/settings", "/analytics", "/safety"].includes(notification.actionUrl)) {
+        targetUrl = notification.actionUrl;
+      }
+      // If the URL doesn't match expected patterns, try to route to appropriate dashboard
+      else {
+        switch (user?.role) {
+          case "admin":
+            targetUrl = "/admin/dashboard";
+            break;
+          case "authority":
+            targetUrl = "/authority/dashboard";
+            break;
+          case "employee":
+            targetUrl = "/portal";
+            break;
+          default:
+            targetUrl = "/";
+        }
+      }
+
+      console.log(`Navigating from notification: ${notification.title} -> ${targetUrl}`);
+      navigate(targetUrl);
+    } else {
+      // If no actionUrl, route to appropriate dashboard based on role
+      switch (user?.role) {
+        case "admin":
+          navigate("/admin/dashboard");
+          break;
+        case "authority":
+          navigate("/authority/dashboard");
+          break;
+        case "employee":
+          navigate("/portal");
+          break;
+        default:
+          navigate("/");
+      }
     }
   };
 
