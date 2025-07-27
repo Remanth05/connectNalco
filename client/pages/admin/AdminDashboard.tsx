@@ -127,6 +127,24 @@ export default function AdminDashboard() {
     }
   };
 
+  const showConfirmDialog = (options: {
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "default" | "destructive";
+  }) => {
+    setConfirmDialog({
+      open: true,
+      ...options,
+      onCancel: () => setConfirmDialog(prev => ({ ...prev, open: false })),
+      confirmText: options.confirmText || "Confirm",
+      cancelText: options.cancelText || "Cancel",
+      variant: options.variant || "default",
+    });
+  };
+
   const handleQuickAction = (action: string) => {
     switch (action) {
       case "create-user":
