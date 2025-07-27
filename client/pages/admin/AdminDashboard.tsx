@@ -68,6 +68,22 @@ export default function AdminDashboard() {
   const [processing, setProcessing] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const [departmentDialogs, setDepartmentDialogs] = useState<{
+    addDept: boolean;
+    editDept: { open: boolean; dept: any };
+    viewDept: { open: boolean; dept: any };
+  }>({
+    addDept: false,
+    editDept: { open: false, dept: null },
+    viewDept: { open: false, dept: null },
+  });
+  const [newDeptForm, setNewDeptForm] = useState({
+    name: "",
+    head: "",
+    budget: "",
+    location: "",
+    description: "",
+  });
 
   const handleModuleAccess = async (
     modulePath: string,
