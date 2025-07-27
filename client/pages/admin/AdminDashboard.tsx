@@ -1525,18 +1525,23 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  const confirmed = confirm(
-                    "Enable system maintenance mode? This will temporarily disable user access.",
-                  );
-                  if (confirmed) {
-                    alert(
-                      "System Maintenance Mode ENABLED\n\n" +
-                        "- User access temporarily disabled\n" +
-                        "- Maintenance window: 2 hours\n" +
-                        "- Automatic restoration scheduled\n" +
-                        "- Admin access remains active",
-                    );
-                  }
+                  showConfirmDialog({
+                    title: "System Maintenance Mode",
+                    message: "Enable system maintenance mode? This will temporarily disable user access and should only be done during scheduled maintenance windows.",
+                    confirmText: "Enable Maintenance",
+                    variant: "destructive",
+                    onConfirm: () => {
+                      setConfirmDialog(prev => ({ ...prev, open: false }));
+                      setSuccess(
+                        "System Maintenance Mode ENABLED\n\n" +
+                          "• User access temporarily disabled\n" +
+                          "• Maintenance window: 2 hours\n" +
+                          "• Automatic restoration scheduled\n" +
+                          "• Admin access remains active"
+                      );
+                      setTimeout(() => setSuccess(""), 5000);
+                    }
+                  });
                 }}
               >
                 System Maintenance
