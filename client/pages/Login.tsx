@@ -136,31 +136,43 @@ export default function Login() {
             Modern employee management system for NALCO operations
           </p>
 
-          {/* Role Information Cards */}
+          {/* Role Selection Buttons */}
           <div className="grid gap-4 md:grid-cols-3">
-            <Card className="text-center">
-              <CardContent className="p-4">
+            <Button
+              variant="outline"
+              className="h-auto p-4 hover:bg-nalco-blue/10 hover:border-nalco-blue transition-all"
+              onClick={() => setFormData({ ...formData, role: "employee" })}
+            >
+              <div className="text-center">
                 <User className="h-8 w-8 text-nalco-blue mx-auto mb-2" />
                 <h3 className="font-medium text-nalco-black">Employee</h3>
                 <p className="text-sm text-nalco-gray">
                   Access personal services
                 </p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="p-4">
+              </div>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-auto p-4 hover:bg-nalco-green/10 hover:border-nalco-green transition-all"
+              onClick={() => setFormData({ ...formData, role: "authority" })}
+            >
+              <div className="text-center">
                 <Shield className="h-8 w-8 text-nalco-green mx-auto mb-2" />
                 <h3 className="font-medium text-nalco-black">Authority</h3>
                 <p className="text-sm text-nalco-gray">Manage departments</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="p-4">
+              </div>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-auto p-4 hover:bg-nalco-red/10 hover:border-nalco-red transition-all"
+              onClick={() => setFormData({ ...formData, role: "admin" })}
+            >
+              <div className="text-center">
                 <Users className="h-8 w-8 text-nalco-red mx-auto mb-2" />
                 <h3 className="font-medium text-nalco-black">Admin</h3>
                 <p className="text-sm text-nalco-gray">System administration</p>
-              </CardContent>
-            </Card>
+              </div>
+            </Button>
           </div>
         </div>
 
