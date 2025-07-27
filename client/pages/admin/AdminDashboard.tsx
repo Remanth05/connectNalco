@@ -554,12 +554,26 @@ export default function AdminDashboard() {
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
-                      <Dialog>
+                      <Dialog
+                        open={departmentDialogs.editDept.open && departmentDialogs.editDept.dept?.name === dept.name}
+                        onOpenChange={(open) =>
+                          setDepartmentDialogs(prev => ({
+                            ...prev,
+                            editDept: { open, dept: open ? dept : null }
+                          }))
+                        }
+                      >
                         <DialogTrigger asChild>
                           <Button
                             size="sm"
                             variant="outline"
                             className="flex-1"
+                            onClick={() =>
+                              setDepartmentDialogs(prev => ({
+                                ...prev,
+                                editDept: { open: true, dept }
+                              }))
+                            }
                           >
                             <Edit className="h-4 w-4 mr-2" />
                             Edit
@@ -593,13 +607,35 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                           <DialogFooter>
-                            <Button variant="outline">Cancel</Button>
+                            <Button
+                              variant="outline"
+                              onClick={() =>
+                                setDepartmentDialogs(prev => ({
+                                  ...prev,
+                                  editDept: { open: false, dept: null }
+                                }))
+                              }
+                            >
+                              Cancel
+                            </Button>
                             <Button
                               className="bg-nalco-green hover:bg-nalco-green/90"
-                              onClick={() => {
-                                alert(
-                                  `Department ${dept.name} updated successfully!`,
-                                );
+                              onClick={async () => {
+                                try {
+                                  // Here you would make API call to update department
+                                  // await fetch(`/api/departments/${dept.id}`, { method: 'PUT', body: JSON.stringify(updatedData) });
+
+                                  setSuccess(`Department "${dept.name}" updated successfully!`);
+                                  setDepartmentDialogs(prev => ({
+                                    ...prev,
+                                    editDept: { open: false, dept: null }
+                                  }));
+
+                                  setTimeout(() => setSuccess(""), 3000);
+                                } catch (error) {
+                                  setError("Failed to update department. Please try again.");
+                                  setTimeout(() => setError(""), 3000);
+                                }
                               }}
                             >
                               Save Changes
