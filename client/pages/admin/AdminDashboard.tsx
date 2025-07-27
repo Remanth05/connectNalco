@@ -311,11 +311,19 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Setup</h3>
-              <Dialog>
+              <Dialog
+                open={departmentDialogs.addDept}
+                onOpenChange={(open) =>
+                  setDepartmentDialogs(prev => ({ ...prev, addDept: open }))
+                }
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="sm"
                     className="bg-nalco-green hover:bg-nalco-green/90"
+                    onClick={() =>
+                      setDepartmentDialogs(prev => ({ ...prev, addDept: true }))
+                    }
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Department
@@ -331,19 +339,35 @@ export default function AdminDashboard() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
                       <Label>Department Name</Label>
-                      <Input placeholder="Enter department name" />
+                      <Input
+                        placeholder="Enter department name"
+                        value={newDeptForm.name}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, name: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <Label>Department Head</Label>
-                      <Input placeholder="Enter head name" />
+                      <Input
+                        placeholder="Enter head name"
+                        value={newDeptForm.head}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, head: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <Label>Initial Budget</Label>
-                      <Input placeholder="₹ 0" />
+                      <Input
+                        placeholder="₹ 0"
+                        value={newDeptForm.budget}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, budget: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <Label>Location</Label>
-                      <Input placeholder="Office/Building location" />
+                      <Input
+                        placeholder="Office/Building location"
+                        value={newDeptForm.location}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, location: e.target.value }))}
+                      />
                     </div>
                   </div>
                   <div>
@@ -351,14 +375,54 @@ export default function AdminDashboard() {
                     <Textarea
                       placeholder="Department description and responsibilities"
                       rows={3}
+                      value={newDeptForm.description}
+                      onChange={(e) => setNewDeptForm(prev => ({ ...prev, description: e.target.value }))}
                     />
                   </div>
                   <DialogFooter>
-                    <Button variant="outline">Cancel</Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setDepartmentDialogs(prev => ({ ...prev, addDept: false }));
+                        setNewDeptForm({
+                          name: "",
+                          head: "",
+                          budget: "",
+                          location: "",
+                          description: "",
+                        });
+                      }}
+                    >
+                      Cancel
+                    </Button>
                     <Button
                       className="bg-nalco-green hover:bg-nalco-green/90"
-                      onClick={() => {
-                        alert("New department created successfully!");
+                      onClick={async () => {
+                        if (!newDeptForm.name || !newDeptForm.head) {
+                          alert("Please fill in required fields (Name and Head)");
+                          return;
+                        }
+
+                        try {
+                          // Here you would make API call to save department
+                          // await fetch('/api/departments', { method: 'POST', body: JSON.stringify(newDeptForm) });
+
+                          setSuccess(`Department "${newDeptForm.name}" created successfully!`);
+                          setDepartmentDialogs(prev => ({ ...prev, addDept: false }));
+                          setNewDeptForm({
+                            name: "",
+                            head: "",
+                            budget: "",
+                            location: "",
+                            description: "",
+                          });
+
+                          // Clear success message after 3 seconds
+                          setTimeout(() => setSuccess(""), 3000);
+                        } catch (error) {
+                          setError("Failed to create department. Please try again.");
+                          setTimeout(() => setError(""), 3000);
+                        }
                       }}
                     >
                       Create Department
