@@ -84,6 +84,25 @@ export default function AdminDashboard() {
     location: "",
     description: "",
   });
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "default" | "destructive";
+  }>({
+    open: false,
+    title: "",
+    message: "",
+    onConfirm: () => {},
+    onCancel: () => {},
+    confirmText: "Confirm",
+    cancelText: "Cancel",
+    variant: "default",
+  });
 
   const handleModuleAccess = async (
     modulePath: string,
