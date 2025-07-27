@@ -1469,17 +1469,23 @@ export default function AdminDashboard() {
               </Button>
               <Button
                 variant="outline"
-                onClick={async () => {
-                  const confirmed = confirm(
-                    "Are you sure you want to start a database backup? This may take several minutes.",
-                  );
-                  if (confirmed) {
-                    alert(
-                      "Database backup initiated...\nBackup ID: BKP" +
-                        Date.now() +
-                        "\nEstimated time: 10-15 minutes\nYou will be notified when complete.",
-                    );
-                  }
+                onClick={() => {
+                  showConfirmDialog({
+                    title: "Database Backup",
+                    message: "Are you sure you want to start a database backup? This may take several minutes and will temporarily affect system performance.",
+                    confirmText: "Start Backup",
+                    onConfirm: () => {
+                      setConfirmDialog(prev => ({ ...prev, open: false }));
+                      setSuccess(
+                        "Database backup initiated...\n\n" +
+                          `Backup ID: BKP${Date.now()}\n` +
+                          "Estimated time: 10-15 minutes\n" +
+                          "You will be notified when complete.\n" +
+                          "Backup will be stored securely in the cloud."
+                      );
+                      setTimeout(() => setSuccess(""), 5000);
+                    }
+                  });
                 }}
               >
                 Backup Database
