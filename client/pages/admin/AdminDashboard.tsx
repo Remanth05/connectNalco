@@ -65,6 +65,9 @@ export default function AdminDashboard() {
     title: "",
   });
   const [moduleLoading, setModuleLoading] = useState<string | null>(null);
+  const [processing, setProcessing] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
 
   const handleModuleAccess = async (
     modulePath: string,
