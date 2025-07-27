@@ -38,74 +38,65 @@ export default function Login() {
     setError("");
     setIsLoading(true);
 
-    // Clear any existing auth data first
-    localStorage.removeItem("auth");
-
-    // Simple demo authentication
-    setTimeout(() => {
-      console.log("Login attempt:", formData);
-
+    try {
       if (!formData.employeeId || !formData.password || !formData.role) {
         setError("Please fill in all fields");
         setIsLoading(false);
         return;
       }
 
-      // Demo credentials - in real app this would be API call
-      const validCredentials = {
-        employee: { id: "EMP001", password: "emp123" },
-        authority: { id: "AUTH001", password: "auth123" },
-        admin: { id: "ADMIN001", password: "admin123" },
-      };
+      // API call to authenticate user
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employeeId: formData.employeeId,
+          password: formData.password,
+          role: formData.role,
+        }),
+      });
 
-      const roleCredentials =
-        validCredentials[formData.role as keyof typeof validCredentials];
+      const data = await response.json();
 
-      console.log("Role credentials:", roleCredentials);
-      console.log("Form data:", formData);
-
-      if (
-        !roleCredentials ||
-        formData.employeeId !== roleCredentials.id ||
-        formData.password !== roleCredentials.password
-      ) {
-        setError(
-          "Invalid credentials. Please check your Employee ID and password.",
-        );
+      if (!response.ok) {
+        setError(data.message || "Login failed. Please try again.");
         setIsLoading(false);
         return;
       }
 
       // Store auth data using context
       const authData = {
-        employeeId: formData.employeeId,
-        role: formData.role as "employee" | "authority" | "admin",
-        name:
-          formData.role === "admin"
-            ? "Vikram Patel"
-            : formData.role === "authority"
-              ? "Dr. Priya Sharma"
-              : "Rajesh Kumar Singh",
+        employeeId: data.user.employeeId,
+        role: data.user.role as "employee" | "authority" | "admin",
+        name: data.user.name,
+        email: data.user.email,
         isAuthenticated: true,
+        token: data.token,
       };
 
-      console.log("Auth data:", authData);
+      // Store token for API calls
+      localStorage.setItem("token", data.token);
 
       // Use the auth context to log in
       login(authData);
 
       // Navigate to appropriate dashboard
       const targetPath =
-        formData.role === "admin"
+        data.user.role === "admin"
           ? "/admin/dashboard"
-          : formData.role === "authority"
+          : data.user.role === "authority"
             ? "/authority/dashboard"
             : "/portal";
 
-      console.log("Navigating to:", targetPath);
       navigate(targetPath);
       setIsLoading(false);
-    }, 500); // Reduced timeout for faster testing
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Login failed. Please check your connection and try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -136,31 +127,43 @@ export default function Login() {
             Modern employee management system for NALCO operations
           </p>
 
-          {/* Role Information Cards */}
+          {/* Role Selection Buttons */}
           <div className="grid gap-4 md:grid-cols-3">
-            <Card className="text-center">
-              <CardContent className="p-4">
+            <Button
+              variant="outline"
+              className="h-auto p-4 hover:bg-nalco-blue/10 hover:border-nalco-blue transition-all"
+              onClick={() => setFormData({ ...formData, role: "employee" })}
+            >
+              <div className="text-center">
                 <User className="h-8 w-8 text-nalco-blue mx-auto mb-2" />
                 <h3 className="font-medium text-nalco-black">Employee</h3>
                 <p className="text-sm text-nalco-gray">
                   Access personal services
                 </p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="p-4">
+              </div>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-auto p-4 hover:bg-nalco-green/10 hover:border-nalco-green transition-all"
+              onClick={() => setFormData({ ...formData, role: "authority" })}
+            >
+              <div className="text-center">
                 <Shield className="h-8 w-8 text-nalco-green mx-auto mb-2" />
                 <h3 className="font-medium text-nalco-black">Authority</h3>
                 <p className="text-sm text-nalco-gray">Manage departments</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="p-4">
+              </div>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-auto p-4 hover:bg-nalco-red/10 hover:border-nalco-red transition-all"
+              onClick={() => setFormData({ ...formData, role: "admin" })}
+            >
+              <div className="text-center">
                 <Users className="h-8 w-8 text-nalco-red mx-auto mb-2" />
                 <h3 className="font-medium text-nalco-black">Admin</h3>
                 <p className="text-sm text-nalco-gray">System administration</p>
-              </CardContent>
-            </Card>
+              </div>
+            </Button>
           </div>
         </div>
 

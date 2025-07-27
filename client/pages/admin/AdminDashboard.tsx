@@ -65,6 +65,44 @@ export default function AdminDashboard() {
     title: "",
   });
   const [moduleLoading, setModuleLoading] = useState<string | null>(null);
+  const [processing, setProcessing] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const [departmentDialogs, setDepartmentDialogs] = useState<{
+    addDept: boolean;
+    editDept: { open: boolean; dept: any };
+    viewDept: { open: boolean; dept: any };
+  }>({
+    addDept: false,
+    editDept: { open: false, dept: null },
+    viewDept: { open: false, dept: null },
+  });
+  const [newDeptForm, setNewDeptForm] = useState({
+    name: "",
+    head: "",
+    budget: "",
+    location: "",
+    description: "",
+  });
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "default" | "destructive";
+  }>({
+    open: false,
+    title: "",
+    message: "",
+    onConfirm: () => {},
+    onCancel: () => {},
+    confirmText: "Confirm",
+    cancelText: "Cancel",
+    variant: "default",
+  });
 
   const handleModuleAccess = async (
     modulePath: string,
@@ -87,6 +125,24 @@ export default function AdminDashboard() {
     } finally {
       setModuleLoading(null);
     }
+  };
+
+  const showConfirmDialog = (options: {
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+    variant?: "default" | "destructive";
+  }) => {
+    setConfirmDialog({
+      open: true,
+      ...options,
+      onCancel: () => setConfirmDialog(prev => ({ ...prev, open: false })),
+      confirmText: options.confirmText || "Confirm",
+      cancelText: options.cancelText || "Cancel",
+      variant: options.variant || "default",
+    });
   };
 
   const handleQuickAction = (action: string) => {
@@ -292,11 +348,19 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Department Setup</h3>
-              <Dialog>
+              <Dialog
+                open={departmentDialogs.addDept}
+                onOpenChange={(open) =>
+                  setDepartmentDialogs(prev => ({ ...prev, addDept: open }))
+                }
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="sm"
                     className="bg-nalco-green hover:bg-nalco-green/90"
+                    onClick={() =>
+                      setDepartmentDialogs(prev => ({ ...prev, addDept: true }))
+                    }
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Department
@@ -312,19 +376,35 @@ export default function AdminDashboard() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
                       <Label>Department Name</Label>
-                      <Input placeholder="Enter department name" />
+                      <Input
+                        placeholder="Enter department name"
+                        value={newDeptForm.name}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, name: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <Label>Department Head</Label>
-                      <Input placeholder="Enter head name" />
+                      <Input
+                        placeholder="Enter head name"
+                        value={newDeptForm.head}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, head: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <Label>Initial Budget</Label>
-                      <Input placeholder="₹ 0" />
+                      <Input
+                        placeholder="₹ 0"
+                        value={newDeptForm.budget}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, budget: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <Label>Location</Label>
-                      <Input placeholder="Office/Building location" />
+                      <Input
+                        placeholder="Office/Building location"
+                        value={newDeptForm.location}
+                        onChange={(e) => setNewDeptForm(prev => ({ ...prev, location: e.target.value }))}
+                      />
                     </div>
                   </div>
                   <div>
@@ -332,14 +412,54 @@ export default function AdminDashboard() {
                     <Textarea
                       placeholder="Department description and responsibilities"
                       rows={3}
+                      value={newDeptForm.description}
+                      onChange={(e) => setNewDeptForm(prev => ({ ...prev, description: e.target.value }))}
                     />
                   </div>
                   <DialogFooter>
-                    <Button variant="outline">Cancel</Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setDepartmentDialogs(prev => ({ ...prev, addDept: false }));
+                        setNewDeptForm({
+                          name: "",
+                          head: "",
+                          budget: "",
+                          location: "",
+                          description: "",
+                        });
+                      }}
+                    >
+                      Cancel
+                    </Button>
                     <Button
                       className="bg-nalco-green hover:bg-nalco-green/90"
-                      onClick={() => {
-                        alert("New department created successfully!");
+                      onClick={async () => {
+                        if (!newDeptForm.name || !newDeptForm.head) {
+                          alert("Please fill in required fields (Name and Head)");
+                          return;
+                        }
+
+                        try {
+                          // Here you would make API call to save department
+                          // await fetch('/api/departments', { method: 'POST', body: JSON.stringify(newDeptForm) });
+
+                          setSuccess(`Department "${newDeptForm.name}" created successfully!`);
+                          setDepartmentDialogs(prev => ({ ...prev, addDept: false }));
+                          setNewDeptForm({
+                            name: "",
+                            head: "",
+                            budget: "",
+                            location: "",
+                            description: "",
+                          });
+
+                          // Clear success message after 3 seconds
+                          setTimeout(() => setSuccess(""), 3000);
+                        } catch (error) {
+                          setError("Failed to create department. Please try again.");
+                          setTimeout(() => setError(""), 3000);
+                        }
                       }}
                     >
                       Create Department
@@ -471,12 +591,26 @@ export default function AdminDashboard() {
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
-                      <Dialog>
+                      <Dialog
+                        open={departmentDialogs.editDept.open && departmentDialogs.editDept.dept?.name === dept.name}
+                        onOpenChange={(open) =>
+                          setDepartmentDialogs(prev => ({
+                            ...prev,
+                            editDept: { open, dept: open ? dept : null }
+                          }))
+                        }
+                      >
                         <DialogTrigger asChild>
                           <Button
                             size="sm"
                             variant="outline"
                             className="flex-1"
+                            onClick={() =>
+                              setDepartmentDialogs(prev => ({
+                                ...prev,
+                                editDept: { open: true, dept }
+                              }))
+                            }
                           >
                             <Edit className="h-4 w-4 mr-2" />
                             Edit
@@ -510,13 +644,35 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                           <DialogFooter>
-                            <Button variant="outline">Cancel</Button>
+                            <Button
+                              variant="outline"
+                              onClick={() =>
+                                setDepartmentDialogs(prev => ({
+                                  ...prev,
+                                  editDept: { open: false, dept: null }
+                                }))
+                              }
+                            >
+                              Cancel
+                            </Button>
                             <Button
                               className="bg-nalco-green hover:bg-nalco-green/90"
-                              onClick={() => {
-                                alert(
-                                  `Department ${dept.name} updated successfully!`,
-                                );
+                              onClick={async () => {
+                                try {
+                                  // Here you would make API call to update department
+                                  // await fetch(`/api/departments/${dept.id}`, { method: 'PUT', body: JSON.stringify(updatedData) });
+
+                                  setSuccess(`Department "${dept.name}" updated successfully!`);
+                                  setDepartmentDialogs(prev => ({
+                                    ...prev,
+                                    editDept: { open: false, dept: null }
+                                  }));
+
+                                  setTimeout(() => setSuccess(""), 3000);
+                                } catch (error) {
+                                  setError("Failed to update department. Please try again.");
+                                  setTimeout(() => setError(""), 3000);
+                                }
                               }}
                             >
                               Save Changes
@@ -792,38 +948,42 @@ export default function AdminDashboard() {
               <Button
                 size="sm"
                 className="bg-purple-600 hover:bg-purple-600/90"
-                onClick={async () => {
-                  const confirmed = confirm(
-                    "Are you sure you want to start a database backup? This may take several minutes.",
-                  );
-                  if (confirmed) {
-                    setProcessing("backup-database");
-                    setError("");
-                    setSuccess("");
+                onClick={() => {
+                  showConfirmDialog({
+                    title: "Database Backup",
+                    message: "Are you sure you want to start a database backup? This may take several minutes and will temporarily affect system performance.",
+                    confirmText: "Start Backup",
+                    variant: "default",
+                    onConfirm: async () => {
+                      setProcessing("backup-database");
+                      setError("");
+                      setSuccess("");
+                      setConfirmDialog(prev => ({ ...prev, open: false }));
 
-                    try {
-                      // Simulate backup process
-                      await new Promise((resolve) => setTimeout(resolve, 3000));
+                      try {
+                        // Simulate backup process
+                        await new Promise((resolve) => setTimeout(resolve, 3000));
 
-                      const backupId = `BKP${Date.now()}`;
-                      const backupSize = Math.random() * 2 + 1; // Random size between 1-3 GB
+                        const backupId = `BKP${Date.now()}`;
+                        const backupSize = Math.random() * 2 + 1; // Random size between 1-3 GB
 
-                      setSuccess(
-                        `Database backup completed successfully!\n\n` +
-                          `Backup ID: ${backupId}\n` +
-                          `Backup Size: ${backupSize.toFixed(2)} GB\n` +
-                          `Completion Time: ${new Date().toLocaleString()}\n` +
-                          `Storage Location: /backups/${backupId}.sql\n\n` +
-                          `The backup has been stored securely and can be used for restore operations.`,
-                      );
-                    } catch (error) {
-                      setError(
-                        "Database backup failed. Please check system logs and try again.",
-                      );
-                    } finally {
-                      setProcessing(null);
+                        setSuccess(
+                          `Database backup completed successfully!\n\n` +
+                            `Backup ID: ${backupId}\n` +
+                            `Backup Size: ${backupSize.toFixed(2)} GB\n` +
+                            `Completion Time: ${new Date().toLocaleString()}\n` +
+                            `Storage Location: /backups/${backupId}.sql\n\n` +
+                            `The backup has been stored securely and can be used for restore operations.`,
+                        );
+                      } catch (error) {
+                        setError(
+                          "Database backup failed. Please check system logs and try again.",
+                        );
+                      } finally {
+                        setProcessing(null);
+                      }
                     }
-                  }
+                  });
                 }}
                 disabled={processing === "backup-database"}
               >
@@ -1309,17 +1469,23 @@ export default function AdminDashboard() {
               </Button>
               <Button
                 variant="outline"
-                onClick={async () => {
-                  const confirmed = confirm(
-                    "Are you sure you want to start a database backup? This may take several minutes.",
-                  );
-                  if (confirmed) {
-                    alert(
-                      "Database backup initiated...\nBackup ID: BKP" +
-                        Date.now() +
-                        "\nEstimated time: 10-15 minutes\nYou will be notified when complete.",
-                    );
-                  }
+                onClick={() => {
+                  showConfirmDialog({
+                    title: "Database Backup",
+                    message: "Are you sure you want to start a database backup? This may take several minutes and will temporarily affect system performance.",
+                    confirmText: "Start Backup",
+                    onConfirm: () => {
+                      setConfirmDialog(prev => ({ ...prev, open: false }));
+                      setSuccess(
+                        "Database backup initiated...\n\n" +
+                          `Backup ID: BKP${Date.now()}\n` +
+                          "Estimated time: 10-15 minutes\n" +
+                          "You will be notified when complete.\n" +
+                          "Backup will be stored securely in the cloud."
+                      );
+                      setTimeout(() => setSuccess(""), 5000);
+                    }
+                  });
                 }}
               >
                 Backup Database
@@ -1365,18 +1531,23 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  const confirmed = confirm(
-                    "Enable system maintenance mode? This will temporarily disable user access.",
-                  );
-                  if (confirmed) {
-                    alert(
-                      "System Maintenance Mode ENABLED\n\n" +
-                        "- User access temporarily disabled\n" +
-                        "- Maintenance window: 2 hours\n" +
-                        "- Automatic restoration scheduled\n" +
-                        "- Admin access remains active",
-                    );
-                  }
+                  showConfirmDialog({
+                    title: "System Maintenance Mode",
+                    message: "Enable system maintenance mode? This will temporarily disable user access and should only be done during scheduled maintenance windows.",
+                    confirmText: "Enable Maintenance",
+                    variant: "destructive",
+                    onConfirm: () => {
+                      setConfirmDialog(prev => ({ ...prev, open: false }));
+                      setSuccess(
+                        "System Maintenance Mode ENABLED\n\n" +
+                          "• User access temporarily disabled\n" +
+                          "• Maintenance window: 2 hours\n" +
+                          "• Automatic restoration scheduled\n" +
+                          "• Admin access remains active"
+                      );
+                      setTimeout(() => setSuccess(""), 5000);
+                    }
+                  });
                 }}
               >
                 System Maintenance
@@ -1481,6 +1652,86 @@ export default function AdminDashboard() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Custom Confirmation Dialog */}
+        <Dialog
+          open={confirmDialog.open}
+          onOpenChange={(open) => {
+            if (!open) {
+              confirmDialog.onCancel();
+            }
+            setConfirmDialog(prev => ({ ...prev, open }));
+          }}
+        >
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-nalco-black">
+                {confirmDialog.title}
+              </DialogTitle>
+              <DialogDescription>
+                {confirmDialog.message}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  confirmDialog.onCancel();
+                  setConfirmDialog(prev => ({ ...prev, open: false }));
+                }}
+              >
+                {confirmDialog.cancelText}
+              </Button>
+              <Button
+                className={
+                  confirmDialog.variant === "destructive"
+                    ? "bg-nalco-red hover:bg-nalco-red/90"
+                    : "bg-nalco-blue hover:bg-nalco-blue/90"
+                }
+                onClick={confirmDialog.onConfirm}
+              >
+                {confirmDialog.confirmText}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Success/Error Messages */}
+        {success && (
+          <div className="fixed top-4 right-4 z-50 max-w-md">
+            <div className="bg-nalco-green text-white p-4 rounded-lg shadow-lg">
+              <div className="flex items-start justify-between">
+                <div className="whitespace-pre-line text-sm">{success}</div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20 ml-2"
+                  onClick={() => setSuccess("")}
+                >
+                  ×
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="fixed top-4 right-4 z-50 max-w-md">
+            <div className="bg-nalco-red text-white p-4 rounded-lg shadow-lg">
+              <div className="flex items-start justify-between">
+                <div className="whitespace-pre-line text-sm">{error}</div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20 ml-2"
+                  onClick={() => setError("")}
+                >
+                  ×
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
