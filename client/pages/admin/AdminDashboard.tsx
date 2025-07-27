@@ -1652,6 +1652,86 @@ export default function AdminDashboard() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Custom Confirmation Dialog */}
+        <Dialog
+          open={confirmDialog.open}
+          onOpenChange={(open) => {
+            if (!open) {
+              confirmDialog.onCancel();
+            }
+            setConfirmDialog(prev => ({ ...prev, open }));
+          }}
+        >
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-nalco-black">
+                {confirmDialog.title}
+              </DialogTitle>
+              <DialogDescription>
+                {confirmDialog.message}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  confirmDialog.onCancel();
+                  setConfirmDialog(prev => ({ ...prev, open: false }));
+                }}
+              >
+                {confirmDialog.cancelText}
+              </Button>
+              <Button
+                className={
+                  confirmDialog.variant === "destructive"
+                    ? "bg-nalco-red hover:bg-nalco-red/90"
+                    : "bg-nalco-blue hover:bg-nalco-blue/90"
+                }
+                onClick={confirmDialog.onConfirm}
+              >
+                {confirmDialog.confirmText}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Success/Error Messages */}
+        {success && (
+          <div className="fixed top-4 right-4 z-50 max-w-md">
+            <div className="bg-nalco-green text-white p-4 rounded-lg shadow-lg">
+              <div className="flex items-start justify-between">
+                <div className="whitespace-pre-line text-sm">{success}</div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20 ml-2"
+                  onClick={() => setSuccess("")}
+                >
+                  ×
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="fixed top-4 right-4 z-50 max-w-md">
+            <div className="bg-nalco-red text-white p-4 rounded-lg shadow-lg">
+              <div className="flex items-start justify-between">
+                <div className="whitespace-pre-line text-sm">{error}</div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20 ml-2"
+                  onClick={() => setError("")}
+                >
+                  ×
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
