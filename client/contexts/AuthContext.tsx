@@ -108,6 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         } else {
           // Invalid auth data, clear it
           localStorage.removeItem("auth");
+          localStorage.removeItem("token");
         }
       } catch (error) {
         console.error("Error parsing saved auth data:", error);
