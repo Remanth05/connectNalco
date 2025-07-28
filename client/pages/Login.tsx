@@ -101,6 +101,22 @@ export default function Login() {
     }
   };
 
+  // Quick fill demo credentials
+  const fillDemoCredentials = (role: string) => {
+    const credentials = {
+      employee: { id: "EMP001", password: "emp123" },
+      authority: { id: "AUTH001", password: "auth123" },
+      admin: { id: "ADMIN001", password: "admin123" },
+    };
+    
+    const cred = credentials[role as keyof typeof credentials];
+    setFormData({
+      employeeId: cred.id,
+      password: cred.password,
+      role: role,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-nalco-blue/10 to-nalco-red/10 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl grid gap-8 lg:grid-cols-2 items-center">
@@ -113,6 +129,9 @@ export default function Login() {
                   src="/logo.jpg"
                   alt="Company Logo"
                   className="h-full w-full object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
               <div>
@@ -133,7 +152,9 @@ export default function Login() {
           <div className="grid gap-4 md:grid-cols-3">
             <Button
               variant="outline"
-              className="h-auto p-4 hover:bg-nalco-blue/10 hover:border-nalco-blue transition-all"
+              className={`h-auto p-4 hover:bg-nalco-blue/10 hover:border-nalco-blue transition-all ${
+                formData.role === "employee" ? "bg-nalco-blue/10 border-nalco-blue" : ""
+              }`}
               onClick={() => setFormData({ ...formData, role: "employee" })}
             >
               <div className="text-center">
@@ -146,7 +167,9 @@ export default function Login() {
             </Button>
             <Button
               variant="outline"
-              className="h-auto p-4 hover:bg-nalco-green/10 hover:border-nalco-green transition-all"
+              className={`h-auto p-4 hover:bg-nalco-green/10 hover:border-nalco-green transition-all ${
+                formData.role === "authority" ? "bg-nalco-green/10 border-nalco-green" : ""
+              }`}
               onClick={() => setFormData({ ...formData, role: "authority" })}
             >
               <div className="text-center">
@@ -157,7 +180,9 @@ export default function Login() {
             </Button>
             <Button
               variant="outline"
-              className="h-auto p-4 hover:bg-nalco-red/10 hover:border-nalco-red transition-all"
+              className={`h-auto p-4 hover:bg-nalco-red/10 hover:border-nalco-red transition-all ${
+                formData.role === "admin" ? "bg-nalco-red/10 border-nalco-red" : ""
+              }`}
               onClick={() => setFormData({ ...formData, role: "admin" })}
             >
               <div className="text-center">
@@ -198,8 +223,8 @@ export default function Login() {
                     setFormData({ ...formData, role: value })
                   }
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose your role" />
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Authority" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="employee">
@@ -231,7 +256,7 @@ export default function Login() {
                   <Input
                     id="employeeId"
                     type="text"
-                    placeholder="Enter your Employee ID"
+                    placeholder="AUTH001"
                     value={formData.employeeId}
                     onChange={(e) =>
                       setFormData({ ...formData, employeeId: e.target.value })
@@ -248,7 +273,7 @@ export default function Login() {
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="••••••••"
                     value={formData.password}
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
@@ -274,15 +299,33 @@ export default function Login() {
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline">Employee</Badge>
+                  <Badge 
+                    variant="outline" 
+                    className="cursor-pointer hover:bg-nalco-blue/10"
+                    onClick={() => fillDemoCredentials("employee")}
+                  >
+                    Employee
+                  </Badge>
                   <span className="text-nalco-gray">EMP001 / emp123</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline">Authority</Badge>
+                  <Badge 
+                    variant="outline"
+                    className="cursor-pointer hover:bg-nalco-green/10"
+                    onClick={() => fillDemoCredentials("authority")}
+                  >
+                    Authority
+                  </Badge>
                   <span className="text-nalco-gray">AUTH001 / auth123</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline">Admin</Badge>
+                  <Badge 
+                    variant="outline"
+                    className="cursor-pointer hover:bg-nalco-red/10"
+                    onClick={() => fillDemoCredentials("admin")}
+                  >
+                    Admin
+                  </Badge>
                   <span className="text-nalco-gray">ADMIN001 / admin123</span>
                 </div>
               </div>
