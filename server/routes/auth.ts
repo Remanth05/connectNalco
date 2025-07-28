@@ -146,6 +146,7 @@ export const registerUser: RequestHandler = async (req, res) => {
 export const loginUser: RequestHandler = async (req, res) => {
   try {
     const { employeeId, password, role } = req.body;
+    console.log("Login attempt:", { employeeId, role, hasPassword: !!password });
 
     if (!employeeId || !password || !role) {
       const response: ApiResponse<null> = {
