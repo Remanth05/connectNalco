@@ -97,7 +97,9 @@ export default function Login() {
       setIsLoading(false);
     } catch (error) {
       console.error("Login error:", error);
-      setError("Unable to connect to server. Please check your internet connection or try again.");
+      setError(
+        "Unable to connect to server. Please check your internet connection or try again.",
+      );
       setIsLoading(false);
     }
   };

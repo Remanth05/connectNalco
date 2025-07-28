@@ -6,7 +6,10 @@ const MONGODB_URI =
 export const connectDB = async () => {
   try {
     // Skip MongoDB connection in development if MONGODB_URI is default
-    if (MONGODB_URI === "mongodb://localhost:27017/nalco_connect" && process.env.NODE_ENV !== "production") {
+    if (
+      MONGODB_URI === "mongodb://localhost:27017/nalco_connect" &&
+      process.env.NODE_ENV !== "production"
+    ) {
       console.log("🔄 Running in development mode without MongoDB");
       console.log("✨ Using demo credentials for authentication");
       console.log("📝 Demo login credentials:");
