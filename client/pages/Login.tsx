@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Logo } from "@/components/ui/logo";
 import { User, Lock, Building2, Shield, Users } from "lucide-react";
 
 export default function Login() {
