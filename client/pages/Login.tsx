@@ -109,7 +109,7 @@ export default function Login() {
       authority: { id: "AUTH001", password: "auth123" },
       admin: { id: "ADMIN001", password: "admin123" },
     };
-    
+
     const cred = credentials[role as keyof typeof credentials];
     setFormData({
       employeeId: cred.id,
@@ -145,7 +145,9 @@ export default function Login() {
             <Button
               variant="outline"
               className={`h-auto p-4 hover:bg-nalco-blue/10 hover:border-nalco-blue transition-all ${
-                formData.role === "employee" ? "bg-nalco-blue/10 border-nalco-blue" : ""
+                formData.role === "employee"
+                  ? "bg-nalco-blue/10 border-nalco-blue"
+                  : ""
               }`}
               onClick={() => setFormData({ ...formData, role: "employee" })}
             >
@@ -160,7 +162,9 @@ export default function Login() {
             <Button
               variant="outline"
               className={`h-auto p-4 hover:bg-nalco-green/10 hover:border-nalco-green transition-all ${
-                formData.role === "authority" ? "bg-nalco-green/10 border-nalco-green" : ""
+                formData.role === "authority"
+                  ? "bg-nalco-green/10 border-nalco-green"
+                  : ""
               }`}
               onClick={() => setFormData({ ...formData, role: "authority" })}
             >
@@ -173,7 +177,9 @@ export default function Login() {
             <Button
               variant="outline"
               className={`h-auto p-4 hover:bg-nalco-red/10 hover:border-nalco-red transition-all ${
-                formData.role === "admin" ? "bg-nalco-red/10 border-nalco-red" : ""
+                formData.role === "admin"
+                  ? "bg-nalco-red/10 border-nalco-red"
+                  : ""
               }`}
               onClick={() => setFormData({ ...formData, role: "admin" })}
             >
@@ -291,8 +297,8 @@ export default function Login() {
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <Badge 
-                    variant="outline" 
+                  <Badge
+                    variant="outline"
                     className="cursor-pointer hover:bg-nalco-blue/10"
                     onClick={() => fillDemoCredentials("employee")}
                   >
@@ -301,7 +307,7 @@ export default function Login() {
                   <span className="text-nalco-gray">EMP001 / emp123</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <Badge 
+                  <Badge
                     variant="outline"
                     className="cursor-pointer hover:bg-nalco-green/10"
                     onClick={() => fillDemoCredentials("authority")}
@@ -311,7 +317,7 @@ export default function Login() {
                   <span className="text-nalco-gray">AUTH001 / auth123</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <Badge 
+                  <Badge
                     variant="outline"
                     className="cursor-pointer hover:bg-nalco-red/10"
                     onClick={() => fillDemoCredentials("admin")}
