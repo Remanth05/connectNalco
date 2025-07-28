@@ -46,6 +46,12 @@ export default function Login() {
       }
 
       // API call to authenticate user
+      console.log("Attempting login with:", {
+        employeeId: formData.employeeId,
+        role: formData.role,
+        password: formData.password ? "*".repeat(formData.password.length) : "no password"
+      });
+
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -59,6 +65,7 @@ export default function Login() {
       });
 
       const data = await response.json();
+      console.log("Login response:", { status: response.status, success: data.success, error: data.error });
 
       if (!response.ok) {
         setError(
