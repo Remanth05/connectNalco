@@ -97,7 +97,9 @@ export default function Login() {
       setIsLoading(false);
     } catch (error) {
       console.error("Login error:", error);
-      setError("Login failed. Please check your connection and try again.");
+      setError(
+        "Unable to connect to server. Please check your internet connection or try again.",
+      );
       setIsLoading(false);
     }
   };
@@ -293,7 +295,7 @@ export default function Login() {
             {/* Demo Credentials */}
             <div className="mt-6 p-4 bg-nalco-gray/10 rounded-lg">
               <h4 className="font-medium text-nalco-black mb-2">
-                Demo Credentials:
+                Demo Credentials (Click to autofill):
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
