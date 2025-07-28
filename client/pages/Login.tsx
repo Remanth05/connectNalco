@@ -61,32 +61,34 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Login failed. Please try again.");
+        setError(
+          data.error || data.message || "Login failed. Please try again.",
+        );
         setIsLoading(false);
         return;
       }
 
       // Store auth data using context
       const authData = {
-        employeeId: data.user.employeeId,
-        role: data.user.role as "employee" | "authority" | "admin",
-        name: data.user.name,
-        email: data.user.email,
+        employeeId: data.data.user.employeeId,
+        role: data.data.user.role as "employee" | "authority" | "admin",
+        name: data.data.user.name,
+        email: data.data.user.email,
         isAuthenticated: true,
-        token: data.token,
+        token: data.data.token,
       };
 
       // Store token for API calls
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.data.token);
 
       // Use the auth context to log in
       login(authData);
 
       // Navigate to appropriate dashboard
       const targetPath =
-        data.user.role === "admin"
+        data.data.user.role === "admin"
           ? "/admin/dashboard"
-          : data.user.role === "authority"
+          : data.data.user.role === "authority"
             ? "/authority/dashboard"
             : "/portal";
 

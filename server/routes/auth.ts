@@ -145,37 +145,61 @@ export const registerUser: RequestHandler = async (req, res) => {
 // Login user
 export const loginUser: RequestHandler = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { employeeId, password, role } = req.body;
 
-    if (!email || !password) {
+    if (!employeeId || !password || !role) {
       const response: ApiResponse<null> = {
         success: false,
-        error: "Email and password are required",
+        error: "Employee ID, password, and role are required",
       };
       return res.status(400).json(response);
     }
 
     // Check if MongoDB is connected
     if (!isMongoConnected()) {
-      // Development mode fallback
-      if (email === "admin@nalco.com" && password === "nalco@2024") {
+      // Development mode fallback - check against demo credentials
+      const isValidCredentials =
+        (employeeId === "ADMIN001" &&
+          password === "admin123" &&
+          role === "admin") ||
+        (employeeId === "AUTH001" &&
+          password === "auth123" &&
+          role === "authority") ||
+        (employeeId === "EMP001" &&
+          password === "emp123" &&
+          role === "employee");
+
+      if (isValidCredentials) {
+        // Create appropriate mock user based on role
+        const mockUserData = {
+          ...mockUser,
+          employeeId,
+          role,
+          name:
+            role === "admin"
+              ? "Admin User"
+              : role === "authority"
+                ? "Authority User"
+                : "Employee User",
+        };
+
         const token = jwt.sign(
           {
-            userId: mockUser._id,
-            employeeId: mockUser.employeeId,
-            role: mockUser.role,
+            userId: mockUserData._id,
+            employeeId: mockUserData.employeeId,
+            role: mockUserData.role,
           },
           JWT_SECRET,
           { expiresIn: JWT_EXPIRE },
         );
 
         const response: ApiResponse<{
-          user: typeof mockUser;
+          user: typeof mockUserData;
           token: string;
         }> = {
           success: true,
           data: {
-            user: mockUser,
+            user: mockUserData,
             token,
           },
         };
@@ -185,14 +209,14 @@ export const loginUser: RequestHandler = async (req, res) => {
         const response: ApiResponse<null> = {
           success: false,
           error:
-            "Invalid credentials. For development, use admin@nalco.com / nalco@2024",
+            "Invalid credentials. Use demo credentials: ADMIN001/admin123, AUTH001/auth123, or EMP001/emp123",
         };
         return res.status(401).json(response);
       }
     }
 
-    // Find user by email
-    const user = await User.findOne({ email }).select("+password");
+    // Find user by employeeId and role
+    const user = await User.findOne({ employeeId, role }).select("+password");
     if (!user) {
       const response: ApiResponse<null> = {
         success: false,
