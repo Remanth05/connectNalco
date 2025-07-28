@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import {
   Users,
   AlertTriangle,
@@ -21,8 +22,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Layout from "@/components/Layout";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Index() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
+
+  // Redirect authenticated users to appropriate dashboard
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const targetPath =
+        user.role === "admin"
+          ? "/admin/dashboard"
+          : user.role === "authority"
+            ? "/authority/dashboard"
+            : "/portal";
+      navigate(targetPath);
+    }
+  }, [isAuthenticated, user, navigate]);
+
   const features = [
     {
       icon: Users,
