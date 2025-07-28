@@ -77,16 +77,16 @@ export default function Login() {
       };
 
       // Store token for API calls
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.data.token);
 
       // Use the auth context to log in
       login(authData);
 
       // Navigate to appropriate dashboard
       const targetPath =
-        data.user.role === "admin"
+        data.data.user.role === "admin"
           ? "/admin/dashboard"
-          : data.user.role === "authority"
+          : data.data.user.role === "authority"
             ? "/authority/dashboard"
             : "/portal";
 
