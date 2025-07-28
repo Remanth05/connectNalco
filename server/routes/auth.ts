@@ -204,8 +204,8 @@ export const loginUser: RequestHandler = async (req, res) => {
       }
     }
 
-    // Find user by email
-    const user = await User.findOne({ email }).select("+password");
+    // Find user by employeeId and role
+    const user = await User.findOne({ employeeId, role }).select("+password");
     if (!user) {
       const response: ApiResponse<null> = {
         success: false,
