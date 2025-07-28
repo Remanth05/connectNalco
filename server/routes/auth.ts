@@ -145,12 +145,12 @@ export const registerUser: RequestHandler = async (req, res) => {
 // Login user
 export const loginUser: RequestHandler = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { employeeId, password, role } = req.body;
 
-    if (!email || !password) {
+    if (!employeeId || !password || !role) {
       const response: ApiResponse<null> = {
         success: false,
-        error: "Email and password are required",
+        error: "Employee ID, password, and role are required",
       };
       return res.status(400).json(response);
     }
