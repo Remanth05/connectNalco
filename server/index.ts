@@ -75,7 +75,7 @@ export function createServer() {
   // Connect to MongoDB (optional for development)
   connectDB().catch(() => {
     // MongoDB connection failed, continue without it
-    console.log("🔧 Continuing in development mode...");
+    console.log("🔧 Continuing in development mode with demo data...");
   });
 
   // Middleware
