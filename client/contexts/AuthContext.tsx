@@ -4,7 +4,9 @@ interface User {
   employeeId: string;
   role: "employee" | "authority" | "admin";
   name: string;
+  email?: string;
   isAuthenticated: boolean;
+  token?: string;
   loginTime?: number;
   sessionTimeout?: number;
 }
@@ -39,6 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     setUser(null);
     localStorage.removeItem("auth");
+    localStorage.removeItem("token");
   };
 
   // Session timeout monitoring
@@ -98,16 +101,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             // Session expired, clear auth data
             console.log("Session expired, logging out user");
             localStorage.removeItem("auth");
+            localStorage.removeItem("token");
             localStorage.removeItem(`notifications_${userData.employeeId}`);
             localStorage.removeItem(`attendance_${userData.employeeId}`);
           }
         } else {
           // Invalid auth data, clear it
           localStorage.removeItem("auth");
+          localStorage.removeItem("token");
         }
       } catch (error) {
         console.error("Error parsing saved auth data:", error);
         localStorage.removeItem("auth");
+        localStorage.removeItem("token");
       }
     }
   }, []);
