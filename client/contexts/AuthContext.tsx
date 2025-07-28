@@ -101,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             // Session expired, clear auth data
             console.log("Session expired, logging out user");
             localStorage.removeItem("auth");
+            localStorage.removeItem("token");
             localStorage.removeItem(`notifications_${userData.employeeId}`);
             localStorage.removeItem(`attendance_${userData.employeeId}`);
           }
