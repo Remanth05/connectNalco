@@ -146,7 +146,6 @@ export const registerUser: RequestHandler = async (req, res) => {
 export const loginUser: RequestHandler = async (req, res) => {
   try {
     const { employeeId, password, role } = req.body;
-    console.log("Login attempt:", { employeeId, role, hasPassword: !!password });
 
     if (!employeeId || !password || !role) {
       const response: ApiResponse<null> = {
@@ -158,7 +157,6 @@ export const loginUser: RequestHandler = async (req, res) => {
 
     // Check if MongoDB is connected
     if (!isMongoConnected()) {
-      console.log("MongoDB not connected, using demo credentials");
       // Development mode fallback - check against demo credentials
       const isValidCredentials =
         (employeeId === "ADMIN001" &&
@@ -170,8 +168,6 @@ export const loginUser: RequestHandler = async (req, res) => {
         (employeeId === "EMP001" &&
           password === "emp123" &&
           role === "employee");
-
-      console.log("Credential validation result:", isValidCredentials);
 
       if (isValidCredentials) {
         // Create appropriate mock user based on role
