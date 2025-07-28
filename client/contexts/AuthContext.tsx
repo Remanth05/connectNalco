@@ -4,7 +4,9 @@ interface User {
   employeeId: string;
   role: "employee" | "authority" | "admin";
   name: string;
+  email?: string;
   isAuthenticated: boolean;
+  token?: string;
   loginTime?: number;
   sessionTimeout?: number;
 }
@@ -39,6 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     setUser(null);
     localStorage.removeItem("auth");
+    localStorage.removeItem("token");
   };
 
   // Session timeout monitoring
