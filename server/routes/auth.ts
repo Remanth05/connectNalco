@@ -159,9 +159,15 @@ export const loginUser: RequestHandler = async (req, res) => {
     if (!isMongoConnected()) {
       // Development mode fallback - check against demo credentials
       const isValidCredentials =
-        (employeeId === "ADMIN001" && password === "admin123" && role === "admin") ||
-        (employeeId === "AUTH001" && password === "auth123" && role === "authority") ||
-        (employeeId === "EMP001" && password === "emp123" && role === "employee");
+        (employeeId === "ADMIN001" &&
+          password === "admin123" &&
+          role === "admin") ||
+        (employeeId === "AUTH001" &&
+          password === "auth123" &&
+          role === "authority") ||
+        (employeeId === "EMP001" &&
+          password === "emp123" &&
+          role === "employee");
 
       if (isValidCredentials) {
         // Create appropriate mock user based on role
@@ -169,7 +175,12 @@ export const loginUser: RequestHandler = async (req, res) => {
           ...mockUser,
           employeeId,
           role,
-          name: role === "admin" ? "Admin User" : role === "authority" ? "Authority User" : "Employee User",
+          name:
+            role === "admin"
+              ? "Admin User"
+              : role === "authority"
+                ? "Authority User"
+                : "Employee User",
         };
 
         const token = jwt.sign(

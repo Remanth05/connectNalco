@@ -61,7 +61,9 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || data.message || "Login failed. Please try again.");
+        setError(
+          data.error || data.message || "Login failed. Please try again.",
+        );
         setIsLoading(false);
         return;
       }
