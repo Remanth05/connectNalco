@@ -113,6 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } catch (error) {
         console.error("Error parsing saved auth data:", error);
         localStorage.removeItem("auth");
+        localStorage.removeItem("token");
       }
     }
   }, []);
