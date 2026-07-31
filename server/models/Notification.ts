@@ -31,7 +31,4 @@ const notificationSchema = new Schema<INotification>(
 
 notificationSchema.index({ employeeId: 1, timestamp: -1 });
 
-export const Notification = mongoose.model<INotification>(
-  "Notification",
-  notificationSchema,
-);
+export const Notification = (mongoose.models.Notification as mongoose.Model<INotification>) || mongoose.model<INotification>("Notification", notificationSchema);

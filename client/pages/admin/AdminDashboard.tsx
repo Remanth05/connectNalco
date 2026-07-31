@@ -49,11 +49,44 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [usersList, setUsersList] = useState<any[]>([]);
+  const [newUserData, setNewUserData] = useState({
+    fullName: "",
+    employeeId: "",
+    email: "",
+    phone: "",
+    department: "",
+    role: "",
+  });
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/employees");
+      const data = await response.json();
+      if (data.success && data.data) {
+        setUsersList(data.data.map((emp: any) => ({
+          name: emp.name,
+          role: emp.role || "Employee", // API might not return role in getEmployees
+          id: emp.employeeId,
+          status: emp.isActive ? "Active" : "Inactive",
+          email: emp.email,
+          phone: emp.phone,
+        })));
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
   const [moduleDialog, setModuleDialog] = useState<{
     open: boolean;
@@ -205,40 +238,7 @@ export default function AdminDashboard() {
               </Button>
             </div>
             <div className="space-y-2">
-              {[
-                {
-                  name: "Rajesh Kumar Singh",
-                  role: "Employee",
-                  id: "EMP001",
-                  status: "Active",
-                  email: "rajesh.singh@nalco.com",
-                  phone: "+91-9876543210",
-                },
-                {
-                  name: "Dr. Priya Sharma",
-                  role: "Authority",
-                  id: "AUTH001",
-                  status: "Active",
-                  email: "priya.sharma@nalco.com",
-                  phone: "+91-9876543211",
-                },
-                {
-                  name: "Vikram Patel",
-                  role: "Admin",
-                  id: "ADMIN001",
-                  status: "Active",
-                  email: "vikram.patel@nalco.com",
-                  phone: "+91-9876543212",
-                },
-                {
-                  name: "Sunita Devi",
-                  role: "Employee",
-                  id: "EMP002",
-                  status: "Inactive",
-                  email: "sunita.devi@nalco.com",
-                  phone: "+91-9876543213",
-                },
-              ].map((user, index) => (
+              {usersList.map((user, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-3 border rounded-lg"
@@ -1051,37 +1051,39 @@ export default function AdminDashboard() {
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <Label>Full Name</Label>
-                <Input placeholder="Enter full name" />
+                <Input placeholder="Enter full name" value={newUserData.fullName} onChange={(e) => setNewUserData(prev => ({ ...prev, fullName: e.target.value }))} />
               </div>
               <div>
                 <Label>Employee ID</Label>
-                <Input placeholder="EMP###" />
+                <Input placeholder="EMP###" value={newUserData.employeeId} onChange={(e) => setNewUserData(prev => ({ ...prev, employeeId: e.target.value }))} />
               </div>
               <div>
                 <Label>Email</Label>
-                <Input placeholder="user@nalco.com" type="email" />
+                <Input placeholder="user@nalco.com" type="email" value={newUserData.email} onChange={(e) => setNewUserData(prev => ({ ...prev, email: e.target.value }))} />
               </div>
               <div>
                 <Label>Phone</Label>
-                <Input placeholder="+91-9876543210" />
+                <Input placeholder="+91-9876543210" value={newUserData.phone} onChange={(e) => setNewUserData(prev => ({ ...prev, phone: e.target.value }))} />
               </div>
               <div>
                 <Label>Department</Label>
-                <Select>
+                <Select value={newUserData.department} onValueChange={(val) => setNewUserData(prev => ({ ...prev, department: val }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select department" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="hr">Human Resources</SelectItem>
-                    <SelectItem value="finance">Finance</SelectItem>
-                    <SelectItem value="operations">Operations</SelectItem>
-                    <SelectItem value="engineering">Engineering</SelectItem>
+                    <SelectItem value="Human Resources">Human Resources</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="Operations">Operations</SelectItem>
+                    <SelectItem value="Engineering">Engineering</SelectItem>
+                    <SelectItem value="Sales & Marketing">Sales & Marketing</SelectItem>
+                    <SelectItem value="IT">IT</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
                 <Label>Role</Label>
-                <Select>
+                <Select value={newUserData.role} onValueChange={(val) => setNewUserData(prev => ({ ...prev, role: val }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
@@ -1632,12 +1634,57 @@ export default function AdminDashboard() {
               {moduleDialog.type === "create-user" && (
                 <Button
                   className="bg-nalco-blue hover:bg-nalco-blue/90"
-                  onClick={() => {
-                    alert("User created successfully!");
-                    setModuleDialog({ open: false, type: "", title: "" });
+                  onClick={async () => {
+                    setProcessing("create-user");
+                    setError("");
+                    try {
+                      // Call API to register employee
+                      const response = await fetch("/api/auth/register", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          employeeId: newUserData.employeeId,
+                          name: newUserData.fullName,
+                          email: newUserData.email,
+                          password: "emp" + "123", // Default password
+                          role: newUserData.role || "employee",
+                          department: newUserData.department || "Human Resources",
+                          phone: newUserData.phone,
+                          // Join date is not in form, use today
+                          joinDate: new Date().toISOString().split("T")[0],
+                        }),
+                      });
+
+                      const data = await response.json();
+                      if (!data.success) {
+                        throw new Error(data.error || "Failed to register user");
+                      }
+
+                      await fetchUsers();
+                      setSuccess(`User ${newUserData.fullName} created successfully!`);
+                      
+                      // Reset form
+                      setNewUserData({
+                        fullName: "",
+                        employeeId: "",
+                        email: "",
+                        phone: "",
+                        department: "",
+                        role: "",
+                      });
+
+                      setModuleDialog({ open: false, type: "", title: "" });
+                    } catch (err: any) {
+                      setError(err.message || "Failed to create user");
+                    } finally {
+                      setProcessing(null);
+                    }
                   }}
+                  disabled={processing === "create-user"}
                 >
-                  Create User
+                  {processing === "create-user" ? "Creating..." : "Create User"}
                 </Button>
               )}
               <Button

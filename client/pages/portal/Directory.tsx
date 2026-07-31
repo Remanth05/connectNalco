@@ -24,105 +24,42 @@ import { useState, useEffect } from "react";
 
 export default function Directory() {
   const navigate = useNavigate();
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // Load employee data from localStorage or use default NALCO employees
+  // Load employee data from backend API
   useEffect(() => {
-    const savedEmployees = localStorage.getItem("nalco_employees");
-    if (savedEmployees) {
-      setEmployees(JSON.parse(savedEmployees));
-    } else {
-      // Default NALCO employees
-      const defaultEmployees = [
-        {
-          id: 1,
-          name: "Rajesh Kumar Singh",
-          position: "HR Executive",
-          department: "Human Resources",
-          team: "Employee Relations",
-          email: "rajesh.singh@nalco.com",
-          phone: "+91-9876543210",
-          location: "Damanjodi Plant",
-          avatar: "RK",
-          status: "Available",
-          employeeId: "EMP001",
-          joinDate: "2022-03-15",
-        },
-        {
-          id: 2,
-          name: "Dr. Priya Sharma",
-          position: "Department Head",
-          department: "Human Resources",
-          team: "Management",
-          email: "priya.sharma@nalco.com",
-          phone: "+91-9876543211",
-          location: "Damanjodi Plant",
-          avatar: "PS",
-          status: "In Meeting",
-          employeeId: "AUTH001",
-          joinDate: "2018-06-20",
-        },
-        {
-          id: 3,
-          name: "Sunita Devi",
-          position: "HR Assistant",
-          department: "Human Resources",
-          team: "Administration",
-          email: "sunita.devi@nalco.com",
-          phone: "+91-9876543213",
-          location: "Damanjodi Plant",
-          avatar: "SD",
-          status: "Available",
-          employeeId: "EMP002",
-          joinDate: "2021-07-20",
-        },
-        {
-          id: 4,
-          name: "Mohammad Alam",
-          position: "Trainee",
-          department: "Human Resources",
-          team: "Training Program",
-          email: "mohammad.alam@nalco.com",
-          phone: "+91-9876543214",
-          location: "Damanjodi Plant",
-          avatar: "MA",
-          status: "On Leave",
-          employeeId: "EMP003",
-          joinDate: "2023-11-05",
-        },
-        {
-          id: 5,
-          name: "Anita Das",
-          position: "Engineering Manager",
-          department: "Engineering",
-          team: "Plant Operations",
-          email: "anita.das@nalco.com",
-          phone: "+91-9876543215",
-          location: "Plant Area 1",
-          avatar: "AD",
-          status: "Available",
-          employeeId: "ENG001",
-          joinDate: "2019-01-10",
-        },
-        {
-          id: 6,
-          name: "Suresh Babu",
-          position: "Finance Manager",
-          department: "Finance",
-          team: "Accounts",
-          email: "suresh.babu@nalco.com",
-          phone: "+91-9876543216",
-          location: "Admin Block B",
-          avatar: "SB",
-          status: "Available",
-          employeeId: "FIN001",
-          joinDate: "2020-04-15",
-        },
-      ];
-      setEmployees(defaultEmployees);
-      localStorage.setItem("nalco_employees", JSON.stringify(defaultEmployees));
-    }
+    const fetchEmployees = async () => {
+      try {
+        const response = await fetch("/api/employees");
+        const data = await response.json();
+        if (data.success && data.data) {
+          // Map to match the existing Directory structure
+          const formattedEmployees = data.data.map((emp: any) => ({
+            id: emp.employeeId,
+            name: emp.name,
+            position: emp.designation || "Employee",
+            department: emp.department || "NALCO",
+            team: "General", 
+            email: emp.email || "",
+            phone: emp.phone || "",
+            location: emp.location || "Bhubaneswar",
+            avatar: emp.name ? emp.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2) : "EM",
+            status: emp.isActive ? "Available" : "Away",
+            employeeId: emp.employeeId,
+            joinDate: emp.joinDate || "N/A",
+          }));
+          setEmployees(formattedEmployees);
+        }
+      } catch (error) {
+        console.error("Failed to fetch employees:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchEmployees();
   }, []);
 
   // Filter employees based on search term

@@ -151,7 +151,7 @@ export default function Login() {
                   ? "bg-nalco-blue/10 border-nalco-blue"
                   : ""
               }`}
-              onClick={() => setFormData({ ...formData, role: "employee" })}
+              onClick={() => setFormData({ employeeId: "", password: "", role: "employee" })}
             >
               <div className="text-center">
                 <User className="h-8 w-8 text-nalco-blue mx-auto mb-2" />
@@ -168,7 +168,7 @@ export default function Login() {
                   ? "bg-nalco-green/10 border-nalco-green"
                   : ""
               }`}
-              onClick={() => setFormData({ ...formData, role: "authority" })}
+              onClick={() => setFormData({ employeeId: "", password: "", role: "authority" })}
             >
               <div className="text-center">
                 <Shield className="h-8 w-8 text-nalco-green mx-auto mb-2" />
@@ -183,7 +183,7 @@ export default function Login() {
                   ? "bg-nalco-red/10 border-nalco-red"
                   : ""
               }`}
-              onClick={() => setFormData({ ...formData, role: "admin" })}
+              onClick={() => setFormData({ employeeId: "", password: "", role: "admin" })}
             >
               <div className="text-center">
                 <Users className="h-8 w-8 text-nalco-red mx-auto mb-2" />
@@ -256,7 +256,7 @@ export default function Login() {
                   <Input
                     id="employeeId"
                     type="text"
-                    placeholder="Enter the user ID"
+                    placeholder={formData.role === "employee" ? "e.g. EMP001" : formData.role === "authority" ? "e.g. AUTH001" : formData.role === "admin" ? "e.g. ADMIN001" : "Enter your User ID"}
                     value={formData.employeeId}
                     onChange={(e) =>
                       setFormData({ ...formData, employeeId: e.target.value })

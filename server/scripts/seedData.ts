@@ -6,7 +6,7 @@ const nalcoUsers = [
     employeeId: "ADMIN001",
     name: "System Administrator",
     email: "admin@nalco.com",
-    password: "nalco@2024",
+    password: "admin123",
     phone: "+91-6752-242001",
     role: "admin",
     department: "Information Technology",
@@ -18,7 +18,7 @@ const nalcoUsers = [
     employeeId: "AUTH001",
     name: "Dr. Priya Sharma",
     email: "priya.sharma@nalco.com",
-    password: "nalco@2024",
+    password: "auth123",
     phone: "+91-9876543211",
     role: "authority",
     department: "Human Resources",
@@ -31,7 +31,7 @@ const nalcoUsers = [
     employeeId: "EMP001",
     name: "Rajesh Kumar Singh",
     email: "rajesh.singh@nalco.com",
-    password: "nalco@2024",
+    password: "emp123",
     phone: "+91-9876543210",
     role: "employee",
     department: "Human Resources",
@@ -44,7 +44,7 @@ const nalcoUsers = [
     employeeId: "EMP002",
     name: "Sunita Devi",
     email: "sunita.devi@nalco.com",
-    password: "nalco@2024",
+    password: "emp123",
     phone: "+91-9876543213",
     role: "employee",
     department: "Human Resources",
@@ -57,7 +57,7 @@ const nalcoUsers = [
     employeeId: "EMP003",
     name: "Mohammad Alam",
     email: "mohammad.alam@nalco.com",
-    password: "nalco@2024",
+    password: "emp123",
     phone: "+91-9876543214",
     role: "employee",
     department: "Human Resources",
@@ -70,7 +70,7 @@ const nalcoUsers = [
     employeeId: "ENG001",
     name: "Anita Das",
     email: "anita.das@nalco.com",
-    password: "nalco@2024",
+    password: "auth123",
     phone: "+91-9876543215",
     role: "authority",
     department: "Engineering",
@@ -83,7 +83,7 @@ const nalcoUsers = [
     employeeId: "FIN001",
     name: "Suresh Babu",
     email: "suresh.babu@nalco.com",
-    password: "nalco@2024",
+    password: "auth123",
     phone: "+91-9876543216",
     role: "authority",
     department: "Finance",
@@ -96,7 +96,7 @@ const nalcoUsers = [
     employeeId: "OPS001",
     name: "Ramesh Chandran",
     email: "ramesh.chandran@nalco.com",
-    password: "nalco@2024",
+    password: "auth123",
     phone: "+91-9876543217",
     role: "authority",
     department: "Operations",
@@ -117,8 +117,13 @@ export const seedDatabase = async () => {
     await User.deleteMany({});
     console.log("Cleared existing users");
 
-    // Create new users
-    const createdUsers = await User.insertMany(nalcoUsers);
+    // Create users one by one so the pre-save bcrypt hash hook fires
+    const createdUsers = [];
+    for (const userData of nalcoUsers) {
+      const user = await User.create(userData);
+      createdUsers.push(user);
+    }
+
     console.log(`✅ Created ${createdUsers.length} users successfully`);
 
     // Display created users
@@ -132,10 +137,10 @@ export const seedDatabase = async () => {
     console.log("\n🎉 Database seeding completed successfully!");
 
     // Display default credentials
-    console.log("\n🔐 Default Login Credentials:");
-    console.log("Admin: admin@nalco.com / nalco@2024");
-    console.log("Authority: priya.sharma@nalco.com / nalco@2024");
-    console.log("Employee: rajesh.singh@nalco.com / nalco@2024");
+    console.log("\n🔐 Default Login Credentials (matching demo UI):");
+    console.log("Admin:     ADMIN001 / admin123");
+    console.log("Authority: AUTH001  / auth123");
+    console.log("Employee:  EMP001   / emp123");
   } catch (error) {
     console.error("❌ Error seeding database:", error);
   } finally {
@@ -143,7 +148,5 @@ export const seedDatabase = async () => {
   }
 };
 
-// Run seeding if this file is executed directly
-if (require.main === module) {
-  seedDatabase();
-}
+seedDatabase();
+

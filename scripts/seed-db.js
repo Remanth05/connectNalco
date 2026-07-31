@@ -1,4 +1,4 @@
-const { execSync } = require("child_process");
+import { execSync } from "child_process";
 
 console.log("🌱 Seeding NALCO database with initial user data...\n");
 

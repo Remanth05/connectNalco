@@ -37,157 +37,15 @@ export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Initialize with some sample notifications based on user role
-    const sampleNotifications: Notification[] = [
-      {
-        id: "notif-1",
-        title: "Leave Application Approved",
-        message:
-          "Your leave application for March 28-30 has been approved by Dr. Priya Sharma.",
-        type: "success",
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        read: false,
-        actionUrl: "/portal/leave",
-      },
-      {
-        id: "notif-2",
-        title: "System Maintenance Scheduled",
-        message:
-          "Scheduled maintenance on March 31 from 2:00 AM to 4:00 AM. System will be unavailable.",
-        type: "warning",
-        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-        read: false,
-        actionUrl: "/settings",
-      },
-      {
-        id: "notif-3",
-        title: "Payslip Available",
-        message: "Your payslip for March 2024 is now available for download.",
-        type: "info",
-        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        read: true,
-        actionUrl: "/portal/payslips",
-      },
-      {
-        id: "notif-4",
-        title: "New Issue Reported",
-        message: "A new safety issue has been reported in your department requiring immediate attention.",
-        type: "warning",
-        timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-        read: false,
-        actionUrl: "/issues",
-      },
-      {
-        id: "notif-5",
-        title: "Profile Update Required",
-        message: "Please update your emergency contact information in your profile.",
-        type: "info",
-        timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-        read: false,
-        actionUrl: "/portal/profile",
-      },
-    ];
-
-    // Add role-specific notifications
-    if (user?.role === "authority") {
-      sampleNotifications.unshift(
-        {
-          id: "notif-auth-1",
-          title: "Pending Leave Approvals",
-          message:
-            "You have 3 pending leave applications awaiting your review.",
-          type: "warning",
-          timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/authority/dashboard",
-        },
-        {
-          id: "notif-auth-2",
-          title: "Team Attendance Alert",
-          message: "Sunita Devi has not checked in today. Please follow up.",
-          type: "warning",
-          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/authority/attendance",
-        },
-        {
-          id: "notif-auth-3",
-          title: "Department Issue Escalated",
-          message: "A critical safety issue has been escalated to your department for immediate action.",
-          type: "error",
-          timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/issues",
-        },
-        {
-          id: "notif-auth-4",
-          title: "Reimbursement Requests",
-          message: "2 new reimbursement requests require your approval.",
-          type: "info",
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/authority/dashboard",
-        },
-      );
-    }
-
-    if (user?.role === "admin") {
-      sampleNotifications.unshift(
-        {
-          id: "notif-admin-1",
-          title: "System Alert",
-          message: "Database storage is 85% full. Consider archiving old data.",
-          type: "warning",
-          timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/admin/dashboard",
-        },
-        {
-          id: "notif-admin-2",
-          title: "Security Update",
-          message: "3 failed login attempts detected from IP 192.168.1.100.",
-          type: "error",
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/admin/dashboard",
-        },
-        {
-          id: "notif-admin-3",
-          title: "Backup Completed",
-          message:
-            "Scheduled database backup completed successfully at 2:00 AM.",
-          type: "success",
-          timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
-          read: true,
-          actionUrl: "/settings",
-        },
-        {
-          id: "notif-admin-4",
-          title: "Critical Issues Report",
-          message: "5 critical issues require immediate admin attention across all departments.",
-          type: "error",
-          timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/issues",
-        },
-        {
-          id: "notif-admin-5",
-          title: "Department Analytics Ready",
-          message: "Monthly analytics report for all departments is now available for review.",
-          type: "info",
-          timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-          read: false,
-          actionUrl: "/analytics",
-        },
-      );
-    }
+    if (!user?.employeeId) return;
 
     const loadNotifications = async () => {
-      if (user?.employeeId) {
-        try {
-          const response = await fetch(`/api/notifications/${user.employeeId}`);
-          if (response.ok) {
-            const data = await response.json();
+      // 1. Try API first (MongoDB)
+      try {
+        const response = await fetch(`/api/notifications/${user.employeeId}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.data && data.data.length > 0) {
             setNotifications(
               (data.data ?? []).map((notification: Notification & { notificationId?: string }) => ({
                 ...notification,
@@ -196,54 +54,182 @@ export default function NotificationBell() {
             );
             return;
           }
-        } catch (error) {
-          console.error("Error loading notifications:", error);
         }
+      } catch (error) {
+        console.error("Error loading notifications from API:", error);
       }
 
+      // 2. Try localStorage (persisted read state)
       const savedNotifications = localStorage.getItem(
-        `notifications_${user?.employeeId}`,
+        `notifications_${user.employeeId}`,
       );
       if (savedNotifications) {
         try {
-          setNotifications(JSON.parse(savedNotifications));
-          return;
+          const parsed = JSON.parse(savedNotifications);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setNotifications(parsed);
+            return;
+          }
         } catch (error) {
           console.error("Error loading saved notifications:", error);
         }
       }
+
+      // 3. Only fall back to sample notifications if nothing is saved
+      const sampleNotifications: Notification[] = [
+        {
+          id: "notif-1",
+          title: "Leave Application Approved",
+          message:
+            "Your leave application for March 28-30 has been approved by Dr. Priya Sharma.",
+          type: "success",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/portal/leave",
+        },
+        {
+          id: "notif-2",
+          title: "System Maintenance Scheduled",
+          message:
+            "Scheduled maintenance on March 31 from 2:00 AM to 4:00 AM. System will be unavailable.",
+          type: "warning",
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/settings",
+        },
+        {
+          id: "notif-3",
+          title: "Payslip Available",
+          message: "Your payslip for March 2024 is now available for download.",
+          type: "info",
+          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          read: true,
+          actionUrl: "/portal/payslips",
+        },
+        {
+          id: "notif-4",
+          title: "New Issue Reported",
+          message: "A new safety issue has been reported in your department requiring immediate attention.",
+          type: "warning",
+          timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/issues",
+        },
+        {
+          id: "notif-5",
+          title: "Profile Update Required",
+          message: "Please update your emergency contact information in your profile.",
+          type: "info",
+          timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          read: false,
+          actionUrl: "/portal/profile",
+        },
+      ];
+
+      // Add role-specific notifications
+      if (user?.role === "authority") {
+        sampleNotifications.unshift(
+          {
+            id: "notif-auth-1",
+            title: "Pending Leave Approvals",
+            message:
+              "You have 3 pending leave applications awaiting your review.",
+            type: "warning",
+            timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/authority/dashboard",
+          },
+          {
+            id: "notif-auth-2",
+            title: "Team Attendance Alert",
+            message: "Sunita Devi has not checked in today. Please follow up.",
+            type: "warning",
+            timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/authority/attendance",
+          },
+          {
+            id: "notif-auth-3",
+            title: "Department Issue Escalated",
+            message: "A critical safety issue has been escalated to your department for immediate action.",
+            type: "error",
+            timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/issues",
+          },
+          {
+            id: "notif-auth-4",
+            title: "Reimbursement Requests",
+            message: "2 new reimbursement requests require your approval.",
+            type: "info",
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/authority/dashboard",
+          },
+        );
+      }
+
+      if (user?.role === "admin") {
+        sampleNotifications.unshift(
+          {
+            id: "notif-admin-1",
+            title: "System Alert",
+            message: "Database storage is 85% full. Consider archiving old data.",
+            type: "warning",
+            timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/admin/dashboard",
+          },
+          {
+            id: "notif-admin-2",
+            title: "Security Update",
+            message: "3 failed login attempts detected from IP 192.168.1.100.",
+            type: "error",
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/admin/dashboard",
+          },
+          {
+            id: "notif-admin-3",
+            title: "Backup Completed",
+            message:
+              "Scheduled database backup completed successfully at 2:00 AM.",
+            type: "success",
+            timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+            read: true,
+            actionUrl: "/settings",
+          },
+          {
+            id: "notif-admin-4",
+            title: "Critical Issues Report",
+            message: "5 critical issues require immediate admin attention across all departments.",
+            type: "error",
+            timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/issues",
+          },
+          {
+            id: "notif-admin-5",
+            title: "Department Analytics Ready",
+            message: "Monthly analytics report for all departments is now available for review.",
+            type: "info",
+            timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+            read: false,
+            actionUrl: "/analytics",
+          },
+        );
+      }
+
+      // Save sample data to localStorage so read state persists going forward
+      localStorage.setItem(
+        `notifications_${user.employeeId}`,
+        JSON.stringify(sampleNotifications),
+      );
       setNotifications(sampleNotifications);
     };
 
     void loadNotifications();
-
-    // Set up periodic check for new notifications (simulated)
-    const interval = setInterval(() => {
-      // Randomly add a new notification occasionally
-      if (Math.random() < 0.1) {
-        // 10% chance every 30 seconds
-        const newNotification: Notification = {
-          id: `notif-${Date.now()}`,
-          title: "New Activity",
-          message: "You have a new activity requiring your attention.",
-          type: "info",
-          timestamp: new Date().toISOString(),
-          read: false,
-        };
-
-        setNotifications((prev) => {
-          const updated = [newNotification, ...prev].slice(0, 20); // Keep only latest 20
-          localStorage.setItem(
-            `notifications_${user?.employeeId}`,
-            JSON.stringify(updated),
-          );
-          return updated;
-        });
-      }
-    }, 30000); // Check every 30 seconds
-
-    return () => clearInterval(interval);
-  }, [user]);
+  }, [user?.employeeId, user?.role]);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 

@@ -83,35 +83,7 @@ export default function AuthorityDashboard() {
     joinDate: "",
     phone: "",
   });
-  const [employeeList, setEmployeeList] = useState([
-    {
-      name: "Rajesh Kumar Singh",
-      designation: "HR Executive",
-      status: "Active",
-      id: "EMP001",
-      email: "rajesh.singh@nalco.com",
-      phone: "+91-9876543210",
-      joinDate: "2022-03-15",
-    },
-    {
-      name: "Sunita Devi",
-      designation: "HR Assistant",
-      status: "Active",
-      id: "EMP002",
-      email: "sunita.devi@nalco.com",
-      phone: "+91-9876543213",
-      joinDate: "2021-07-20",
-    },
-    {
-      name: "Mohammad Alam",
-      designation: "Trainee",
-      status: "On Leave",
-      id: "EMP003",
-      email: "mohammad.alam@nalco.com",
-      phone: "+91-9876543214",
-      joinDate: "2023-11-05",
-    },
-  ]);
+  const [employeeList, setEmployeeList] = useState<any[]>([]);
 
   // Module action states
   const [moduleDialog, setModuleDialog] = useState<{
@@ -125,12 +97,35 @@ export default function AuthorityDashboard() {
   });
   const [moduleLoading, setModuleLoading] = useState<string | null>(null);
 
-  // Fetch pending approvals on component mount
+  // Fetch pending approvals and employees on component mount
   useEffect(() => {
     if (user?.employeeId) {
       fetchPendingApprovals();
+      fetchEmployees();
     }
   }, [user]);
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await fetch(`/api/employees`);
+      const data = await response.json();
+      if (data.success && data.data) {
+        // Filter employees to only show those in the authority's department
+        const myDeptEmployees = data.data.filter((e: any) => e.department === user?.department);
+        setEmployeeList(myDeptEmployees.map((emp: any) => ({
+          name: emp.name,
+          designation: emp.designation,
+          status: emp.isActive ? "Active" : "Inactive",
+          id: emp.employeeId,
+          email: emp.email,
+          phone: emp.phone,
+          joinDate: emp.joinDate,
+        })));
+      }
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
 
   const fetchPendingApprovals = async () => {
     try {
@@ -448,58 +443,32 @@ export default function AuthorityDashboard() {
                         setSuccess("");
 
                         try {
-                          // Simulate API call
-                          await new Promise((resolve) =>
-                            setTimeout(resolve, 2000),
-                          );
+                          // Call API to register employee
+                          const response = await fetch("/api/auth/register", {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              employeeId: newEmployeeData.employeeId,
+                              name: newEmployeeData.fullName,
+                              email: newEmployeeData.email,
+                              password: "emp" + "123", // Default password
+                              role: "employee", // Default role
+                              department: user?.department || "Human Resources",
+                              designation: newEmployeeData.designation,
+                              phone: newEmployeeData.phone,
+                              joinDate: newEmployeeData.joinDate,
+                            }),
+                          });
 
-                          const newEmployee = {
-                            name: newEmployeeData.fullName,
-                            designation: newEmployeeData.designation,
-                            status: "Active",
-                            id: newEmployeeData.employeeId,
-                            email: newEmployeeData.email,
-                            phone: newEmployeeData.phone,
-                            joinDate: newEmployeeData.joinDate,
-                          };
+                          const data = await response.json();
+                          if (!data.success) {
+                            throw new Error(data.error || "Failed to register employee");
+                          }
 
-                          setEmployeeList([...employeeList, newEmployee]);
-
-                          // Also add to directory
-                          const directoryEmployee = {
-                            id: Date.now(),
-                            name: newEmployeeData.fullName,
-                            position: newEmployeeData.designation,
-                            department: "Human Resources", // Default to HR for new employees
-                            team: "New Employees",
-                            email: newEmployeeData.email,
-                            phone: newEmployeeData.phone,
-                            location: "Damanjodi Plant",
-                            avatar: newEmployeeData.fullName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase(),
-                            status: "Available",
-                            employeeId: newEmployeeData.employeeId,
-                            joinDate: newEmployeeData.joinDate,
-                          };
-
-                          // Update directory data in localStorage
-                          const existingEmployees = JSON.parse(
-                            localStorage.getItem("nalco_employees") || "[]",
-                          );
-                          const updatedEmployees = [
-                            ...existingEmployees,
-                            directoryEmployee,
-                          ];
-                          localStorage.setItem(
-                            "nalco_employees",
-                            JSON.stringify(updatedEmployees),
-                          );
-
-                          // Sync employee data across the system
-                          syncEmployeeUpdate(directoryEmployee);
+                          // Refresh employee list from backend
+                          await fetchEmployees();
 
                           setSuccess(
                             `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully and is now available in the directory!`,
@@ -517,8 +486,8 @@ export default function AuthorityDashboard() {
 
                           // Close dialog
                           setModuleDialog({ open: false, type: "", title: "" });
-                        } catch (error) {
-                          setError("Failed to add employee. Please try again.");
+                        } catch (error: any) {
+                          setError(error.message || "Failed to add employee. Please try again.");
                         } finally {
                           setProcessing(null);
                         }
