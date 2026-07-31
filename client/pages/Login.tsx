@@ -224,7 +224,7 @@ export default function Login() {
                   }
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Authority" />
+                    <SelectValue placeholder="Choose the role" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="employee">
@@ -250,13 +250,13 @@ export default function Login() {
               </div>
 
               <div>
-                <Label htmlFor="employeeId">Employee ID</Label>
+                <Label htmlFor="employeeId">User ID</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nalco-gray" />
                   <Input
                     id="employeeId"
                     type="text"
-                    placeholder="AUTH001"
+                    placeholder="Enter the user ID"
                     value={formData.employeeId}
                     onChange={(e) =>
                       setFormData({ ...formData, employeeId: e.target.value })
