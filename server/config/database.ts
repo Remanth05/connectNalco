@@ -1,15 +1,12 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/nalco_connect";
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "connectNalco";
 
 export const connectDB = async () => {
   try {
     // Skip MongoDB connection in development if MONGODB_URI is default
-    if (
-      MONGODB_URI === "mongodb://localhost:27017/nalco_connect" &&
-      process.env.NODE_ENV !== "production"
-    ) {
+    if (!MONGODB_URI && process.env.NODE_ENV !== "production") {
       console.log("🔄 Running in development mode without MongoDB");
       console.log("✨ Using demo credentials for authentication");
       console.log("📝 Demo login credentials:");
@@ -24,7 +21,13 @@ export const connectDB = async () => {
       return null;
     }
 
-    const conn = await mongoose.connect(MONGODB_URI);
+    if (!MONGODB_URI) {
+      throw new Error("MONGODB_URI is required");
+    }
+
+    const conn = await mongoose.connect(MONGODB_URI, {
+      dbName: MONGODB_DB_NAME,
+    });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {

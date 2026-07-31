@@ -68,6 +68,12 @@ import {
   getAllUsers,
   updateUser,
 } from "./routes/auth";
+import {
+  getNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
+  deleteNotification,
+} from "./routes/notification";
 
 export function createServer() {
   const app = express();
@@ -96,6 +102,21 @@ export function createServer() {
   app.get("/api/auth/me", getCurrentUser);
   app.get("/api/auth/users", getAllUsers);
   app.put("/api/auth/users/:id", updateUser);
+
+  // Notification Routes
+  app.get("/api/notifications/:employeeId", getNotifications);
+  app.patch(
+    "/api/notifications/:employeeId/:notificationId/read",
+    markNotificationRead,
+  );
+  app.patch(
+    "/api/notifications/:employeeId/read-all",
+    markAllNotificationsRead,
+  );
+  app.delete(
+    "/api/notifications/:employeeId/:notificationId",
+    deleteNotification,
+  );
 
   // Leave Management Routes
   app.get("/api/leave/employee/:employeeId", getLeaveApplications);

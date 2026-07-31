@@ -17,7 +17,6 @@ import {
   Calendar,
   FileText,
   Trash2,
-  MarkAsRead,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -183,21 +182,40 @@ export default function NotificationBell() {
       );
     }
 
-    // Load notifications from localStorage
-    const savedNotifications = localStorage.getItem(
-      `notifications_${user?.employeeId}`,
-    );
-    if (savedNotifications) {
-      try {
-        const parsed = JSON.parse(savedNotifications);
-        setNotifications(parsed);
-      } catch (error) {
-        console.error("Error loading notifications:", error);
-        setNotifications(sampleNotifications);
+    const loadNotifications = async () => {
+      if (user?.employeeId) {
+        try {
+          const response = await fetch(`/api/notifications/${user.employeeId}`);
+          if (response.ok) {
+            const data = await response.json();
+            setNotifications(
+              (data.data ?? []).map((notification: Notification & { notificationId?: string }) => ({
+                ...notification,
+                id: notification.notificationId ?? notification.id,
+              })),
+            );
+            return;
+          }
+        } catch (error) {
+          console.error("Error loading notifications:", error);
+        }
       }
-    } else {
+
+      const savedNotifications = localStorage.getItem(
+        `notifications_${user?.employeeId}`,
+      );
+      if (savedNotifications) {
+        try {
+          setNotifications(JSON.parse(savedNotifications));
+          return;
+        } catch (error) {
+          console.error("Error loading saved notifications:", error);
+        }
+      }
       setNotifications(sampleNotifications);
-    }
+    };
+
+    void loadNotifications();
 
     // Set up periodic check for new notifications (simulated)
     const interval = setInterval(() => {
@@ -255,7 +273,14 @@ export default function NotificationBell() {
     }
   };
 
-  const markAsRead = (notificationId: string) => {
+  const markAsRead = async (notificationId: string) => {
+    if (user?.employeeId) {
+      await fetch(
+        `/api/notifications/${user.employeeId}/${notificationId}/read`,
+        { method: "PATCH" },
+      ).catch(() => undefined);
+    }
+
     setNotifications((prev) => {
       const updated = prev.map((n) =>
         n.id === notificationId ? { ...n, read: true } : n,
@@ -268,7 +293,13 @@ export default function NotificationBell() {
     });
   };
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
+    if (user?.employeeId) {
+      await fetch(`/api/notifications/${user.employeeId}/read-all`, {
+        method: "PATCH",
+      }).catch(() => undefined);
+    }
+
     setNotifications((prev) => {
       const updated = prev.map((n) => ({ ...n, read: true }));
       localStorage.setItem(
@@ -279,7 +310,14 @@ export default function NotificationBell() {
     });
   };
 
-  const deleteNotification = (notificationId: string) => {
+  const deleteNotification = async (notificationId: string) => {
+    if (user?.employeeId) {
+      await fetch(
+        `/api/notifications/${user.employeeId}/${notificationId}`,
+        { method: "DELETE" },
+      ).catch(() => undefined);
+    }
+
     setNotifications((prev) => {
       const updated = prev.filter((n) => n.id !== notificationId);
       localStorage.setItem(
