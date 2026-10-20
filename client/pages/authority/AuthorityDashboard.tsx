@@ -82,6 +82,7 @@ export default function AuthorityDashboard() {
     designation: "",
     joinDate: "",
     phone: "",
+    password: "",
   });
   const [employeeList, setEmployeeList] = useState<any[]>([]);
 
@@ -419,6 +420,23 @@ export default function AuthorityDashboard() {
                         }
                       />
                     </div>
+                    <div className="md:col-span-2">
+                      <Label>Initial Password</Label>
+                      <Input
+                        type="text"
+                        placeholder="e.g. Nalco@2026 (or leave blank to use default 'emp123')"
+                        value={newEmployeeData.password}
+                        onChange={(e) =>
+                          setNewEmployeeData({
+                            ...newEmployeeData,
+                            password: e.target.value,
+                          })
+                        }
+                      />
+                      <p className="text-xs text-nalco-gray mt-1">
+                        Default password is <strong>emp123</strong> if left blank.
+                      </p>
+                    </div>
                   </div>
                   <DialogFooter>
                     <Button variant="outline">Cancel</Button>
@@ -443,6 +461,7 @@ export default function AuthorityDashboard() {
                         setSuccess("");
 
                         try {
+                          const assignedPass = newEmployeeData.password?.trim() || "emp123";
                           // Call API to register employee
                           const response = await fetch("/api/auth/register", {
                             method: "POST",
@@ -453,7 +472,7 @@ export default function AuthorityDashboard() {
                               employeeId: newEmployeeData.employeeId,
                               name: newEmployeeData.fullName,
                               email: newEmployeeData.email,
-                              password: "emp" + "123", // Default password
+                              password: assignedPass,
                               role: "employee", // Default role
                               department: user?.department || "Human Resources",
                               designation: newEmployeeData.designation,
@@ -471,7 +490,7 @@ export default function AuthorityDashboard() {
                           await fetchEmployees();
 
                           setSuccess(
-                            `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully and is now available in the directory!`,
+                            `Employee ${newEmployeeData.fullName} (${newEmployeeData.employeeId}) has been added successfully! Assigned Password: ${assignedPass}`,
                           );
 
                           // Reset form
@@ -482,6 +501,7 @@ export default function AuthorityDashboard() {
                             designation: "",
                             joinDate: "",
                             phone: "",
+                            password: "",
                           });
 
                           // Close dialog

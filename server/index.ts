@@ -68,6 +68,7 @@ import {
   getCurrentUser,
   getAllUsers,
   updateUser,
+  changePassword,
 } from "./routes/auth";
 import {
   getNotifications,
@@ -100,6 +101,7 @@ export function createServer() {
   // Authentication Routes
   app.post("/api/auth/register", registerUser);
   app.post("/api/auth/login", loginUser);
+  app.post("/api/auth/change-password", changePassword);
   app.get("/api/auth/me", getCurrentUser);
   app.get("/api/auth/users", getAllUsers);
   app.put("/api/auth/users/:id", updateUser);

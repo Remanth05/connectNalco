@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User";
+import { LeaveBalanceModel } from "../models/HR";
+import { Notification } from "../models/Notification";
 import { ApiResponse } from "@shared/api";
 import mongoose from "mongoose";
 
@@ -79,6 +81,14 @@ export const registerUser: RequestHandler = async (req, res) => {
       .join("")
       .toUpperCase();
 
+    const finalDesignation =
+      designation ||
+      (role === "admin"
+        ? "System Administrator"
+        : role === "authority"
+          ? "Department Authority"
+          : "Associate Engineer");
+
     // Create user
     const user = new User({
       employeeId,
@@ -87,8 +97,8 @@ export const registerUser: RequestHandler = async (req, res) => {
       password,
       phone,
       role,
-      department,
-      designation,
+      department: department || "Human Resources",
+      designation: finalDesignation,
       joinDate: joinDate ? new Date(joinDate) : new Date(),
       location: location || "Damanjodi Plant",
       team,
@@ -97,15 +107,41 @@ export const registerUser: RequestHandler = async (req, res) => {
 
     await user.save();
 
+    // Auto-create initial leave balance for new employee
+    await LeaveBalanceModel.findOneAndUpdate(
+      { employeeId: user.employeeId },
+      {
+        $setOnInsert: {
+          employeeId: user.employeeId,
+          annual: 21,
+          sick: 12,
+          casual: 7,
+          totalAllocated: 40,
+          totalUsed: 0,
+          totalRemaining: 40,
+        },
+      },
+      { upsert: true },
+    ).catch(() => {});
+
+    // Send welcome notification
+    await Notification.create({
+      notificationId: `NOTIF_${Date.now()}_${user.employeeId}`,
+      employeeId: user.employeeId,
+      title: "Welcome to ConnectNALCO",
+      message: `Welcome ${user.name}! Your account has been created successfully with employee ID ${user.employeeId}.`,
+      type: "info",
+    }).catch(() => {});
+
     // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, employeeId: user.employeeId, role: user.role },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRE },
+      { expiresIn: JWT_EXPIRE as any },
     );
 
     const response: ApiResponse<{
-      user: Omit<typeof user, "password">;
+      user: any;
       token: string;
     }> = {
       success: true,
@@ -132,13 +168,28 @@ export const registerUser: RequestHandler = async (req, res) => {
     };
 
     res.status(201).json(response);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Register error:", error);
+    let errorMessage = "Internal server error during registration";
+    if (error?.name === "ValidationError") {
+      errorMessage = Object.values(error.errors || {})
+        .map((e: any) => e.message)
+        .join(", ");
+    } else if (error?.code === 11000) {
+      const field = Object.keys(error.keyPattern || {})[0] || "field";
+      errorMessage = `A user with this ${field} already exists`;
+    } else if (error?.message) {
+      errorMessage = error.message;
+    }
     const response: ApiResponse<null> = {
       success: false,
-      error: "Internal server error during registration",
+      error: errorMessage,
     };
-    res.status(500).json(response);
+    res
+      .status(
+        error?.name === "ValidationError" || error?.code === 11000 ? 400 : 500,
+      )
+      .json(response);
   }
 };
 
@@ -190,7 +241,7 @@ export const loginUser: RequestHandler = async (req, res) => {
             role: mockUserData.role,
           },
           JWT_SECRET,
-          { expiresIn: JWT_EXPIRE },
+          { expiresIn: JWT_EXPIRE as any },
         );
 
         const response: ApiResponse<{
@@ -248,11 +299,11 @@ export const loginUser: RequestHandler = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, employeeId: user.employeeId, role: user.role },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRE },
+      { expiresIn: JWT_EXPIRE as any },
     );
 
     const response: ApiResponse<{
-      user: Omit<typeof user, "password">;
+      user: any;
       token: string;
     }> = {
       success: true,
@@ -396,5 +447,63 @@ export const updateUser: RequestHandler = async (req, res) => {
       error: "Internal server error",
     };
     res.status(500).json(response);
+  }
+};
+
+// Change user password
+export const changePassword: RequestHandler = async (req, res) => {
+  try {
+    const { employeeId, currentPassword, newPassword } = req.body;
+
+    if (!employeeId || !currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: "Employee ID, current password, and new password are required",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: "New password must be at least 6 characters long",
+      });
+    }
+
+    if (!isMongoConnected()) {
+      return res.status(503).json({
+        success: false,
+        error: "Database is not connected",
+      });
+    }
+
+    const user = await User.findOne({ employeeId }).select("+password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found",
+      });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        error: "Current password is incorrect",
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Password updated successfully in database!",
+    });
+  } catch (error: any) {
+    console.error("Change password error:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error while changing password",
+    });
   }
 };

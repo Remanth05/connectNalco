@@ -31,6 +31,19 @@ export default {
           gray: "hsl(var(--nalco-gray))",
           green: "hsl(var(--nalco-green))",
         },
+        // Nalco Industrial Authority exact design tokens
+        nia: {
+          primary: "#9F2221",
+          primaryStrong: "#0063B9",
+          secondary: "#000000",
+          tertiary: "#FFFFFF",
+          neutral: "#F4F5F7",
+          surface: "#FFFFFF",
+          onSurface: "#111111",
+          muted: "#6B7280",
+          border: "#D1D5DB",
+          error: "#B91C1C",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

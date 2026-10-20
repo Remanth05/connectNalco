@@ -70,20 +70,35 @@ export default function Reimbursements() {
       }
     } catch (error) {
       console.error("Error fetching reimbursements:", error);
-      // For demo purposes, set some default data
-      setReimbursements([
-        {
-          id: "DEMO001",
-          employeeId: user?.employeeId || "",
-          employeeName: user?.name || "",
-          type: "travel",
-          amount: 2500,
-          currency: "INR",
-          description: "Travel expenses for training program",
-          submittedDate: "2024-03-15",
-          status: "pending",
-        },
-      ]);
+      const INITIAL_SEED_EMPLOYEES = [
+        "ADMIN001",
+        "AUTH001",
+        "EMP001",
+        "EMP002",
+        "EMP003",
+        "ENG001",
+        "FIN001",
+        "OPS001",
+      ];
+      const isSeedEmployee = INITIAL_SEED_EMPLOYEES.includes(user?.employeeId || "");
+
+      if (isSeedEmployee) {
+        setReimbursements([
+          {
+            id: "DEMO001",
+            employeeId: user?.employeeId || "",
+            employeeName: user?.name || "",
+            type: "travel",
+            amount: 2500,
+            currency: "INR",
+            description: "Travel expenses for training program",
+            submittedDate: "2024-03-15",
+            status: "pending",
+          },
+        ]);
+      } else {
+        setReimbursements([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -106,15 +121,37 @@ export default function Reimbursements() {
       }
     } catch (error) {
       console.error("Error fetching reimbursement stats:", error);
-      // Set default stats for demo
-      setStats({
-        total: 1,
-        pending: 1,
-        approved: 0,
-        rejected: 0,
-        totalAmount: 2500,
-        approvedAmount: 0,
-      });
+      const INITIAL_SEED_EMPLOYEES = [
+        "ADMIN001",
+        "AUTH001",
+        "EMP001",
+        "EMP002",
+        "EMP003",
+        "ENG001",
+        "FIN001",
+        "OPS001",
+      ];
+      const isSeedEmployee = INITIAL_SEED_EMPLOYEES.includes(user?.employeeId || "");
+
+      if (isSeedEmployee) {
+        setStats({
+          total: 1,
+          pending: 1,
+          approved: 0,
+          rejected: 0,
+          totalAmount: 2500,
+          approvedAmount: 0,
+        });
+      } else {
+        setStats({
+          total: 0,
+          pending: 0,
+          approved: 0,
+          rejected: 0,
+          totalAmount: 0,
+          approvedAmount: 0,
+        });
+      }
     }
   };
 
@@ -162,11 +199,11 @@ export default function Reimbursements() {
     } catch (error) {
       console.error("Error submitting reimbursement:", error);
       // For demo purposes, simulate successful submission even if API fails
-      const newReimbursement = {
+      const newReimbursement: Reimbursement = {
         id: `REIMB${Date.now()}`,
         employeeId: user?.employeeId || "",
         employeeName: user?.name || "",
-        type: formData.type,
+        type: formData.type as Reimbursement["type"],
         amount: parseFloat(formData.amount),
         currency: "INR",
         description: formData.description,

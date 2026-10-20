@@ -60,7 +60,7 @@ const userSchema = new Schema<IUser>(
     },
     designation: {
       type: String,
-      required: true,
+      default: "Employee",
     },
     joinDate: {
       type: Date,

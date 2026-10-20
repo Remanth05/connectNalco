@@ -25,32 +25,52 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+const INITIAL_SEED_EMPLOYEES = ["ADMIN001", "AUTH001", "EMP001", "EMP002", "EMP003", "ENG001", "FIN001", "OPS001"];
+
 export default function Profile() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   // State for profile data
   const [profileData, setProfileData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@company.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Main Street, City, State 12345",
-    dateOfBirth: "1990-01-15",
-    emergencyName: "Jane Doe",
-    emergencyRelation: "Spouse",
-    emergencyPhone: "+1 (555) 987-6543",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    dateOfBirth: "",
+    emergencyName: "",
+    emergencyRelation: "",
+    emergencyPhone: "",
   });
 
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
-  // Load profile data from localStorage on mount
+  // Load profile data on mount
   useEffect(() => {
+    if (!user) return;
     const savedProfile = localStorage.getItem(`profile_${user?.employeeId}`);
     if (savedProfile) {
       setProfileData(JSON.parse(savedProfile));
+    } else {
+      const isSeed = INITIAL_SEED_EMPLOYEES.includes(user.employeeId);
+      const nameParts = (user.name || "").trim().split(" ");
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      setProfileData({
+        firstName: isSeed ? (firstName || "Rajesh") : firstName,
+        lastName: isSeed ? (lastName || "Singh") : lastName,
+        email: user.email || "",
+        phone: user.phone || "",
+        address: isSeed ? "NALCO Township, Damanjodi, Koraput, Odisha" : (user.location || "NALCO Township, Odisha"),
+        dateOfBirth: isSeed ? "1992-05-14" : "",
+        emergencyName: isSeed ? "Sunita Singh" : "",
+        emergencyRelation: isSeed ? "Spouse" : "",
+        emergencyPhone: isSeed ? "+91-9876543299" : "",
+      });
     }
   }, [user]);
 

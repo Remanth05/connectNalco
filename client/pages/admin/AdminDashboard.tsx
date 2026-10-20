@@ -62,7 +62,9 @@ export default function AdminDashboard() {
     email: "",
     phone: "",
     department: "",
+    designation: "",
     role: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -1094,6 +1096,22 @@ export default function AdminDashboard() {
                   </SelectContent>
                 </Select>
               </div>
+              <div>
+                <Label>Designation</Label>
+                <Input placeholder="e.g. Senior Engineer, Executive" value={newUserData.designation} onChange={(e) => setNewUserData(prev => ({ ...prev, designation: e.target.value }))} />
+              </div>
+              <div className="md:col-span-2">
+                <Label>Initial Password</Label>
+                <Input
+                  type="text"
+                  placeholder="e.g. Nalco@2026 (or leave blank to use default 'emp123')"
+                  value={newUserData.password}
+                  onChange={(e) => setNewUserData(prev => ({ ...prev, password: e.target.value }))}
+                />
+                <p className="text-xs text-nalco-gray mt-1">
+                  Default password is <strong>emp123</strong> if left blank. Employee can change it after logging in.
+                </p>
+              </div>
             </div>
             <div>
               <Label>Additional Notes</Label>
@@ -1648,9 +1666,10 @@ export default function AdminDashboard() {
                           employeeId: newUserData.employeeId,
                           name: newUserData.fullName,
                           email: newUserData.email,
-                          password: "emp" + "123", // Default password
+                          password: newUserData.password?.trim() || "emp123",
                           role: newUserData.role || "employee",
                           department: newUserData.department || "Human Resources",
+                          designation: newUserData.designation || (newUserData.role === "admin" ? "System Administrator" : newUserData.role === "authority" ? "Department Head" : "Associate Engineer"),
                           phone: newUserData.phone,
                           // Join date is not in form, use today
                           joinDate: new Date().toISOString().split("T")[0],
@@ -1662,8 +1681,9 @@ export default function AdminDashboard() {
                         throw new Error(data.error || "Failed to register user");
                       }
 
+                      const assignedPass = newUserData.password?.trim() || "emp123";
                       await fetchUsers();
-                      setSuccess(`User ${newUserData.fullName} created successfully!`);
+                      setSuccess(`User ${newUserData.fullName} (${newUserData.employeeId}) created successfully! Assigned Password: ${assignedPass}`);
                       
                       // Reset form
                       setNewUserData({
@@ -1672,7 +1692,9 @@ export default function AdminDashboard() {
                         email: "",
                         phone: "",
                         department: "",
+                        designation: "",
                         role: "",
+                        password: "",
                       });
 
                       setModuleDialog({ open: false, type: "", title: "" });

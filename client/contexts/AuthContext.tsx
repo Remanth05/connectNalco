@@ -5,6 +5,10 @@ interface User {
   role: "employee" | "authority" | "admin";
   name: string;
   email?: string;
+  department?: string;
+  designation?: string;
+  location?: string;
+  phone?: string;
   isAuthenticated: boolean;
   token?: string;
   loginTime?: number;

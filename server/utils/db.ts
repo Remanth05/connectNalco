@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import mongoose from "mongoose";
 import type { Response } from "express";
 
 export const isMongoConnected = () => mongoose.connection.readyState === 1;

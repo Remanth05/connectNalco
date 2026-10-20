@@ -43,7 +43,7 @@ import {
   Loader2,
   Check,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -60,13 +60,28 @@ export default function Settings() {
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
     email: user?.email || "",
-    phone: "+91-9876543210",
-    designation: "HR Executive",
-    department: "Human Resources",
-    bio: "Dedicated HR professional with expertise in recruitment and employee relations.",
-    emergencyContact: "+91-9876543211",
-    address: "NALCO Corporate Office, Bhubaneswar, Odisha",
+    phone: user?.phone || "",
+    designation: user?.designation || "",
+    department: user?.department || "",
+    bio: "",
+    emergencyContact: "",
+    address: user?.location || "",
   });
+
+  useEffect(() => {
+    if (!user) return;
+    const isSeed = ["ADMIN001", "AUTH001", "EMP001", "EMP002", "EMP003", "ENG001", "FIN001", "OPS001"].includes(user.employeeId);
+    setProfileData({
+      name: user.name || "",
+      email: user.email || "",
+      phone: user.phone || (isSeed ? "+91-9876543210" : ""),
+      designation: user.designation || (isSeed ? "HR Executive" : "Staff"),
+      department: user.department || "General",
+      bio: isSeed ? "Dedicated professional with expertise in operations and institutional relations." : "",
+      emergencyContact: isSeed ? "+91-9876543211" : "",
+      address: isSeed ? "NALCO Corporate Office, Bhubaneswar, Odisha" : (user.location || "NALCO Township, Odisha"),
+    });
+  }, [user]);
 
   // Notification Settings State
   const [notificationSettings, setNotificationSettings] = useState({
@@ -122,6 +137,58 @@ export default function Settings() {
       }, 2000);
     } catch (error) {
       setError(`Failed to save ${section} settings. Please try again.`);
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  const handlePasswordUpdate = async () => {
+    if (!securitySettings.currentPassword) {
+      setError("Please enter your current password");
+      return;
+    }
+    if (!securitySettings.newPassword) {
+      setError("Please enter your new password");
+      return;
+    }
+    if (securitySettings.newPassword.length < 6) {
+      setError("New password must be at least 6 characters long");
+      return;
+    }
+    if (securitySettings.newPassword !== securitySettings.confirmPassword) {
+      setError("New password and confirmation password do not match");
+      return;
+    }
+
+    setSaving("Password");
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          employeeId: user?.employeeId,
+          currentPassword: securitySettings.currentPassword,
+          newPassword: securitySettings.newPassword,
+        }),
+      });
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || "Failed to update password");
+      }
+
+      setSuccess("✅ Password updated successfully in database! Please use your new password for your next login.");
+      setSecuritySettings((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      }));
+    } catch (err: any) {
+      setError(err.message || "Failed to update password. Please check your current password.");
     } finally {
       setSaving(null);
     }
@@ -534,7 +601,7 @@ export default function Settings() {
                   </div>
                   <Button
                     className="w-full bg-nalco-red hover:bg-nalco-red/90"
-                    onClick={() => handleSave("Password")}
+                    onClick={handlePasswordUpdate}
                     disabled={saving === "Password"}
                   >
                     {saving === "Password" ? (

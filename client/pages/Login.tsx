@@ -121,24 +121,27 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-nalco-blue/10 to-nalco-red/10 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl grid gap-8 lg:grid-cols-2 items-center">
-        {/* Left Side - Branding */}
+    <div className="min-h-screen relative flex items-center justify-center p-4" style={{backgroundImage: "url('/images/smelter.jpg')", backgroundSize: "cover", backgroundPosition: "center"}}>
+      {/* Soft gradient overlay letting the NALCO industrial facility shine through */}
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-950/65 via-slate-900/35 to-slate-950/55 backdrop-blur-[1px]" />
+
+      <div className="relative z-10 w-full max-w-6xl grid gap-8 lg:grid-cols-2 items-center">
+        {/* Left Side - Branding on dark image */}
         <div className="text-center lg:text-left">
           <div className="flex items-center justify-center lg:justify-start mb-4">
             <div className="flex items-center space-x-3">
               <Logo size="lg" />
               <div>
-                <h1 className="text-4xl lg:text-5xl font-bold text-nalco-black">
+                <h1 className="text-4xl lg:text-5xl font-bold text-white">
                   <span className="text-nalco-red">connect</span>NALCO
                 </h1>
-                <p className="text-sm text-nalco-blue font-medium">
+                <p className="text-sm text-white/70 font-medium">
                   Digital Workplace Portal
                 </p>
               </div>
             </div>
           </div>
-          <p className="text-xl text-nalco-gray mb-8">
+          <p className="text-xl text-white/80 mb-8">
             Modern employee management system for NALCO operations
           </p>
 
@@ -146,49 +149,49 @@ export default function Login() {
           <div className="grid gap-4 md:grid-cols-3">
             <Button
               variant="outline"
-              className={`h-auto p-4 hover:bg-nalco-blue/10 hover:border-nalco-blue transition-all ${
+              className={`h-auto p-4 bg-white/10 border-white/25 text-white hover:bg-white/20 hover:border-white/50 backdrop-blur-sm transition-all ${
                 formData.role === "employee"
-                  ? "bg-nalco-blue/10 border-nalco-blue"
+                  ? "bg-white/25 border-white/60 ring-1 ring-white/40"
                   : ""
               }`}
               onClick={() => setFormData({ employeeId: "", password: "", role: "employee" })}
             >
               <div className="text-center">
-                <User className="h-8 w-8 text-nalco-blue mx-auto mb-2" />
-                <h3 className="font-medium text-nalco-black">Employee</h3>
-                <p className="text-sm text-nalco-gray">
+                <User className="h-8 w-8 text-white mx-auto mb-2" />
+                <h3 className="font-medium text-white">Employee</h3>
+                <p className="text-sm text-white/70">
                   Access personal services
                 </p>
               </div>
             </Button>
             <Button
               variant="outline"
-              className={`h-auto p-4 hover:bg-nalco-green/10 hover:border-nalco-green transition-all ${
+              className={`h-auto p-4 bg-white/10 border-white/25 text-white hover:bg-white/20 hover:border-white/50 backdrop-blur-sm transition-all ${
                 formData.role === "authority"
-                  ? "bg-nalco-green/10 border-nalco-green"
+                  ? "bg-white/25 border-white/60 ring-1 ring-white/40"
                   : ""
               }`}
               onClick={() => setFormData({ employeeId: "", password: "", role: "authority" })}
             >
               <div className="text-center">
-                <Shield className="h-8 w-8 text-nalco-green mx-auto mb-2" />
-                <h3 className="font-medium text-nalco-black">Authority</h3>
-                <p className="text-sm text-nalco-gray">Manage departments</p>
+                <Shield className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
+                <h3 className="font-medium text-white">Authority</h3>
+                <p className="text-sm text-white/70">Manage departments</p>
               </div>
             </Button>
             <Button
               variant="outline"
-              className={`h-auto p-4 hover:bg-nalco-red/10 hover:border-nalco-red transition-all ${
+              className={`h-auto p-4 bg-white/10 border-white/25 text-white hover:bg-white/20 hover:border-white/50 backdrop-blur-sm transition-all ${
                 formData.role === "admin"
-                  ? "bg-nalco-red/10 border-nalco-red"
+                  ? "bg-white/25 border-white/60 ring-1 ring-white/40"
                   : ""
               }`}
               onClick={() => setFormData({ employeeId: "", password: "", role: "admin" })}
             >
               <div className="text-center">
-                <Users className="h-8 w-8 text-nalco-red mx-auto mb-2" />
-                <h3 className="font-medium text-nalco-black">Admin</h3>
-                <p className="text-sm text-nalco-gray">System administration</p>
+                <Users className="h-8 w-8 text-nia-primary mx-auto mb-2" />
+                <h3 className="font-medium text-white">Admin</h3>
+                <p className="text-sm text-white/70">System administration</p>
               </div>
             </Button>
           </div>

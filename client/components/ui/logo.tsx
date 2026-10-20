@@ -23,7 +23,7 @@ export function Logo({ className = "", size = "md" }: LogoProps) {
         onError={(e) => {
           // Hide broken image and show fallback
           e.currentTarget.style.display = "none";
-          const fallback = e.currentTarget.nextElementSibling;
+          const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
           if (fallback) {
             fallback.style.display = "flex";
           }

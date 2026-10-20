@@ -38,6 +38,17 @@ export default function Attendance() {
   const [attendanceData, setAttendanceData] = useState([]);
   const [isWorkingDay, setIsWorkingDay] = useState(true);
 
+  const INITIAL_SEED_EMPLOYEES = [
+    "ADMIN001",
+    "AUTH001",
+    "EMP001",
+    "EMP002",
+    "EMP003",
+    "ENG001",
+    "FIN001",
+    "OPS001",
+  ];
+
   // Load attendance data from localStorage on mount
   useEffect(() => {
     const savedAttendance = localStorage.getItem(
@@ -56,50 +67,56 @@ export default function Attendance() {
       }
       setAttendanceData(data);
     } else {
-      // Initialize with default data
-      const defaultData = [
-        {
-          date: "2024-03-25",
-          checkIn: "09:15 AM",
-          checkOut: "06:30 PM",
-          hours: "8h 45m",
-          status: "Present",
-          overtime: "30m",
-        },
-        {
-          date: "2024-03-24",
-          checkIn: "09:00 AM",
-          checkOut: "06:00 PM",
-          hours: "8h 30m",
-          status: "Present",
-          overtime: "0m",
-        },
-        {
-          date: "2024-03-23",
-          checkIn: "09:30 AM",
-          checkOut: "06:15 PM",
-          hours: "8h 15m",
-          status: "Present",
-          overtime: "0m",
-        },
-        {
-          date: "2024-03-22",
-          checkIn: "-",
-          checkOut: "-",
-          hours: "0h",
-          status: "Leave",
-          overtime: "0m",
-        },
-        {
-          date: "2024-03-21",
-          checkIn: "09:45 AM",
-          checkOut: "06:45 PM",
-          hours: "8h 30m",
-          status: "Present",
-          overtime: "30m",
-        },
-      ];
-      setAttendanceData(defaultData);
+      const isSeedEmployee = INITIAL_SEED_EMPLOYEES.includes(user?.employeeId || "");
+      if (isSeedEmployee) {
+        // Initialize with default historical data only for initial seed demo employees
+        const defaultData = [
+          {
+            date: "2024-03-25",
+            checkIn: "09:15 AM",
+            checkOut: "06:30 PM",
+            hours: "8h 45m",
+            status: "Present",
+            overtime: "30m",
+          },
+          {
+            date: "2024-03-24",
+            checkIn: "09:00 AM",
+            checkOut: "06:00 PM",
+            hours: "8h 30m",
+            status: "Present",
+            overtime: "0m",
+          },
+          {
+            date: "2024-03-23",
+            checkIn: "09:30 AM",
+            checkOut: "06:15 PM",
+            hours: "8h 15m",
+            status: "Present",
+            overtime: "0m",
+          },
+          {
+            date: "2024-03-22",
+            checkIn: "-",
+            checkOut: "-",
+            hours: "0h",
+            status: "Leave",
+            overtime: "0m",
+          },
+          {
+            date: "2024-03-21",
+            checkIn: "09:45 AM",
+            checkOut: "06:45 PM",
+            hours: "8h 30m",
+            status: "Present",
+            overtime: "30m",
+          },
+        ];
+        setAttendanceData(defaultData);
+      } else {
+        // Newly added employees start with clean empty attendance log
+        setAttendanceData([]);
+      }
     }
   }, [user]);
 
@@ -505,50 +522,60 @@ export default function Attendance() {
         </Card>
 
         {/* Monthly Summary */}
-        <div className="mb-6 grid gap-6 md:grid-cols-4">
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <Calendar className="h-8 w-8 text-nalco-green" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Days Present
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">20</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <Clock className="h-8 w-8 text-nalco-blue" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Total Hours
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">168h</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <Clock className="h-8 w-8 text-yellow-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">Overtime</p>
-                <p className="text-2xl font-bold text-nalco-black">12h</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <XCircle className="h-8 w-8 text-nalco-red" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-nalco-gray">
-                  Days Absent
-                </p>
-                <p className="text-2xl font-bold text-nalco-black">2</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {(() => {
+          const isSeed = INITIAL_SEED_EMPLOYEES.includes(user?.employeeId || "");
+          const presentDays = isSeed ? 20 : attendanceData.filter((r: any) => r.status === "Present").length;
+          const absentDays = isSeed ? 2 : attendanceData.filter((r: any) => r.status === "Absent").length;
+          const totalHours = isSeed ? "168h" : `${presentDays * 8}h`;
+          const overtimeHours = isSeed ? "12h" : "0h";
+
+          return (
+            <div className="mb-6 grid gap-6 md:grid-cols-4">
+              <Card>
+                <CardContent className="flex items-center p-6">
+                  <Calendar className="h-8 w-8 text-nalco-green" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-nalco-gray">
+                      Days Present
+                    </p>
+                    <p className="text-2xl font-bold text-nalco-black">{presentDays}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="flex items-center p-6">
+                  <Clock className="h-8 w-8 text-nalco-blue" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-nalco-gray">
+                      Total Hours
+                    </p>
+                    <p className="text-2xl font-bold text-nalco-black">{totalHours}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="flex items-center p-6">
+                  <Clock className="h-8 w-8 text-yellow-500" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-nalco-gray">Overtime</p>
+                    <p className="text-2xl font-bold text-nalco-black">{overtimeHours}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="flex items-center p-6">
+                  <XCircle className="h-8 w-8 text-nalco-red" />
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-nalco-gray">
+                      Days Absent
+                    </p>
+                    <p className="text-2xl font-bold text-nalco-black">{absentDays}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          );
+        })()}
 
         {/* Recent Attendance */}
         <Card>
@@ -562,42 +589,54 @@ export default function Attendance() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {attendanceData.map((record, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between border-b pb-4 last:border-b-0"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-nalco-gray/10">
-                      {getStatusIcon(record.status)}
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-nalco-black">
-                        {new Date(record.date).toLocaleDateString("en-US", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </h4>
-                      <p className="text-sm text-nalco-gray">
-                        {record.checkIn} - {record.checkOut} • {record.hours}
-                        {record.overtime !== "0m" && (
-                          <span className="text-yellow-600">
-                            {" "}
-                            (+{record.overtime} OT)
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge className={getStatusColor(record.status)}>
-                      {record.status}
-                    </Badge>
-                  </div>
+              {attendanceData.length === 0 ? (
+                <div className="text-center py-10 text-nalco-gray">
+                  <Clock className="h-10 w-10 mx-auto mb-3 text-nalco-gray/40" />
+                  <p className="font-semibold text-base text-nalco-black">
+                    No Attendance Records Logged
+                  </p>
+                  <p className="text-sm text-nalco-gray mt-1">
+                    Punch in using the Check In button above to register your work shift.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                attendanceData.map((record: any, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between border-b pb-4 last:border-b-0"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-nalco-gray/10">
+                        {getStatusIcon(record.status)}
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-nalco-black">
+                          {new Date(record.date).toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </h4>
+                        <p className="text-sm text-nalco-gray">
+                          {record.checkIn} - {record.checkOut} • {record.hours}
+                          {record.overtime !== "0m" && (
+                            <span className="text-yellow-600">
+                              {" "}
+                              (+{record.overtime} OT)
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge className={getStatusColor(record.status)}>
+                        {record.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
